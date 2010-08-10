@@ -2,7 +2,7 @@
 /**
 *
 * @package acm
-* @version $Id$
+* @version $Id: acm_file.php 10379 2009-12-25 15:55:35Z bantu $
 * @copyright (c) 2005, 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

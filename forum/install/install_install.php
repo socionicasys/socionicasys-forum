@@ -105,7 +105,15 @@ class install_install extends module
 				$this->add_language($mode, $sub);
 				$this->add_bots($mode, $sub);
 				$this->email_admin($mode, $sub);
-
+				// SEO premod
+				global $db, $phpEx;
+				if (!class_exists('phpbb_db_tools')) {
+					include('./../includes/db/db_tools.' . $phpEx);
+				}
+				$db_tools = new phpbb_db_tools($db);
+				$db_tools->sql_column_add(TOPICS_TABLE, 'topic_url', array('VCHAR', ''));
+				$db_tools->sql_create_index(TOPICS_TABLE, 'topic_lpid', array('topic_last_post_id'));
+				set_config('seo_premod_version', '3.0.7-PL1');
 				// Remove the lock file
 				@unlink($phpbb_root_path . 'cache/install_lock');
 
@@ -425,7 +433,7 @@ class install_install extends module
 			'LEGEND_EXPLAIN'	=> $lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array('cache/', 'files/', 'store/');
+		$directories = array('cache/', 'files/', 'store/', 'phpbb_seo/cache/', 'gym_sitemaps/cache/');
 
 		umask(0);
 
@@ -2199,6 +2207,9 @@ class install_install extends module
 				'ACP_MODULE_MANAGEMENT',
 			),
 			'ACP_CAT_DOT_MODS'		=> null,
+			'ACP_CAT_PHPBB_SEO'		=> array(
+				'ACP_MOD_REWRITE',
+			),
 		),
 		'mcp'	=> array(
 			'MCP_MAIN'		=> null,

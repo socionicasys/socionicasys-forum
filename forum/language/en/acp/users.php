@@ -4,7 +4,7 @@
 * acp_users [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: users.php 9767 2009-07-17 11:27:50Z toonarmy $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

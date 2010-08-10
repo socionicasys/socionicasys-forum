@@ -4,7 +4,7 @@
 * help_faq [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: help_faq.php 10495 2010-02-17 10:03:29Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

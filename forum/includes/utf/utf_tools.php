@@ -2,7 +2,7 @@
 /**
 *
 * @package utf
-* @version $Id$
+* @version $Id: utf_tools.php 10041 2009-08-21 21:47:19Z terrafrost $
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -105,6 +105,10 @@ if (!extension_loaded('xml'))
 if (extension_loaded('mbstring'))
 {
 	mb_internal_encoding('UTF-8');
+	// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+	// ini_set is only used to try to make things better for mods using mbstring directly
+	// I know they're not supposed to, but you know they still could and the fix is costless
+	@ini_set("mbstring.internal_encoding", 'UTF-8');
 
 	/**
 	* UTF-8 aware alternative to strrpos
@@ -129,11 +133,15 @@ if (extension_loaded('mbstring'))
 
 			if (is_null($offset))
 			{
-				return mb_strrpos($str, $needle);
+				// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+				// Explicit encoding
+				return mb_strrpos($str, $needle, 0, 'UTF-8');
 			}
 			else
 			{
-				return mb_strrpos($str, $needle, $offset);
+				// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+				// Explicit encoding
+				return mb_strrpos($str, $needle, $offset, 'UTF-8');
 			}
 		}
 	}
@@ -153,8 +161,9 @@ if (extension_loaded('mbstring'))
 				{
 					return false;
 				}
-
-				return mb_strrpos($str, $needle);
+				// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+				// Explicit encoding
+				return mb_strrpos($str, $needle, 'UTF-8');
 			}
 			else
 			{
@@ -163,10 +172,12 @@ if (extension_loaded('mbstring'))
 					trigger_error('utf8_strrpos expects parameter 3 to be long', E_USER_ERROR);
 					return false;
 				}
-
-				$str = mb_substr($str, $offset);
-
-				if (false !== ($pos = mb_strrpos($str, $needle)))
+				// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+				// Explicit encoding
+				$str = mb_substr($str, $offset, mb_strlen($str, 'UTF-8'), 'UTF-8');
+				// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+				// Explicit encoding
+				if (false !== ($pos = mb_strrpos($str, $needle, 'UTF-8')))
 				{
 					return $pos + $offset;
 				}
@@ -184,11 +195,15 @@ if (extension_loaded('mbstring'))
 	{
 		if (is_null($offset))
 		{
-			return mb_strpos($str, $needle);
+			// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+			// Explicit encoding
+			return mb_strpos($str, $needle, 0, 'UTF-8');
 		}
 		else
 		{
-			return mb_strpos($str, $needle, $offset);
+			// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+			// Explicit encoding
+			return mb_strpos($str, $needle, $offset, 'UTF-8');
 		}
 	}
 
@@ -198,7 +213,9 @@ if (extension_loaded('mbstring'))
 	*/
 	function utf8_strtolower($str)
 	{
-		return mb_strtolower($str);
+		// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+		// Explicit encoding
+		return mb_strtolower($str, 'UTF-8');
 	}
 
 	/**
@@ -207,7 +224,9 @@ if (extension_loaded('mbstring'))
 	*/
 	function utf8_strtoupper($str)
 	{
-		return mb_strtoupper($str);
+		// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+		// Explicit encoding
+		return mb_strtoupper($str, 'UTF-8');
 	}
 
 	/**
@@ -218,11 +237,15 @@ if (extension_loaded('mbstring'))
 	{
 		if (is_null($length))
 		{
-			return mb_substr($str, $offset);
+			// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+			// Explicit encoding
+			return mb_substr($str, $offset, mb_strlen($str, 'UTF-8'), 'UTF-8');
 		}
 		else
 		{
-			return mb_substr($str, $offset, $length);
+			// Fix for http://www.phpbb.com/bugs/phpbb3/52315
+			// Explicit encoding
+			return mb_substr($str, $offset, $length, 'UTF-8');
 		}
 	}
 

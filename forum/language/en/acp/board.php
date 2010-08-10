@@ -4,7 +4,7 @@
 * acp_board [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: board.php 10554 2010-02-28 19:20:23Z naderman $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -4,7 +4,7 @@
 * captcha_qa [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: captcha_qa.php 10450 2010-01-26 10:57:00Z Kellanved $
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

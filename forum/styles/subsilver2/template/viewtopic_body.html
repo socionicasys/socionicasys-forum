@@ -268,9 +268,9 @@
 						<tr valign="middle">
 							<td class="gensmall" align="{S_CONTENT_FLOW_END}">
 							<!-- IF not S_IS_BOT -->
-								<!-- IF postrow.U_REPORT --><a href="{postrow.U_REPORT}">{REPORT_IMG}</a> <!-- ENDIF --> 
-								<!-- IF postrow.U_INFO --><a href="{postrow.U_INFO}">{INFO_IMG}</a> <!-- ENDIF --> 
-								<!-- IF postrow.U_WARN --><a href="{postrow.U_WARN}">{WARN_IMG}</a> <!-- ENDIF --> 
+								<!-- IF postrow.U_REPORT --><a href="{postrow.U_REPORT}">{REPORT_IMG}</a> <!-- ENDIF -->
+								<!-- IF postrow.U_INFO --><a href="{postrow.U_INFO}">{INFO_IMG}</a> <!-- ENDIF -->
+								<!-- IF postrow.U_WARN --><a href="{postrow.U_WARN}">{WARN_IMG}</a> <!-- ENDIF -->
 								<!-- IF postrow.U_DELETE --><a href="{postrow.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
 							<!-- ENDIF -->
 							</td>
@@ -284,7 +284,7 @@
 
 		<!-- IF postrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 
-			<td class="profile"><strong><a href="#wrapheader">{L_BACK_TO_TOP}</a></strong></td>
+			<td class="profile"><strong><a href="{U_VIEW_TOPIC}#wrapheader">{L_BACK_TO_TOP}</a></strong></td>
 			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">&nbsp;<!-- IF postrow.U_POST_AUTHOR --><a href="{postrow.U_POST_AUTHOR}">{PROFILE_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_PM --><a href="{postrow.U_PM}">{PM_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_EMAIL --><a href="{postrow.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;</div> <div class="gensmall" style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT --><!-- IF postrow.U_EDIT --><a href="{postrow.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_QUOTE --><a href="{postrow.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>
 	<!-- ENDIF -->
 		</tr>
@@ -329,6 +329,59 @@
 <!-- ENDIF -->
 
 <!-- INCLUDE breadcrumbs.html -->
+
+<!-- IF S_RELATED_RESULTS --><br clear="all" />
+	<table class="tablebg" width="100%" cellspacing="1">
+	<tr>
+		<td class="cat" colspan="<!-- IF S_TOPIC_ICONS -->7<!-- ELSE -->6<!-- ENDIF -->"><span class="nav">{L_RELATED_TOPICS}</span></td>
+	</tr>
+	<tr>
+		<!-- IF S_TOPIC_ICONS -->
+			<th colspan="3">&nbsp;{L_TOPICS}&nbsp;</th>
+		<!-- ELSE -->
+			<th colspan="2">&nbsp;{L_TOPICS}&nbsp;</th>
+		<!-- ENDIF -->
+		<th>&nbsp;{L_AUTHOR}&nbsp;</th>
+		<th>&nbsp;{L_REPLIES}&nbsp;</th>
+		<th>&nbsp;{L_VIEWS}&nbsp;</th>
+		<th>&nbsp;{L_LAST_POST}&nbsp;</th>
+	</tr>
+	<!-- BEGIN related -->
+		<tr>
+			<td class="row1" width="25" align="center">{related.TOPIC_FOLDER_IMG}</td>
+			<!-- IF S_TOPIC_ICONS -->
+				<td class="row1" width="25" align="center"><!-- IF related.TOPIC_ICON_IMG --><img src="{T_ICONS_PATH}{related.TOPIC_ICON_IMG}" width="{related.TOPIC_ICON_IMG_WIDTH}" height="{related.TOPIC_ICON_IMG_HEIGHT}" alt="" title="" /><!-- ENDIF --></td>
+			<!-- ENDIF -->
+			<td class="row1">
+				<!-- IF related.S_UNREAD_TOPIC --><a href="{related.U_NEWEST_POST}">{NEWEST_POST_IMG}</a><!-- ENDIF -->
+				{related.ATTACH_ICON_IMG} <a title="{L_POSTED}: {related.FIRST_POST_TIME}" href="{related.U_TOPIC}"class="topictitle">{related.TOPIC_TITLE}</a>
+				<!-- IF related.S_TOPIC_UNAPPROVED -->
+					<a href="{related.U_MCP_QUEUE}">{UNAPPROVED_IMG}</a>&nbsp;
+				<!-- ENDIF -->
+				<!-- IF related.S_TOPIC_REPORTED -->
+					<a href="{related.U_MCP_REPORT}">{REPORTED_IMG}</a>&nbsp;
+				<!-- ENDIF -->
+				<!-- IF related.PAGINATION -->
+					<p class="gensmall"> [ {GOTO_PAGE_IMG}{L_GOTO_PAGE}: {related.PAGINATION} ] </p>
+				<!-- ENDIF -->
+			</td>
+			<td class="row2" width="130" align="center"><p class="topicauthor">{related.TOPIC_AUTHOR_FULL}</p></td>
+			<td class="row1" width="50" align="center"><p class="topicdetails">{related.REPLIES}</p></td>
+			<td class="row2" width="50" align="center"><p class="topicdetails">{related.VIEWS}</p></td>
+			<td class="row1" width="140" align="center">
+				<p class="topicdetails" style="white-space: nowrap;">{related.LAST_POST_TIME}</p>
+				<p class="topicdetails">{related.LAST_POST_AUTHOR_FULL}
+					<a href="{related.U_LAST_POST}">{LAST_POST_IMG}</a>
+				</p>
+			</td>
+		</tr>
+	<!-- END related -->
+	<tr align="center">
+		<td class="cat" colspan="<!-- IF S_TOPIC_ICONS -->7<!-- ELSE -->6<!-- ENDIF -->">&nbsp;</td>
+	</tr>
+	</table>
+	<br clear="all" />
+<!-- ENDIF -->
 
 <!-- IF S_DISPLAY_ONLINE_LIST -->
 	<br clear="all" />

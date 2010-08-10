@@ -4,7 +4,7 @@
 * common [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: common.php 10441 2010-01-25 15:57:10Z nickvergessen $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -865,5 +865,19 @@ $lang = array_merge($lang, array(
 	'default_dateformat'	=> 'D M d, Y g:i a', // Mon Jan 01, 2007 1:37 pm
 
 ));
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN - TITLE
+$lang['Page'] = 'Page ';
+// www.phpBB-SEO.com SEO TOOLKIT END - TITLE
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> GYM Sitemaps
+$lang = array_merge($lang, array(
+	'GYM_LINKS' => 'Links',
+	'GYM_LINK' => 'Link',
+	'GYM_RSS_SLIDE_START' => 'Start scroller',
+	'GYM_RSS_SLIDE_STOP' => 'Stop scroller',
+	'GYM_RSS_SOURCE' => 'Source',
+));
+// www.phpBB-SEO.com SEO TOOLKIT END -> GYM Sitemaps
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Related Topics
+$lang['RELATED_TOPICS'] = 'Related topics';
+// www.phpBB-SEO.com SEO TOOLKIT END - Related Topics
 ?>

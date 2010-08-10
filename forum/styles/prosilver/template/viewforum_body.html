@@ -1,7 +1,7 @@
 <!-- INCLUDE overall_header.html -->
 <!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
 <h2><a href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2>
-
+<!-- IF GYM_LINKS_CAT --><h3>{GYM_HTML_FORUM_NEWS_LINK} {GYM_HTML_FORUM_MAP_LINK} {GYM_RSS_FORUM_LINK} {GYM_GOOGLE_FORUM_LINK}</h3><!-- ENDIF -->
 <!-- IF FORUM_DESC or MODERATORS or U_MCP -->
 <div>
 	<!-- NOTE: remove the style="display: none" when you want to have the forum description on the forum body -->
@@ -148,7 +148,7 @@
 				<dd class="posts">{topicrow.REPLIES} <dfn>{L_REPLIES}</dfn></dd>
 				<dd class="views">{topicrow.VIEWS} <dfn>{L_VIEWS}</dfn></dd>
 				<dd class="lastpost"><span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} {topicrow.LAST_POST_AUTHOR_FULL}
-					<!-- IF not S_IS_BOT --><a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a> <!-- ENDIF --><br />{topicrow.LAST_POST_TIME}</span>
+					<a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a> <br />{topicrow.LAST_POST_TIME}</span>
 				</dd>
 			</dl>
 		</li>

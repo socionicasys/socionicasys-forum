@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: posting.php 10507 2010-02-18 04:56:06Z jelly_doughnut $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -665,7 +665,30 @@ if ($submit || $preview || $refresh)
 	$post_data['enable_smilies']	= (!$smilies_status || isset($_POST['disable_smilies'])) ? false : true;
 	$post_data['enable_urls']		= (isset($_POST['disable_magic_url'])) ? 0 : 1;
 	$post_data['enable_sig']		= (!$config['allow_sig'] || !$auth->acl_get('f_sigs', $forum_id) || !$auth->acl_get('u_sig')) ? false : ((isset($_POST['attach_sig']) && $user->data['is_registered']) ? true : false);
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	if (!empty($phpbb_seo->seo_opt['sql_rewrite'])) {
+		if ($mode == 'post' || ($mode == 'edit' && $post_data['topic_first_post_id'] == $post_id)) {
+			$phpbb_seo->set_url($post_data['forum_name'], $forum_id, $phpbb_seo->seo_static['forum']);
+			$_parent = $post_data['topic_type'] == POST_GLOBAL ? $phpbb_seo->seo_static['global_announce'] : $phpbb_seo->seo_url['forum'][$forum_id];
+			$_t = !empty($post_data['topic_id']) ? max(0, (int) $post_data['topic_id'] ) : 0;
+			$_url = $phpbb_seo->url_can_edit($forum_id) ? utf8_normalize_nfc(request_var('url', '', true)) : ( isset($post_data['topic_url']) ? $post_data['topic_url'] : '' );
+			if (!$phpbb_seo->check_url('topic', $_url, $_parent)) {
+				if (!empty($_url)) {
+					// Here we get rid of the seo delim (-t) and put it back even in simple mod
+					// to be able to handle all cases at once
+					$_url = preg_replace('`' . $phpbb_seo->seo_delim['topic'] . '$`i', '', $_url);
+					$_title = $phpbb_seo->get_url_info('topic', $_url . $phpbb_seo->seo_delim['topic'] . $_t);
+				} else {
+					$_title = $phpbb_seo->modrtype > 2 ? censor_text($post_data['post_subject']) : '';
+				}
+				unset($phpbb_seo->seo_url['topic'][$_t]);
+				$_url = $phpbb_seo->get_url_info('topic', $phpbb_seo->prepare_url( 'topic', $_title, $_t, $_parent ,  (( empty($_title) || ($_title == $phpbb_seo->seo_static['topic']) ) ? true : false)), 'url');
+				unset($phpbb_seo->seo_url['topic'][$_t]);
+			}
+			$post_data['topic_url'] = $_url;
+		}
+	}
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	if ($config['allow_topic_notify'] && $user->data['is_registered'])
 	{
 		$notify = (isset($_POST['notify'])) ? true : false;
@@ -1097,7 +1120,11 @@ if ($submit || $preview || $refresh)
 				'topic_approved'		=> (isset($post_data['topic_approved'])) ? $post_data['topic_approved'] : false,
 				'post_approved'			=> (isset($post_data['post_approved'])) ? $post_data['post_approved'] : false,
 			);
-
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+			if (!empty($phpbb_seo->seo_opt['sql_rewrite'])) {
+				$data += array('topic_url' => isset($post_data['topic_url']) ? $post_data['topic_url'] : '');
+			}
+			// www.phpBB-SEO.com SEO TOOLKIT END
 			if ($mode == 'edit')
 			{
 				$data['topic_replies_real'] = $post_data['topic_replies_real'];
@@ -1393,6 +1420,10 @@ $template->assign_vars(array(
 	'FORUM_NAME'			=> $post_data['forum_name'],
 	'FORUM_DESC'			=> ($post_data['forum_desc']) ? generate_text_for_display($post_data['forum_desc'], $post_data['forum_desc_uid'], $post_data['forum_desc_bitfield'], $post_data['forum_desc_options']) : '',
 	'TOPIC_TITLE'			=> censor_text($post_data['topic_title']),
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	'TOPIC_URL'		=> isset($post_data['topic_url']) ? preg_replace('`' . $phpbb_seo->seo_delim['topic'] . '$`i', '', $post_data['topic_url']) : '',
+	'S_URL'			=> ($mode == 'post' || ($mode == 'edit' && $post_id == $post_data['topic_first_post_id'])) ? $phpbb_seo->url_can_edit($forum_id) : false,
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	'MODERATORS'			=> (sizeof($moderators)) ? implode(', ', $moderators[$forum_id]) : '',
 	'USERNAME'				=> ((!$preview && $mode != 'quote') || $preview) ? $post_data['username'] : '',
 	'SUBJECT'				=> $post_data['post_subject'],

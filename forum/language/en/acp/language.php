@@ -4,7 +4,7 @@
 * acp_language [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: language.php 9649 2009-06-21 19:17:20Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

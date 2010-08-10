@@ -4,7 +4,7 @@
 * posting [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: posting.php 9742 2009-07-09 10:34:40Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

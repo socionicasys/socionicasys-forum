@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: search.php 10426 2010-01-18 15:50:13Z rxu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -20,7 +20,17 @@ include($phpbb_root_path . 'common.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('search');
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+$clean_request = array('keywords', 'author', 'add_keywords');
+foreach ($clean_request as $request) {
+	if (!empty($_REQUEST[$request])) {
+		$_REQUEST[$request] = rawurldecode($_REQUEST[$request]);
+		if (!$phpbb_seo->is_utf8($_REQUEST[$request])) {
+			$_REQUEST[$request] = utf8_normalize_nfc(utf8_recode($_REQUEST[$request], 'iso-8859-1'));
+		}
+	}
+}
+// www.phpBB-SEO.com SEO TOOLKIT END
 // Define initial vars
 $mode			= request_var('mode', '');
 $search_id		= request_var('search_id', '');
@@ -304,6 +314,14 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				$sort_key = 't';
 				$sort_dir = 'd';
 				$sort_days = request_var('st', 7);
+				// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Zero dupe
+				$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+					'search_id' => array('val' => 'active_topics', 'keep' => true),
+					'st' => array('val' => $sort_days, 'keep' => (boolean) ($sort_days != 7) ),
+					'start' => array('val' => $phpbb_seo->seo_chk_start( $start, $config['topics_per_page'] ), 'keep' => true),
+				);
+				$phpbb_seo->seo_chk_dupe();
+				// www.phpBB-SEO.com SEO TOOLKIT END - Zero dupe
 				$sort_by_sql['t'] = 't.topic_last_post_time';
 
 				gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
@@ -325,6 +343,17 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				$l_search_title = $user->lang['SEARCH_UNANSWERED'];
 				$show_results = request_var('sr', 'topics');
 				$show_results = ($show_results == 'posts') ? 'posts' : 'topics';
+				// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Zero dupe
+				$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+					'sr' => array('val' => $show_results, 'keep' => (boolean) ($show_results == 'posts') ),
+					'st' => array('val' => $sort_days, 'keep' => true),
+					'sk' => array('val' => $sort_key, 'keep' => true),
+					'sd' => array('val' => $sort_dir, 'keep' => true),
+					'search_id' => array('val' => 'unanswered', 'keep' => true),
+					'start' => array('val' => $phpbb_seo->seo_chk_start( $start, ($show_results == 'posts' ? $config['posts_per_page'] : $config['topics_per_page']) ), 'keep' => true),
+				);
+				$phpbb_seo->seo_chk_dupe();
+				// www.phpBB-SEO.com SEO TOOLKIT END - Zero dupe
 				$sort_by_sql['t'] = ($show_results == 'posts') ? 'p.post_time' : 't.topic_last_post_time';
 				$sort_by_sql['s'] = ($show_results == 'posts') ? 'p.post_subject' : 't.topic_title';
 				$sql_sort = 'ORDER BY ' . $sort_by_sql[$sort_key] . (($sort_dir == 'a') ? ' ASC' : ' DESC');
@@ -377,6 +406,14 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				$l_search_title = $user->lang['SEARCH_UNREAD'];
 				// force sorting
 				$show_results = 'topics';
+				// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Zero dupe
+				$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+					'search_id' => array('val' => 'unreadposts', 'keep' => true),
+					'sr' => array('val' => $show_results, 'keep' => (boolean) ($show_results != 'topics') ),
+					'start' => array('val' => $phpbb_seo->seo_chk_start( $start, ($show_results == 'posts' ? $config['posts_per_page'] : $config['topics_per_page']) ), 'keep' => true),
+				);
+				$phpbb_seo->seo_chk_dupe();
+				// www.phpBB-SEO.com SEO TOOLKIT END - Zero dupe
 				$sort_key = 't';
 				$sort_by_sql['t'] = 't.topic_last_post_time';
 				$sql_sort = 'ORDER BY ' . $sort_by_sql[$sort_key] . (($sort_dir == 'a') ? ' ASC' : ' DESC');
@@ -405,6 +442,14 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				$l_search_title = $user->lang['SEARCH_NEW'];
 				// force sorting
 				$show_results = (request_var('sr', 'topics') == 'posts') ? 'posts' : 'topics';
+				// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Zero dupe
+				$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+					'search_id' => array('val' => 'newposts', 'keep' => true),
+					'sr' => array('val' => $show_results, 'keep' => (boolean) ($show_results == 'posts') ),
+					'start' => array('val' => $phpbb_seo->seo_chk_start( $start, $config['topics_per_page'] ), 'keep' => true),
+				);
+				$phpbb_seo->seo_chk_dupe();
+				// www.phpBB-SEO.com SEO TOOLKIT END - Zero dupe
 				$sort_key = 't';
 				$sort_dir = 'd';
 				$sort_by_sql['t'] = ($show_results == 'posts') ? 'p.post_time' : 't.topic_last_post_time';
@@ -547,7 +592,9 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 	$u_show_results = '&amp;sr=' . $show_results;
 	$u_search_forum = implode('&amp;fid%5B%5D=', $search_forum);
 
-	$u_search = append_sid("{$phpbb_root_path}search.$phpEx", $u_sort_param . $u_show_results);
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	//$u_search = append_sid("{$phpbb_root_path}search.$phpEx", $u_sort_param . $u_show_results);
+	$u_search = $u_sort_param . $u_show_results;
 	$u_search .= ($search_id) ? '&amp;search_id=' . $search_id : '';
 	$u_search .= ($u_hilit) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
 	$u_search .= ($search_terms != 'all') ? '&amp;terms=' . $search_terms : '';
@@ -558,7 +605,43 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 	$u_search .= (!$search_child) ? '&amp;sc=0' : '';
 	$u_search .= ($search_fields != 'all') ? '&amp;sf=' . $search_fields : '';
 	$u_search .= ($return_chars != 300) ? '&amp;ch=' . $return_chars : '';
-
+	$u_search = preg_replace('`(^&amp;|&amp;$)`i', '', $u_search);
+	if ( $phpbb_seo->seo_opt['rewrite_usermsg'] && (!empty($author) || !empty($author_id)) ) {
+		$author_name = '';
+		if (!empty($author_id)) {
+			$sql = $sql = 'SELECT username
+				FROM ' . USERS_TABLE . "
+				WHERE user_id = $author_id
+				AND user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')';
+			$result = $db->sql_query($sql);
+			if ($row = $db->sql_fetchrow($result)) {
+				$author_name = $row['username'];
+				$phpbb_seo->set_user_url( $author_name, $author_id );
+			}
+		}
+		if (!empty($author) && (strpos($author, '*') === false) ) {
+			$sql = $sql = 'SELECT user_id
+				FROM ' . USERS_TABLE . "
+				WHERE username_clean = '" . $db->sql_escape(utf8_clean_string($author)) . "'
+				AND user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')';
+			$result = $db->sql_query($sql);
+			if ($row = $db->sql_fetchrow($result)) {
+				$phpbb_seo->set_user_url( $author, $row['user_id'] );
+			}
+		}
+		$author = empty($author) ? $author_name : $author;
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Zero dupe
+		if (!$submit && !$u_search_forum) {
+			$seo_search_params = (!empty($u_search) ? '?' . $u_search . '&amp;': '?') .  'start=' .  $phpbb_seo->seo_chk_start( $start, $per_page );
+			$phpbb_seo->seo_chk_dupe("{$phpbb_root_path}search.$phpEx$seo_search_params");
+		}
+		// www.phpBB-SEO.com SEO TOOLKIT END - Zero dupe
+	}
+	$u_search = append_sid( "{$phpbb_root_path}search.$phpEx" . (!empty($u_search) ? '?' . $u_search : '') );
+	// www.phpBB-SEO.com SEO TOOLKIT END
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN - TITLE
+	$l_search_title = empty($l_search_title) && !empty($author) ? $author  . ' - ' . ($show_results != 'posts' ? $user->lang['TOPICS'] : $user->lang['POSTS']) : $l_search_title;
+	// www.phpBB-SEO.com SEO TOOLKIT END - TITLE
 	$template->assign_vars(array(
 		'SEARCH_TITLE'		=> $l_search_title,
 		'SEARCH_MATCHES'	=> $l_search_matches,
@@ -843,7 +926,10 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 			{
 				$u_forum_id = $forum_id;
 			}
-
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+			$phpbb_seo->set_url($row['forum_name'], $u_forum_id, $phpbb_seo->seo_static['forum']);
+			$phpbb_seo->prepare_iurl($row, 'topic', $row['topic_type'] == POST_GLOBAL ? $phpbb_seo->seo_static['global_announce'] : $phpbb_seo->seo_url['forum'][$u_forum_id]);
+			// www.phpBB-SEO.com SEO TOOLKIT END
 			$view_topic_url_params = "f=$u_forum_id&amp;t=$result_topic_id" . (($u_hilit) ? "&amp;hilit=$u_hilit" : '');
 			$view_topic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", $view_topic_url_params);
 
@@ -998,7 +1084,10 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 	}
 	unset($rowset);
 
-	page_header(($l_search_title) ? $l_search_title : $user->lang['SEARCH']);
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN - TITLE
+	$extra_title = ($start > 0) ? ' - ' . $user->lang['Page'] . ( floor( $start / $per_page ) + 1 ) : '';
+	page_header( ( ($l_search_title) ? $l_search_title . (!empty($search->search_query) ? ' : ' . $search->search_query : '' ): $user->lang['SEARCH'] ) . $extra_title );
+	// www.phpBB-SEO.com SEO TOOLKIT END - TITLE
 
 	$template->set_filenames(array(
 		'body' => 'search_results.html')

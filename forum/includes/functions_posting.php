@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: functions_posting.php 10486 2010-02-08 16:54:39Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1319,13 +1319,18 @@ function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id
 				$messenger->to($addr['email'], $addr['name']);
 				$messenger->im($addr['jabber'], $addr['name']);
 
+				// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+				global $phpbb_seo;
+				$phpbb_seo->set_url(htmlspecialchars_decode($forum_name), $forum_id, $phpbb_seo->seo_static['forum']);
+				$phpbb_seo->prepare_iurl(array('topic_id' => $topic_id, 'topic_title' => htmlspecialchars_decode($topic_title)), 'topic', $phpbb_seo->seo_url['forum'][$forum_id]);
 				$messenger->assign_vars(array(
 					'USERNAME'		=> htmlspecialchars_decode($addr['name']),
 					'TOPIC_TITLE'	=> htmlspecialchars_decode($topic_title),
 					'FORUM_NAME'	=> htmlspecialchars_decode($forum_name),
 
-					'U_FORUM'				=> generate_board_url() . "/viewforum.$phpEx?f=$forum_id",
-					'U_TOPIC'				=> generate_board_url() . "/viewtopic.$phpEx?f=$forum_id&t=$topic_id",
+					'U_FORUM'				=> !empty($phpbb_seo->seo_opt['url_rewrite']) ? $phpbb_seo->drop_sid(append_sid("{$phpbb_root_path}viewforum.$phpEx?f=$forum_id")) : generate_board_url() . "/viewforum.$phpEx?f=$forum_id",
+					'U_TOPIC'				=> !empty($phpbb_seo->seo_opt['url_rewrite']) ? $phpbb_seo->drop_sid(append_sid("{$phpbb_root_path}viewtopic.$phpEx?f=$forum_id&amp;t=$topic_id")) : generate_board_url() . "/viewtopic.$phpEx?f=$forum_id&t=$topic_id",
+				// www.phpBB-SEO.com SEO TOOLKIT END
 					'U_NEWEST_POST'			=> generate_board_url() . "/viewtopic.$phpEx?f=$forum_id&t=$topic_id&p=$post_id&e=$post_id",
 					'U_STOP_WATCHING_TOPIC'	=> generate_board_url() . "/viewtopic.$phpEx?uid={$addr['user_id']}&f=$forum_id&t=$topic_id&unwatch=topic",
 					'U_STOP_WATCHING_FORUM'	=> generate_board_url() . "/viewforum.$phpEx?uid={$addr['user_id']}&f=$forum_id&unwatch=forum",
@@ -1628,7 +1633,9 @@ function delete_post($forum_id, $topic_id, $post_id, &$data)
 function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $update_message = true, $update_search_index = true)
 {
 	global $db, $auth, $user, $config, $phpEx, $template, $phpbb_root_path;
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	global $phpbb_seo;
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	// We do not handle erasing posts here
 	if ($mode == 'delete')
 	{
@@ -1816,7 +1823,11 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 				'topic_time_limit'			=> ($topic_type == POST_STICKY || $topic_type == POST_ANNOUNCE) ? ($data['topic_time_limit'] * 86400) : 0,
 				'topic_attachment'			=> (!empty($data['attachment_data'])) ? 1 : 0,
 			);
-
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+			if (!empty($phpbb_seo->seo_opt['sql_rewrite'])) {
+				$sql_data[TOPICS_TABLE]['sql'] += array('topic_url' => isset($data['topic_url']) ? $data['topic_url'] : '');
+			}
+			// www.phpBB-SEO.com SEO TOOLKIT END
 			if (isset($poll['poll_options']) && !empty($poll['poll_options']))
 			{
 				$poll_start = ($poll['poll_start']) ? $poll['poll_start'] : $current_time;
@@ -1902,7 +1913,11 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 
 				'topic_attachment'			=> (!empty($data['attachment_data'])) ? 1 : (isset($data['topic_attachment']) ? $data['topic_attachment'] : 0),
 			);
-
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+			if (!empty($phpbb_seo->seo_opt['sql_rewrite'])) {
+				$sql_data[TOPICS_TABLE]['sql'] += array('topic_url' => isset($data['topic_url']) ? $data['topic_url'] : '');
+			}
+			// www.phpBB-SEO.com SEO TOOLKIT END
 			// Correctly set back the topic replies and forum posts... only if the topic was approved before and now gets disapproved
 			if (!$post_approval && $data['topic_approved'])
 			{
@@ -2604,7 +2619,12 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 	{
 		$params .= '&amp;t=' . $data['topic_id'];
 	}
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	$phpbb_seo->set_url($data['forum_name'], $data['forum_id'], $phpbb_seo->seo_static['forum']);
+	if ( $params ) {
+		$phpbb_seo->prepare_iurl($data, 'topic', $topic_type == POST_GLOBAL ? $phpbb_seo->seo_static['global_announce'] : $phpbb_seo->seo_url['forum'][$data['forum_id']]);
+	}
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	$url = (!$params) ? "{$phpbb_root_path}viewforum.$phpEx" : "{$phpbb_root_path}viewtopic.$phpEx";
 	$url = append_sid($url, 'f=' . $data['forum_id'] . $params) . $add_anchor;
 

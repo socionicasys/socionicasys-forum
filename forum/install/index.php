@@ -231,6 +231,7 @@ if (!file_exists($phpbb_root_path . 'language/' . $language) || !is_dir($phpbb_r
 include($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/acp/common.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/acp/board.' . $phpEx);
+include($phpbb_root_path . 'language/' . $language . '/mods/acp_phpbb_seo.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/install.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/posting.' . $phpEx);
 
@@ -242,7 +243,7 @@ define('CHMOD_READ', 4);
 define('CHMOD_WRITE', 2);
 define('CHMOD_EXECUTE', 1);
 
-$mode = request_var('mode', 'overview');
+$mode = request_var('mode', 'seo_premod');
 $sub = request_var('sub', '');
 
 // Set PHP error handler to ours

@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id$
+* @version $Id: phpbb_recaptcha_plugin.php 10420 2010-01-17 17:25:14Z toonarmy $
 * @copyright (c) 2006, 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

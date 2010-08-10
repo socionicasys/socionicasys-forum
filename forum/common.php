@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: common.php 10299 2009-12-06 02:30:24Z naderman $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -219,7 +219,17 @@ unset($dbpasswd);
 
 // Grab global variables, re-cache if necessary
 $config = $cache->obtain_config();
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+if (empty($phpbb_seo) ) {
+	require_once($phpbb_root_path . 'phpbb_seo/phpbb_seo_class.'.$phpEx);
+	$phpbb_seo = new phpbb_seo();
+	@define('PHPBB_USE_BOARD_URL_PATH', true);
+}
+// www.phpBB-SEO.com SEO TOOLKIT END
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN - META
+require_once($phpbb_root_path . 'phpbb_seo/phpbb_seo_meta.'.$phpEx);
+$seo_meta = new seo_meta();
+// www.phpBB-SEO.com SEO TOOLKIT END - META
 // Add own hook handler
 require($phpbb_root_path . 'includes/hooks/index.' . $phpEx);
 $phpbb_hook = new phpbb_hook(array('exit_handler', 'phpbb_user_session_handler', 'append_sid', array('template', 'display')));

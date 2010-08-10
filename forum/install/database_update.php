@@ -420,6 +420,8 @@ if ($debug_from_version === false)
 		SET config_value = '$updates_to_version'
 		WHERE config_name = 'version'";
 	_sql($sql, $errored, $error_ary);
+	// SEO premod
+	set_config('seo_premod_version', '3.0.7-PL1');
 }
 
 // Reset permissions
@@ -869,11 +871,20 @@ function database_update_info()
 				FORUMS_TABLE		=> array(
 					'forum_options'			=> array('UINT:20', 0),
 				),
+				// SEO premod, add this here to properly print the query to eventually use later
+				TOPICS_TABLE		=> array(
+					'topic_url'			=> array('VCHAR:255', '')
+				),
 			),
 			'change_columns'		=> array(
 				USERS_TABLE				=> array(
 					'user_options'		=> array('UINT:11', 230271),
 				),
+			),
+			// SEO premod, add this here to properly print the query to eventually use later
+			// Make sure that the index name is correct for the no dupe
+			'drop_keys'		=> array(
+				TOPICS_TABLE			=> array('topic_last_post_id'),
 			),
 			'add_index'		=> array(
 				REPORTS_TABLE		=> array(
@@ -882,6 +893,10 @@ function database_update_info()
 				),
 				POSTS_TABLE			=> array(
 					'post_username'		=> array('post_username'),
+				),
+				// SEO premod, add this here to properly print the query to eventually use later
+				TOPICS_TABLE			=> array(
+					'topic_lpid'		=> array('topic_last_post_id'),
 				),
 			),
 		),
@@ -1356,6 +1371,14 @@ function change_database_data(&$no_updates, $version)
 					'title'		=> 'MCP_PM_REPORT_DETAILS',
 					'auth'		=> 'aclf_m_report',
 					'cat'		=> 'MCP_REPORTS'
+				),
+				// SEO premod, add the new extended settings panel
+				'extended'		=> array(
+					'base'		=> 'phpbb_seo',
+					'class'		=> 'acp',
+					'title'		=> 'ACP_SEO_EXTENDED',
+					'auth'		=> 'acl_a_board',
+					'cat'		=> 'ACP_MOD_REWRITE'
 				),
 			);
 

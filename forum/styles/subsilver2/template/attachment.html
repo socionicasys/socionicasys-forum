@@ -10,19 +10,19 @@
 		<!-- ENDIF -->
 
 		<!-- IF _file.S_THUMBNAIL -->
-			<a href="{_file.U_DOWNLOAD_LINK}"><img src="{_file.THUMB_IMAGE}" alt="{_file.DOWNLOAD_NAME}" /></a><br />
+			<a href="{_file.U_DOWNLOAD_LINK}"><img src="{_file.THUMB_IMAGE}" alt="{_file.DOWNLOAD_NAME}" title="<!-- IF _file.COMMENT_CLEAN -->{_file.COMMENT_CLEAN} / {_file.DOWNLOAD_NAME}<!-- ELSE -->{_file.DOWNLOAD_NAME} ({_file.FILESIZE} {_file.SIZE_LANG}) {_file.L_DOWNLOAD_COUNT}<!-- ENDIF -->"/></a><br />
 			<span class="gensmall">{_file.DOWNLOAD_NAME} [ {_file.FILESIZE} {_file.SIZE_LANG} | {_file.L_DOWNLOAD_COUNT} ]</span>
 		<!-- ENDIF -->
 
 		<!-- IF _file.S_IMAGE -->
-			<img src="{_file.U_INLINE_LINK}" alt="{_file.DOWNLOAD_NAME}" /><br />
+			<img src="{_file.U_INLINE_LINK}" alt="{_file.DOWNLOAD_NAME}" title="<!-- IF _file.COMMENT_CLEAN -->{_file.COMMENT_CLEAN} / <!-- ENDIF -->{_file.DOWNLOAD_NAME}"/><br />
 			<span class="gensmall">{_file.DOWNLOAD_NAME} [ {_file.FILESIZE} {_file.SIZE_LANG} | {_file.L_DOWNLOAD_COUNT} ]</span>
 		<!-- ENDIF -->
 
 		<!-- IF _file.S_FILE -->
 			<span class="genmed">
 				<!-- IF _file.UPLOAD_ICON -->{_file.UPLOAD_ICON} <!-- ENDIF -->
-				<a href="{_file.U_DOWNLOAD_LINK}">{_file.DOWNLOAD_NAME}</a> [{_file.FILESIZE} {_file.SIZE_LANG}]
+				<a href="{_file.U_DOWNLOAD_LINK}" title="<!-- IF _file.COMMENT_CLEAN -->{_file.COMMENT_CLEAN} / <!-- ENDIF -->{_file.DOWNLOAD_NAME}">{_file.DOWNLOAD_NAME}</a> [{_file.FILESIZE} {_file.SIZE_LANG}]
 			</span><br />
 			<span class="gensmall">{_file.L_DOWNLOAD_COUNT}</span>
 		<!-- ENDIF -->
@@ -72,7 +72,7 @@
 				<param name="controller" value="true">
 				<param name="autoplay" value="false" />
 				<param name="type" value="video/quicktime">
-				<embed name="qtstream_{_file.ATTACH_ID}" src="{_file.U_DOWNLOAD_LINK}" pluginspage="http://www.apple.com/quicktime/download/" enablejavascript="true" controller="true" width="0" height="16" type="video/quicktime" autoplay="false"> 
+				<embed name="qtstream_{_file.ATTACH_ID}" src="{_file.U_DOWNLOAD_LINK}" pluginspage="http://www.apple.com/quicktime/download/" enablejavascript="true" controller="true" width="0" height="16" type="video/quicktime" autoplay="false">
 			</object>
 		<!-- ELSEIF _file.S_RM_FILE -->
 			<object id="rmstream_{_file.ATTACH_ID}" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="200" height="50">

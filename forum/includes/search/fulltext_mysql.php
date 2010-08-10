@@ -2,7 +2,7 @@
 /**
 *
 * @package search
-* @version $Id$
+* @version $Id: fulltext_mysql.php 10399 2010-01-11 23:26:56Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

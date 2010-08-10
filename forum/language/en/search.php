@@ -4,7 +4,7 @@
 * search [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: search.php 10004 2009-08-17 13:25:04Z rxu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id$
+* @version $Id: phpbb_captcha_qa_plugin.php 10486 2010-02-08 16:54:39Z bantu $
 * @copyright (c) 2006, 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: viewtopic.php 10510 2010-02-20 00:15:35Z toonarmy $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -17,7 +17,20 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+if (empty($_REQUEST['f'])) {
+	$phpbb_seo->get_forum_id($session_forum_id);
+	if ($session_forum_id > 0) {
+		$_REQUEST['f'] = (int) $session_forum_id;
+	}
+}
+if (!empty($_REQUEST['hilit'])) {
+	$_REQUEST['hilit'] = rawurldecode($_REQUEST['hilit']);
+	if (!$phpbb_seo->is_utf8($_REQUEST['hilit'])) {
+		$_REQUEST['hilit'] = utf8_normalize_nfc(utf8_recode($_REQUEST['hilit'], 'iso-8859-1'));
+	}
+}
+// www.phpBB-SEO.com SEO TOOLKIT END
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
@@ -330,6 +343,40 @@ if ($post_id)
 }
 
 $topic_id = (int) $topic_data['topic_id'];
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+$phpbb_seo->set_url($topic_data['forum_name'], $forum_id, $phpbb_seo->seo_static['forum']);
+if ($topic_data['topic_type'] == POST_GLOBAL) {
+	// Let's make sure user will see global annoucements
+	$auth->cache[$forum_id]['f_read'] = 1;
+	$_parent = $phpbb_seo->seo_static['global_announce'];
+} else {
+	$_parent = $phpbb_seo->seo_url['forum'][$forum_id];
+}
+if (!empty($phpbb_seo->seo_opt['sql_rewrite'])) {
+	if ( !$phpbb_seo->check_url('topic', $topic_data['topic_url'], $_parent)) {
+		if (!empty($topic_data['topic_url'])) {
+			// Here we get rid of the seo delim (-t) and put it back even in simple mod
+			// to be able to handle all cases at once
+			$_url = preg_replace('`' . $phpbb_seo->seo_delim['topic'] . '$`i', '', $topic_data['topic_url']);
+			$_title = $phpbb_seo->get_url_info('topic', $_url . $phpbb_seo->seo_delim['topic'] . $topic_id, 'title');
+		} else {
+			$_title = $phpbb_seo->modrtype > 2 ? censor_text($topic_data['topic_title']) : '';
+		}
+		unset($phpbb_seo->seo_url['topic'][$topic_id]);
+		$topic_data['topic_url'] = $phpbb_seo->get_url_info('topic', $phpbb_seo->prepare_url( 'topic', $_title, $topic_id, $_parent, (( empty($_title) || ($_title == $phpbb_seo->seo_static['topic']) ) ? true : false) ), 'url');
+		unset($phpbb_seo->seo_url['topic'][$topic_id]);
+		if ($topic_data['topic_url']) {
+			// Update the topic_url field for later re-use
+			$sql = "UPDATE " . TOPICS_TABLE . " SET topic_url = '" . $db->sql_escape($topic_data['topic_url']) . "'
+				WHERE topic_id = $topic_id";
+			$db->sql_query($sql);
+		}
+	}
+} else {
+	$topic_data['topic_url'] = '';
+}
+$phpbb_seo->prepare_iurl($topic_data, 'topic', $_parent);
+// www.phpBB-SEO.com SEO TOOLKIT END
 //
 $topic_replies = ($auth->acl_get('m_approve', $forum_id)) ? $topic_data['topic_replies_real'] : $topic_data['topic_replies'];
 
@@ -376,17 +423,23 @@ if (isset($_GET['e']))
 {
 	$jump_to = request_var('e', 0);
 
-	$redirect_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id");
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	//$redirect_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id");
+	// www.phpBB-SEO.com SEO TOOLKIT END
 
 	if ($user->data['user_id'] == ANONYMOUS)
 	{
-		login_box($redirect_url . "&amp;p=$post_id&amp;e=$jump_to", $user->lang['LOGIN_NOTIFY_TOPIC']);
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		login_box(append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_id&amp;e=$jump_to"), $user->lang['LOGIN_NOTIFY_TOPIC']);
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	}
 
 	if ($jump_to > 0)
 	{
 		// We direct the already logged in user to the correct post...
-		redirect($redirect_url . ((!$post_id) ? "&amp;p=$jump_to" : "&amp;p=$post_id") . "#p$jump_to");
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		redirect(append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . ((!$post_id) ? "&amp;p=$jump_to" : "&amp;p=$post_id")) . "#p$jump_to");
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	}
 }
 
@@ -475,7 +528,48 @@ if ($start < 0 || $start >= $total_posts)
 {
 	$start = ($start < 0) ? 0 : floor(($total_posts - 1) / $config['posts_per_page']) * $config['posts_per_page'];
 }
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> Zero dupe
+$phpbb_seo->seo_opt['zero_dupe']['start'] = $phpbb_seo->seo_chk_start( $start, $config['posts_per_page'] );
+if (!empty($phpbb_seo->seo_opt['url_rewrite'])) {
+	$phpbb_seo->seo_path['canonical'] = $phpbb_seo->drop_sid(append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start"));
+}
+if ( $post_id && !$view && !$phpbb_seo->set_do_redir_post()) {
+	$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+		'p' => array('val' => $post_id, 'keep' => true, 'force' => true, 'hash' => "p$post_id"),
+		'hilit' => array('val' => (($highlight_match) ? $highlight : ''), 'keep' => !empty($highlight_match)),
+	);
+} else {
+	$seo_watch = request_var('watch', '');
+	$seo_unwatch = request_var('unwatch', '');
+	$seo_bookmark = request_var('bookmark', 0);
+	$keep_watch = (boolean) ($seo_watch == 'topic' && $user->data['is_registered']);
+	$keep_unwatch = (boolean) ($seo_unwatch == 'topic' && $user->data['is_registered']);
+	$keep_hash = (boolean) ($keep_watch || $keep_unwatch || $seo_bookmark);
+	$seo_uid = max(0, request_var('uid', 0));
+	$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+		'uid' => array('val' => $seo_uid, 'keep' => (boolean) ($keep_hash && $seo_uid)),
+		'f' => array('val' => $forum_id, 'keep' => true, 'force' => true),
+		't' => array('val' => $topic_id, 'keep' => true, 'force' => true, 'hash' => $post_id ? "p$post_id" : ''),
+		'p' => array('val' => $post_id, 'keep' =>  ($post_id && $view == 'show' ? true : false), 'hash' => "p$post_id"),
+		'watch' => array('val' => $seo_watch, 'keep' => $keep_watch),
+		'unwatch' => array('val' => $seo_unwatch, 'keep' => $keep_unwatch),
+		'bookmark' => array('val' => $seo_bookmark, 'keep' => (boolean) ($user->data['is_registered'] && $config['allow_bookmarks'] && $seo_bookmark)),
+		'start' => array('val' => $phpbb_seo->seo_opt['zero_dupe']['start'], 'keep' => true, 'force' => true),
+		'hash' => array('val' => request_var('hash', ''), 'keep' => $keep_hash),
+		'st' => array('val' => $sort_days, 'keep' => true),
+		'sk' => array('val' => $sort_key, 'keep' => true),
+		'sd' => array('val' => $sort_dir, 'keep' => true),
+		'view' => array('val' => $view, 'keep' => $view == 'print' ? (boolean) $auth->acl_get('f_print', $forum_id) : (($view == 'viewpoll' || $view == 'show') ? true : false)),
+		'hilit' => array('val' => (($highlight_match) ? $highlight : ''), 'keep' => (boolean) !(!$user->data['is_registered'] && $phpbb_seo->seo_opt['rem_hilit'])),
+	);
+	if ($phpbb_seo->seo_opt['zero_dupe']['redir_def']['bookmark']['keep']) { // Prevent unessecary redirections
+		// Note : bookmark, watch and unwatch cases could just not be handled by the zero dupe (no redirect at all when used),
+		// but the handling as well acts as a poweful security shield so, it's worth it ;)
+		unset($phpbb_seo->seo_opt['zero_dupe']['redir_def']['start']);
+	}
+}
+$phpbb_seo->seo_chk_dupe();
+// www.phpBB-SEO.com SEO TOOLKIT END -> Zero dupe
 // General Viewtopic URL for return links
 $viewtopic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start" . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : '') . (($highlight_match) ? "&amp;hilit=$highlight" : ''));
 
@@ -642,20 +736,26 @@ $template->assign_vars(array(
 	'S_DISPLAY_REPLY_INFO'	=> ($topic_data['forum_type'] == FORUM_POST && ($auth->acl_get('f_reply', $forum_id) || $user->data['user_id'] == ANONYMOUS)) ? true : false,
 	'S_ENABLE_FEEDS_TOPIC'	=> ($config['feed_topic'] && !phpbb_optionget(FORUM_OPTION_FEED_EXCLUDE, $topic_data['forum_options'])) ? true : false,
 
-	'U_TOPIC'				=> "{$server_path}viewtopic.$phpEx?f=$forum_id&amp;t=$topic_id",
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	'U_TOPIC'				=> !empty($phpbb_seo->seo_opt['url_rewrite']) ? $phpbb_seo->drop_sid($viewtopic_url) : "{$server_path}viewtopic.$phpEx?f=$forum_id&amp;t=$topic_id",
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	'U_FORUM'				=> $server_path,
 	'U_VIEW_TOPIC' 			=> $viewtopic_url,
 	'U_VIEW_FORUM' 			=> append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $forum_id),
 	'U_VIEW_OLDER_TOPIC'	=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=previous"),
 	'U_VIEW_NEWER_TOPIC'	=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=next"),
-	'U_PRINT_TOPIC'			=> ($auth->acl_get('f_print', $forum_id)) ? $viewtopic_url . '&amp;view=print' : '',
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	'U_PRINT_TOPIC'			=> ($auth->acl_get('f_print', $forum_id)) ? append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start&amp;" . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : '') . (($highlight_match) ? "&amp;hilit=$highlight" : '') . "&amp;view=print") : '',
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	'U_EMAIL_TOPIC'			=> ($auth->acl_get('f_email', $forum_id) && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=email&amp;t=$topic_id") : '',
 
 	'U_WATCH_TOPIC' 		=> $s_watching_topic['link'],
 	'L_WATCH_TOPIC' 		=> $s_watching_topic['title'],
 	'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
 
-	'U_BOOKMARK_TOPIC'		=> ($user->data['is_registered'] && $config['allow_bookmarks']) ? $viewtopic_url . '&amp;bookmark=1&amp;hash=' . generate_link_hash("topic_$topic_id") : '',
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	'U_BOOKMARK_TOPIC'		=> ($user->data['is_registered'] && $config['allow_bookmarks']) ? append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;bookmark=1&amp;hash=" . generate_link_hash("topic_$topic_id")) : '',
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	'L_BOOKMARK_TOPIC'		=> ($user->data['is_registered'] && $config['allow_bookmarks'] && $topic_data['bookmarked']) ? $user->lang['BOOKMARK_TOPIC_REMOVE'] : $user->lang['BOOKMARK_TOPIC'],
 
 	'U_POST_NEW_TOPIC' 		=> ($auth->acl_get('f_post', $forum_id) || $user->data['user_id'] == ANONYMOUS) ? append_sid("{$phpbb_root_path}posting.$phpEx", "mode=post&amp;f=$forum_id") : '',
@@ -884,7 +984,9 @@ if (!empty($topic_data['poll_start']))
 		'S_IS_MULTI_CHOICE'	=> ($topic_data['poll_max_options'] > 1) ? true : false,
 		'S_POLL_ACTION'		=> $viewtopic_url,
 
-		'U_VIEW_RESULTS'	=> $viewtopic_url . '&amp;view=viewpoll')
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		'U_VIEW_RESULTS'	=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;view=viewpoll") )
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	);
 
 	unset($poll_end, $poll_info, $voted_id);
@@ -998,7 +1100,9 @@ while ($row = $db->sql_fetchrow($result))
 	}
 
 	$poster_id = (int) $row['poster_id'];
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	$phpbb_seo->set_user_url( $row['username'], $poster_id );
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	// Does post have an attachment? If so, add it to the list
 	if ($row['post_attachment'] && $config['allow_attachments'])
 	{
@@ -1352,7 +1456,29 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 
 	// Parse the message and subject
 	$message = censor_text($row['post_text']);
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN  - META
+	if ($i == 0) {
+		$m_kewrd = '';
+		$seo_meta->collect('description', $message);
+		if ($seo_meta->mconfig['topic_sql']) {
+			$common_sql = $seo_meta->mconfig['bypass_common'] ? '' : 'AND w.word_common = 0';
+			// collect keywords from all post in page
+			$post_id_sql = $db->sql_in_set('m.post_id', $post_list, false, true);
+			$sql = "SELECT w.word_text
+				FROM " . SEARCH_WORDMATCH_TABLE . " m, " . SEARCH_WORDLIST_TABLE . " w
+				WHERE $post_id_sql
+					AND w.word_id = m.word_id
+					$common_sql
+				ORDER BY w.word_count DESC";
+			$result = $db->sql_query_limit($sql, min(25, (int) $seo_meta->mconfig['keywordlimit']));
+			while ( $meta_row = $db->sql_fetchrow($result) ) {
+				$m_kewrd .= ' ' . $meta_row['word_text'];
+			}
+			$db->sql_freeresult($result);
+		}
+		$seo_meta->collect('keywords', $topic_data['topic_title'] . ' ' . $row['post_subject'] . ' ' . (!empty($m_kewrd) ? $m_kewrd : $seo_meta->meta['description']));
+	}
+	// www.phpBB-SEO.com SEO TOOLKIT END  - META
 	// Second parse bbcode here
 	if ($row['bbcode_bitfield'])
 	{
@@ -1540,7 +1666,9 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'U_REPORT'			=> ($auth->acl_get('f_report', $forum_id)) ? append_sid("{$phpbb_root_path}report.$phpEx", 'f=' . $forum_id . '&amp;p=' . $row['post_id']) : '',
 		'U_MCP_REPORT'		=> ($auth->acl_get('m_report', $forum_id)) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $user->session_id) : '',
 		'U_MCP_APPROVE'		=> ($auth->acl_get('m_approve', $forum_id)) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $user->session_id) : '',
-		'U_MINI_POST'		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'p=' . $row['post_id']) . (($topic_data['topic_type'] == POST_GLOBAL) ? '&amp;f=' . $forum_id : '') . '#p' . $row['post_id'],
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> no dupe
+		'U_MINI_POST' => @$phpbb_seo->seo_opt['no_dupe']['on'] ? append_sid("{$phpbb_root_path}viewtopic.$phpEx", 't=' . $topic_id . '&amp;f=' . $forum_id . '&amp;start=' . $start ) . '#p' . $row['post_id'] : append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'p=' . $row['post_id'] . (($topic_data['topic_type'] == POST_GLOBAL) ? '&amp;f=' . $forum_id : '')) . '#p' . $row['post_id'],
+		// www.phpBB-SEO.com SEO TOOLKIT END -> no dupe
 		'U_NEXT_POST_ID'	=> ($i < $i_total && isset($rowset[$post_list[$i + 1]])) ? $rowset[$post_list[$i + 1]]['post_id'] : '',
 		'U_PREV_POST_ID'	=> $prev_post_id,
 		'U_NOTES'			=> ($auth->acl_getf_global('m_')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $user->session_id) : '',
@@ -1560,7 +1688,9 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'S_TOPIC_POSTER'	=> ($topic_data['topic_poster'] == $poster_id) ? true : false,
 
 		'S_IGNORE_POST'		=> ($row['hide_post']) ? true : false,
-		'L_IGNORE_POST'		=> ($row['hide_post']) ? sprintf($user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']), '<a href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		'L_IGNORE_POST'		=> ($row['hide_post']) ? sprintf($user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']), '<a href="' . append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p={$row['post_id']}&amp;view=show") . '#p' . $row['post_id'] . '">', '</a>') : '',
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	);
 
 	if (isset($cp_row['row']) && sizeof($cp_row['row']))
@@ -1742,9 +1872,18 @@ if (empty($_REQUEST['t']) && !empty($topic_id))
 {
 	$_REQUEST['t'] = $topic_id;
 }
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Related Topics
+if (!empty($config['seo_related'])) {
+	require($phpbb_root_path . "phpbb_seo/phpbb_seo_related.$phpEx");
+	$seo_related = new seo_related();
+	$seo_related->get($topic_data, $forum_id);
+}
+// www.phpBB-SEO.com SEO TOOLKIT END - Related Topics
 // Output the page
-page_header($user->lang['VIEW_TOPIC'] . ' - ' . $topic_data['topic_title'], true, $forum_id);
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN - TITLE
+$extra_title = ($start > 0) ? ' - ' . $user->lang['Page'] . ( floor( ($start / $config['posts_per_page']) ) + 1 ) : '';
+page_header($topic_data['topic_title'] . ' : ' .  $topic_data['forum_name'] . $extra_title, true, $forum_id);
+// www.phpBB-SEO.com SEO TOOLKIT END - TITLE
 
 $template->set_filenames(array(
 	'body' => ($view == 'print') ? 'viewtopic_print.html' : 'viewtopic_body.html')

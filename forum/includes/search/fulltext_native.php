@@ -2,7 +2,7 @@
 /**
 *
 * @package search
-* @version $Id$
+* @version $Id: fulltext_native.php 10399 2010-01-11 23:26:56Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1126,7 +1126,13 @@ class fulltext_native extends search_backend
 		// Split old and new post/subject to obtain array of 'words'
 		$split_text = $this->split_message($message);
 		$split_title = $this->split_message($subject);
-
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Enable search_ignore_words
+		$this->filter_nums($split_text);
+		$this->filter_nums($split_title);
+		$this->get_ignore_words();
+		$split_text = array_diff($split_text, $this->ignore_words);
+		$split_title = array_diff($split_title, $this->ignore_words);
+		// www.phpBB-SEO.com SEO TOOLKIT END - Enable search_ignore_words
 		$cur_words = array('post' => array(), 'title' => array());
 
 		$words = array();
@@ -1742,6 +1748,18 @@ class fulltext_native extends search_backend
 			'config'	=> array('fulltext_native_load_upd' => 'bool', 'fulltext_native_min_chars' => 'integer:0:255', 'fulltext_native_max_chars' => 'integer:0:255', 'fulltext_native_common_thres' => 'double:0:100')
 		);
 	}
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN - Enable search_ignore_words
+	/**
+	* Get rid of integers values in $input array
+	*/
+	function filter_nums(&$input) {
+		foreach ($input as $key => $word) {
+			if (preg_match('`^[0-9]+$`', $word)) {
+				unset($input[$key]);
+			}
+		}
+	}
+	// www.phpBB-SEO.com SEO TOOLKIT END - Enable search_ignore_words
 }
 
 ?>

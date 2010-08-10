@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: file.php 10282 2009-11-21 09:14:07Z Kellanved $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -236,10 +236,13 @@ if (!download_allowed())
 
 $download_mode = (int) $extensions[$attachment['extension']]['download_mode'];
 
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> Zero dupe
+// Added , attach_comment
 // Fetching filename here to prevent sniffing of filename
-$sql = 'SELECT attach_id, is_orphan, in_message, post_msg_id, extension, physical_filename, real_filename, mimetype, filetime
+$sql = 'SELECT attach_id, is_orphan, in_message, post_msg_id, extension, physical_filename, real_filename, mimetype, filetime, attach_comment
 	FROM ' . ATTACHMENTS_TABLE . "
 	WHERE attach_id = $download_id";
+// www.phpBB-SEO.com SEO TOOLKIT END -> Zero dupe
 $result = $db->sql_query_limit($sql, 1);
 $attachment = $db->sql_fetchrow($result);
 $db->sql_freeresult($result);
@@ -261,7 +264,28 @@ if ($display_cat == ATTACHMENT_CATEGORY_FLASH && !$user->optionget('viewflash'))
 {
 	$display_cat = ATTACHMENT_CATEGORY_NONE;
 }
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> Zero dupe
+if (!empty($phpbb_seo->seo_opt['rewrite_files'])) {
+	if (empty($phpbb_seo->seo_url['file'][$download_id])) {
+		$comment = bbcode_nl2br(censor_text($attachment['attach_comment']));
+		$comment_clean = preg_replace('`<[^>]*>`Ui', ' ', $comment);
+		$_display_cat =  ($thumbnail && $display_cat != ATTACHMENT_CATEGORY_NONE) ? ATTACHMENT_CATEGORY_THUMB : $display_cat;
+		if (($_pos = utf8_strpos($comment, '<br')) !== false) {
+			$comment_url = strip_tags(utf8_substr($comment, 0, $_pos));
+		} else {
+			$comment_url = $comment_clean;
+		}
+		$comment_url = utf8_strlen($comment_url) > 60 ? utf8_substr($comment_url, 0, 60) : $comment_url; 
+		$phpbb_seo->seo_url['file'][$download_id] = $phpbb_seo->format_url($comment_url, $phpbb_seo->seo_static['file'][$display_cat]);
+	}
+	$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+		'id' => array('val' => $download_id, 'keep' => true),
+		'mode' => array('val' => $mode, 'keep' => (boolean) ($mode == 'view')),
+		't' => array('val' => $thumbnail, 'keep' => $thumbnail),
+	);
+	$phpbb_seo->seo_chk_dupe('', '', $phpbb_root_path . 'download/');
+}
+// www.phpBB-SEO.com SEO TOOLKIT END -> Zero dupe
 if ($thumbnail)
 {
 	$attachment['physical_filename'] = 'thumb_' . $attachment['physical_filename'];

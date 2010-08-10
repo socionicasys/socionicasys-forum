@@ -211,7 +211,124 @@ li {
 	padding-right: 10px;
 	min-width: 0;
 }
+/* www.phpbb-seo.com GYM Sitemaps & RSS 
+ * Just some more indepth tabbing */
+#gymtab, #gymtabs {
+	line-height: normal;
+	margin: 0 0 -6px 7px;
+	min-width: 600px;
+	height: 1%;
+	overflow: hidden;
+}
 
+.rtl #gymtab, .rtl #gymtabs {
+	margin: 0 7px -6px 0;
+}
+
+#gymtab ul, #gymtabs ul {
+	margin:0;
+	padding: 0;
+	list-style: none;
+}
+
+#gymtab li, #gymtabs li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+	font-size: 0.85em;
+	font-weight: bold;
+}
+
+#gymtab a, #gymtabs a {
+	float: left;
+	background:url("../images/bg_tabs1.gif") no-repeat 0% -34px;
+	margin: 0 1px 0 0;
+	padding: 0 0 0 7px;
+	text-decoration: none;
+	position: relative;
+}
+
+.rtl #gymtab a, .rtl #gymtabs a {
+	float: right;
+}
+
+#gymtab a span, #gymtabs a span {
+	float: left;
+	display: block;
+	background: url("../images/bg_tabs2.gif") no-repeat 100% -34px;
+	padding: 7px 10px 4px 4px;
+	color: #767676;
+	white-space: nowrap;
+	font-family: Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.rtl #gymtab a span, .rtl #gymtabs a span {
+	float: right;
+}
+
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+#gymtab  a span, #gymtabs a span, .rtl #gymtab a span, .rtl #gymtabs a span { float:none;}
+/* End hack */
+
+#gymtab a:hover span, #gymtabs a:hover span {
+	color: #BC2A4D;
+}
+
+#gymtab #gymactivetab a, #gymtabs #gymactivetabs a {
+	background-position: 0 0;
+	border-bottom: 1px solid #DCDEE2;
+}
+
+#gymtab #gymactivetab a span, #gymtabs #gymactivetabs a span {
+	background-position: 100% 0;
+	padding-bottom: 5px;
+	color: #23649F;
+}
+
+#gymtab  a:hover, #gymtabs a:hover {
+	background-position: 0 -69px;
+}
+
+#gymtab a:hover span, #gymtabs a:hover span {
+	background-position: 100% -69px;
+}
+
+#gymtab #gymactivetab a:hover span , #gymtabs #gymactivetabs a:hover span {
+	color: #115098;
+}
+#gymacp, #gymacps {
+	margin: 4px 0;
+	padding: 3px 1px;
+	min-width: 550px;
+	background-color: #FFFFFF;
+	border: 1px #999999 solid;
+}
+#gymcontent, #gymcontents {
+	padding: 30px 10px 10px;
+	position: relative;
+	padding-top: 10px;
+	height: 1%;
+	overflow: hidden;
+}
+
+
+#gymcontent h1, #gymcontents h1 {
+	line-height: 1.2em;
+	margin-bottom: 0;
+	color: #115098;
+}
+
+#gymcontent h2, #gymcontents h2 {
+	margin-top: 20px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid #CCCCCC;
+	padding-bottom: 5px;
+	color: #333333;
+}
+/* www.phpbb-seo.com GYM Sitemaps & RSS 
+ * Just some more indepth tabbing */
 /* Tabbed menu
 	Based on: http://www.alistapart.com/articles/slidingdoors2/
 ----------------------------------------*/

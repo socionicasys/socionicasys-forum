@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: functions_display.php 10405 2010-01-12 21:15:32Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -23,7 +23,9 @@ function display_forums($root_data = '', $display_moderators = true, $return_mod
 {
 	global $db, $auth, $user, $template;
 	global $phpbb_root_path, $phpEx, $config;
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	global $phpbb_seo;
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	$forum_rows = $subforums = $forum_ids = $forum_ids_moderator = $forum_moderators = $active_forum_ary = array();
 	$parent_id = $visible_forums = 0;
 	$sql_from = '';
@@ -87,7 +89,15 @@ function display_forums($root_data = '', $display_moderators = true, $return_mod
 
 		$sql_array['SELECT'] .= ', fa.user_id';
 	}
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> no dupe
+	if (@$phpbb_seo->seo_opt['no_dupe']['on']) {
+		$sql_array['SELECT'] .= ', t.topic_id, t.topic_title, t.topic_replies, t.topic_replies_real, t.topic_status, t.topic_type, t.topic_moved_id' . (!empty($phpbb_seo->seo_opt['sql_rewrite']) ? ', t.topic_url ' : ' ');
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM'	=> array(TOPICS_TABLE => 't'),
+			'ON'	=> "f.forum_last_post_id = t.topic_last_post_id"
+		);
+	}
+	// www.phpBB-SEO.com SEO TOOLKIT END -> no dupe
 	$sql = $db->sql_build_query('SELECT', array(
 		'SELECT'	=> $sql_array['SELECT'],
 		'FROM'		=> $sql_array['FROM'],
@@ -118,7 +128,9 @@ function display_forums($root_data = '', $display_moderators = true, $return_mod
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$forum_id = $row['forum_id'];
-
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		$phpbb_seo->set_url($row['forum_name'], $forum_id, $phpbb_seo->seo_static['forum']);
+		// www.phpBB-SEO.com SEO TOOLKIT END
 		// Mark forums read?
 		if ($mark_read == 'forums' || $mark_read == 'all')
 		{
@@ -169,7 +181,26 @@ function display_forums($root_data = '', $display_moderators = true, $return_mod
 
 		// Count the difference of real to public topics, so we can display an information to moderators
 		$row['forum_id_unapproved_topics'] = ($auth->acl_get('m_approve', $forum_id) && ($row['forum_topics_real'] != $row['forum_topics'])) ? $forum_id : 0;
-		$row['forum_topics'] = ($auth->acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> no dupe
+		if (@$phpbb_seo->seo_opt['no_dupe']['on']) {
+			if ($row['topic_status'] == ITEM_MOVED) {
+				$row['topic_id'] = $row['topic_moved_id'];
+			}
+			$phpbb_seo->seo_opt['topic_forum_name'][$row['topic_id']] = $row['forum_name'];
+			if ($auth->acl_get('m_approve', $forum_id)) {
+				$row['forum_topics'] = $row['forum_topics_real'];
+				$replies = $row['topic_replies_real'];
+			} else {
+				$row['forum_topics'] = $row['forum_topics'];
+				$replies = $row['topic_replies'];
+			}
+			if (($replies + 1) > $phpbb_seo->seo_opt['topic_per_page']) {
+				$phpbb_seo->seo_opt['topic_last_page'][$row['topic_id']] = floor($replies / $phpbb_seo->seo_opt['topic_per_page']) * $phpbb_seo->seo_opt['topic_per_page'];
+			}
+		} else {
+			$row['forum_topics'] = ($auth->acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
+		}
+		// www.phpBB-SEO.com SEO TOOLKIT END -> no dupe
 
 		// Display active topics from this forum?
 		if ($show_active && $row['forum_type'] == FORUM_POST && $auth->acl_get('f_read', $forum_id) && ($row['forum_flags'] & FORUM_FLAG_ACTIVE_TOPICS))
@@ -249,6 +280,17 @@ function display_forums($root_data = '', $display_moderators = true, $return_mod
 				$forum_rows[$parent_id]['forum_last_poster_name'] = $row['forum_last_poster_name'];
 				$forum_rows[$parent_id]['forum_last_poster_colour'] = $row['forum_last_poster_colour'];
 				$forum_rows[$parent_id]['forum_id_last_post'] = $forum_id;
+				// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> no dupe
+				if (@$phpbb_seo->seo_opt['no_dupe']['on']) {
+					$forum_rows[$parent_id]['topic_id'] = $row['topic_id'];
+					$forum_rows[$parent_id]['topic_title'] = $row['topic_title'];
+					$forum_rows[$parent_id]['topic_type'] = $row['topic_type'];
+					$forum_rows[$parent_id]['forum_password'] = $row['forum_password'];
+					if (!empty($row['topic_url'])) {
+						$forum_rows[$parent_id]['topic_url'] = $row['topic_url'];
+					}
+				}
+				// www.phpBB-SEO.com SEO TOOLKIT END -> no dupe
 			}
 		}
 	}
@@ -404,11 +446,25 @@ function display_forums($root_data = '', $display_moderators = true, $return_mod
 		{
 			$last_post_subject = $row['forum_last_post_subject'];
 			$last_post_time = $user->format_date($row['forum_last_post_time']);
-			$last_post_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $row['forum_id_last_post'] . '&amp;p=' . $row['forum_last_post_id']) . '#p' . $row['forum_last_post_id'];
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> no dupe
+			if (@$phpbb_seo->seo_opt['no_dupe']['on'] && !$row['forum_password'] && $auth->acl_get('f_read', $row['forum_id_last_post'])) {
+				$phpbb_seo->prepare_iurl($row, 'topic', $row['topic_type'] == POST_GLOBAL ? $phpbb_seo->seo_static['global_announce'] : $phpbb_seo->seo_url['forum'][$forum_id]);
+				$last_post_url =  append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $row['forum_id_last_post'] . '&amp;t=' . $row['topic_id'] . '&amp;start=' . @intval($phpbb_seo->seo_opt['topic_last_page'][$row['topic_id']]) ) . '#p' . $row['forum_last_post_id'];
+				$topic_title = censor_text($row['topic_title']);
+				// Limit in chars for the last post link text.
+				$char_limit = 25;
+				// Limit topic text link to $char_limit, without breacking words
+				$topic_text_lilnk = $char_limit > 0 && ( ( $length = utf8_strlen($topic_title) ) > $char_limit ) ? ( utf8_strlen($fragment = utf8_substr($topic_title, 0, $char_limit + 1 - 4)) < $length + 1 ? preg_replace('`\s*\S*$`', '', $fragment) . ' ...' : $topic_title ) : $topic_title;
+				$last_post_link = '<a href="' . append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $row['forum_id_last_post'] . '&amp;t=' . $row['topic_id']) . '" title="' . $topic_title . ' : ' . $phpbb_seo->seo_opt['topic_forum_name'][$row['topic_id']] . '">' . $topic_text_lilnk . '</a>';
+			} else {
+				$last_post_url =  append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $row['forum_id_last_post'] . '&amp;p=' . $row['forum_last_post_id']) . '#p' . $row['forum_last_post_id'];
+				$last_post_link = '';
+			}
 		}
 		else
 		{
-			$last_post_subject = $last_post_time = $last_post_url = '';
+			$last_post_subject = $last_post_time = $last_post_url = $last_post_link = '';
+			// www.phpBB-SEO.com SEO TOOLKIT END -> no dupe
 		}
 
 		// Output moderator listing ... if applicable
@@ -483,6 +539,9 @@ function display_forums($root_data = '', $display_moderators = true, $return_mod
 			'U_UNAPPROVED_TOPICS'	=> ($row['forum_id_unapproved_topics']) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=unapproved_topics&amp;f=' . $row['forum_id_unapproved_topics']) : '',
 			'U_VIEWFORUM'		=> $u_viewforum,
 			'U_LAST_POSTER'		=> get_username_string('profile', $row['forum_last_poster_id'], $row['forum_last_poster_name'], $row['forum_last_poster_colour']),
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> no dupe
+			'LAST_POST_LINK'	=> $last_post_link,
+			// www.phpBB-SEO.com SEO TOOLKIT END -> no dupe
 			'U_LAST_POST'		=> $last_post_url)
 		);
 
@@ -547,7 +606,9 @@ function generate_forum_nav(&$forum_data)
 {
 	global $db, $user, $template, $auth, $config;
 	global $phpEx, $phpbb_root_path;
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	global $phpbb_seo;
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	if (!$auth->acl_get('f_list', $forum_data['forum_id']))
 	{
 		return;
@@ -562,7 +623,9 @@ function generate_forum_nav(&$forum_data)
 		foreach ($forum_parents as $parent_forum_id => $parent_data)
 		{
 			list($parent_name, $parent_type) = array_values($parent_data);
-
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+			$phpbb_seo->set_url($parent_name, $parent_forum_id, $phpbb_seo->seo_static['forum']);
+			// www.phpBB-SEO.com SEO TOOLKIT END
 			// Skip this parent if the user does not have the permission to view it
 			if (!$auth->acl_get('f_list', $parent_forum_id))
 			{
@@ -648,7 +711,9 @@ function get_forum_parents(&$forum_data)
 function topic_generate_pagination($replies, $url)
 {
 	global $config, $user;
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	global $phpbb_seo, $phpEx;
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	// Make sure $per_page is a valid value
 	$per_page = ($config['posts_per_page'] <= 0) ? 1 : $config['posts_per_page'];
 
@@ -675,6 +740,18 @@ function topic_generate_pagination($replies, $url)
 			}
 			$times++;
 		}
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		if (!empty($phpbb_seo->seo_opt['url_rewrite'])) {
+			static $pagin_find = array();
+			static $pagin_replace = array();
+			if (empty($pagin_find)) {
+				$pagin_find = array('`(https?\://[a-z0-9_/\.-]+/[a-z0-9_\.-]+)(\.(?!' . $phpEx . ')[a-z0-9]+)(\?[\w\#$%&~\-;:=,@+\.]+)?(&amp;|\?)start=([0-9]+)`i', '`(https?\://[a-z0-9_/\.-]+/[a-z0-9_\.-]+)/(\?[\w\#$%&~\-;:=,@+\.]+)?(&amp;|\?)start=([0-9]+)`i' );
+				$pagin_replace = array( '\1' . $phpbb_seo->seo_delim['start'] . '\5\2\3', '\1/' . $phpbb_seo->seo_static['pagination'] . '\4' . $phpbb_seo->seo_ext['pagination'] . '\2' );
+			}
+			$pagination = str_replace( '&amp;start=0', '', $pagination );
+			$pagination = preg_replace( $pagin_find, $pagin_replace, $pagination );
+		}
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	}
 	else
 	{
@@ -690,7 +767,9 @@ function topic_generate_pagination($replies, $url)
 function get_moderators(&$forum_moderators, $forum_id = false)
 {
 	global $config, $template, $db, $phpbb_root_path, $phpEx, $user, $auth;
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	global $phpbb_seo;
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	$forum_id_ary = array();
 
 	if ($forum_id !== false)
@@ -744,6 +823,9 @@ function get_moderators(&$forum_moderators, $forum_id = false)
 		}
 		else
 		{
+			// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+			$phpbb_seo->prepare_url('group', $row['group_name'], $row['group_id']);
+			// www.phpBB-SEO.com SEO TOOLKIT END
 			$group_name = (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']);
 
 			if ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile'))
@@ -946,7 +1028,9 @@ function display_user_activity(&$userdata)
 {
 	global $auth, $template, $db, $user;
 	global $phpbb_root_path, $phpEx;
-
+	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+	global $phpbb_seo;
+	// www.phpBB-SEO.com SEO TOOLKIT END
 	// Do not display user activity for users having more than 5000 posts...
 	if ($userdata['user_posts'] > 5000)
 	{
@@ -1005,12 +1089,27 @@ function display_user_activity(&$userdata)
 
 	if (!empty($active_t_row))
 	{
-		$sql = 'SELECT topic_title
-			FROM ' . TOPICS_TABLE . '
-			WHERE topic_id = ' . $active_t_row['topic_id'];
-		$result = $db->sql_query($sql);
-		$active_t_row['topic_title'] = (string) $db->sql_fetchfield('topic_title');
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		$sql_array = array(
+			'SELECT'	=> 't.topic_title, t.topic_type ' . (!empty($phpbb_seo->seo_opt['sql_rewrite']) ? ', t.topic_url' : '') . ', f.forum_id, f.forum_name',
+			'FROM'		=> array(
+				TOPICS_TABLE	=> 't',
+			),
+			'LEFT_JOIN' => array(
+				array(
+					'FROM'	=> array(FORUMS_TABLE => 'f'),
+					'ON'	=> 'f.forum_id = t.forum_id',
+				),
+			),
+			'WHERE' => 't.topic_id = ' . (int) $active_t_row['topic_id']
+		);
+		$result = $db->sql_query($db->sql_build_query('SELECT', $sql_array));
+		$seo_active_t_row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
+		if ($seo_active_t_row) {
+			$active_t_row = array_merge($active_t_row, $seo_active_t_row);
+		}
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	}
 
 	$userdata['active_t_row'] = $active_t_row;
@@ -1023,6 +1122,9 @@ function display_user_activity(&$userdata)
 		$active_f_id = $active_f_row['forum_id'];
 		$active_f_count = $active_f_row['num_posts'];
 		$active_f_pct = ($userdata['user_posts']) ? ($active_f_count / $userdata['user_posts']) * 100 : 0;
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		$phpbb_seo->set_url($active_f_name, $active_f_id, $phpbb_seo->seo_static['forum']);
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	}
 
 	$active_t_name = $active_t_id = $active_t_count = $active_t_pct = '';
@@ -1032,6 +1134,13 @@ function display_user_activity(&$userdata)
 		$active_t_id = $active_t_row['topic_id'];
 		$active_t_count = $active_t_row['num_posts'];
 		$active_t_pct = ($userdata['user_posts']) ? ($active_t_count / $userdata['user_posts']) * 100 : 0;
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		if (!empty($seo_active_t_row)) {
+			$active_t_forum_id = (int) $active_t_row['forum_id'];
+			$phpbb_seo->set_url($active_t_row['forum_name'], $active_t_forum_id, $phpbb_seo->seo_static['forum']);
+			$phpbb_seo->prepare_iurl($active_t_row, 'topic', $active_t_row['topic_type'] == POST_GLOBAL ? $phpbb_seo->seo_static['global_announce'] : $phpbb_seo->seo_url['forum'][$active_t_forum_id]);
+		}
+		// www.phpBB-SEO.com SEO TOOLKIT END
 	}
 
 	$l_active_pct = ($userdata['user_id'] != ANONYMOUS && $userdata['user_id'] == $user->data['user_id']) ? $user->lang['POST_PCT_ACTIVE_OWN'] : $user->lang['POST_PCT_ACTIVE'];

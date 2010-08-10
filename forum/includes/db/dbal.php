@@ -2,7 +2,7 @@
 /**
 *
 * @package dbal
-* @version $Id$
+* @version $Id: dbal.php 10529 2010-02-23 23:46:43Z naderman $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -711,7 +711,9 @@ class dbal
 	function sql_report($mode, $query = '')
 	{
 		global $cache, $starttime, $phpbb_root_path, $user;
-
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		global $phpbb_seo;
+		// www.phpBB-SEO.com SEO TOOLKIT END
 		if (empty($_REQUEST['explain']))
 		{
 			return false;
@@ -741,7 +743,7 @@ class dbal
 						<meta http-equiv="Content-Style-Type" content="text/css" />
 						<meta http-equiv="imagetoolbar" content="no" />
 						<title>SQL Report</title>
-						<link href="' . $phpbb_root_path . 'adm/style/admin.css" rel="stylesheet" type="text/css" media="screen" />
+						<link href="' . $phpbb_seo->seo_path['phpbb_url'] . 'adm/style/admin.css" rel="stylesheet" type="text/css" media="screen" />
 					</head>
 					<body id="errorpage">
 					<div id="wrap">

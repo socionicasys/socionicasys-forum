@@ -28,7 +28,7 @@ if (!defined('IN_PHPBB'))
 define('PHPBB_VERSION', '3.0.7-PL1');
 
 // QA-related
-// define('PHPBB_QA', 1);
+// define('PHPBB_SEO_QA', 1);
 
 // User related
 define('ANONYMOUS', 1);

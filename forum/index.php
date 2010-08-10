@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
+* @version $Id: index.php 9614 2009-06-18 11:04:54Z nickvergessen $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -24,7 +24,25 @@ include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('viewforum');
-
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN -> Zero dupe
+if (!empty($phpbb_seo->seo_opt['url_rewrite'])) {
+	$phpbb_seo->seo_path['canonical'] = $phpbb_seo->drop_sid(append_sid("{$phpbb_root_path}index.$phpEx"));
+}
+$seo_mark = request_var('mark', '');
+$keep_mark = in_array($seo_mark, array('topics', 'topic', 'forums', 'all')) ? (boolean) ($user->data['is_registered'] || $config['load_anon_lastread']) : false;
+$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
+	'hash' => array('val' => request_var('hash', ''), 'keep' => $keep_mark),
+	'mark' => array('val' => $seo_mark, 'keep' => $keep_mark),
+);
+if ( !$phpbb_seo->seo_opt['zero_dupe']['strict'] ) { // strict mode is here a bit faster
+	if ( !empty($phpbb_seo->seo_static['index']) ) {
+		$phpbb_seo->set_cond( (boolean) (utf8_strpos($phpbb_seo->seo_path['uri'], $phpbb_seo->seo_static['index']) === false), 'do_redir', (empty($_GET) || (!empty($seo_mark) && !$keep_mark)));
+	} else {
+		$phpbb_seo->set_cond( (boolean) (utf8_strpos($phpbb_seo->seo_path['uri'], "index.$phpEx") !== false), 'do_redir', (empty($_GET) || (!empty($seo_mark) && !$keep_mark)));
+	}
+}
+$phpbb_seo->seo_chk_dupe();
+// www.phpBB-SEO.com SEO TOOLKIT END -> Zero dupe
 display_forums('', $config['load_moderators']);
 
 // Set some stats, get posts count from forums data if we... hum... retrieve all forums data
@@ -72,6 +90,9 @@ while ($row = $db->sql_fetchrow($result))
 	}
 	else
 	{
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		$phpbb_seo->prepare_url('group', $row['group_name'], $row['group_id']);
+		// www.phpBB-SEO.com SEO TOOLKIT END
 		$legend[] = '<a' . $colour_text . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . $group_name . '</a>';
 	}
 }
@@ -128,7 +149,13 @@ $template->assign_vars(array(
 );
 
 // Output page
-page_header($user->lang['INDEX']);
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN - META
+$seo_meta->collect('description', $config['sitename'] . ' : ' .  $config['site_desc']);
+$seo_meta->collect('keywords', $config['sitename'] . ' ' . $seo_meta->meta['description']);
+// www.phpBB-SEO.com SEO TOOLKIT END - META
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN - TITLE
+page_header($config['sitename']);
+// www.phpBB-SEO.com SEO TOOLKIT END - TITLE
 
 $template->set_filenames(array(
 	'body' => 'index_body.html')

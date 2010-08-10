@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id$
+* @version $Id: functions_admin.php 10529 2010-02-23 23:46:43Z naderman $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -3289,10 +3289,14 @@ function obtain_latest_version_info($force_update = false, $warn_fail = false, $
 	{
 		$errstr = '';
 		$errno = 0;
-
-		$info = get_remote_file('www.phpbb.com', '/updatecheck',
-				((defined('PHPBB_QA')) ? '30x_qa.txt' : '30x.txt'), $errstr, $errno);
-
+		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+		global $config;
+		$url = 'www.phpbb-seo.com';
+		$dir = (strpos($config['default_lang'], 'fr') !== false ? '/fr' : '/en') . '/updatecheck';
+		$info = get_remote_file($url, $dir, ((defined('PHPBB_SEO_QA')) ? 'test_30x.txt' : 'premod_30x.txt'), $errstr, $errno);
+		//$info = get_remote_file('www.phpbb.com', '/updatecheck',
+		//		((defined('PHPBB_QA')) ? '30x_qa.txt' : '30x.txt'), $errstr, $errno);
+		// www.phpBB-SEO.com SEO TOOLKIT END
 		if ($info === false)
 		{
 			$cache->destroy('versioncheck');

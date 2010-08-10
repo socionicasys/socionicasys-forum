@@ -4,7 +4,7 @@
 * search_synonyms [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: search_synonyms.php 10280 2009-11-19 13:22:55Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

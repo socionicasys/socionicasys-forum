@@ -4,7 +4,7 @@
 * acp_common [English]
 *
 * @package language
-* @version $Id$
+* @version $Id: common.php 10458 2010-01-26 15:26:07Z jelly_doughnut $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
