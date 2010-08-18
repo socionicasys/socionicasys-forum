@@ -1,9 +1,81 @@
+# Lines That should already be in your .htacess
 <Files "config.php">
-Order Allow,Deny
-Deny from All
+	Order Allow,Deny
+	Deny from All
+</Files>
+<Files "common.php">
+	Order Allow,Deny
+	Deny from All
 </Files>
 
-<Files "common.php">
-Order Allow,Deny
-Deny from All
-</Files>
+# You may need to un-comment the following lines
+# Options +FollowSymlinks
+# To make sure that rewritten dir or file (/|.html) will not load dir.php in case it exist
+# Options -MultiViews
+# REMEBER YOU ONLY NEED TO STARD MOD REWRITE ONCE
+RewriteEngine On
+# Uncomment the statement below if you want to make use of
+# HTTP authentication and it does not already work.
+# This could be required if you are for example using PHP via Apache CGI.
+# RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+# REWRITE BASE
+RewriteBase /forum/
+# HERE IS A GOOD PLACE TO FORCE CANONICAL DOMAIN
+# RewriteCond %{HTTP_HOST} !^test\.socionicasys\.ru$ [NC]
+# RewriteRule ^(.*)$ http://test.socionicasys.ru/forum/$1 [QSA,L,R=301]
+
+# DO NOT GO FURTHER IF THE REQUESTED FILE / DIR DOES EXISTS
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule . - [L]
+#####################################################
+# PHPBB SEO REWRITE RULES ALL MODES
+#####################################################
+# AUTHOR : dcz www.phpbb-seo.com
+# STARTED : 01/2006
+#################################
+# FORUMS PAGES
+###############
+# FORUM INDEX REWRITERULE WOULD STAND HERE IF USED. "forum" REQUIRES TO BE SET AS FORUM INDEX
+# RewriteRule ^forum\.html$ index.php [QSA,L,NC]
+# FORUM ALL MODES
+RewriteRule ^(forum|[a-z0-9_-]*-f)([0-9]+)/?(page([0-9]+)\.html)?$ viewforum.php?f=$2&start=$4 [QSA,L,NC]
+# TOPIC WITH VIRTUAL FOLDER ALL MODES
+RewriteRule ^(forum|[a-z0-9_-]*-f)([0-9]+)/(topic|[a-z0-9_-]*-t)([0-9]+)(-([0-9]+))?\.html$ viewtopic.php?f=$2&t=$4&start=$6 [QSA,L,NC]
+# GLOBAL ANNOUNCES WITH VIRTUAL FOLDER ALL MODES
+RewriteRule ^announces/(topic|[a-z0-9_-]*-t)([0-9]+)(-([0-9]+))?\.html$ viewtopic.php?t=$2&start=$4 [QSA,L,NC]
+# TOPIC WITHOUT FORUM ID & DELIM ALL MODES
+RewriteRule ^([a-z0-9_-]*)/?(topic|[a-z0-9_-]*-t)([0-9]+)(-([0-9]+))?\.html$ viewtopic.php?forum_uri=$1&t=$3&start=$5 [QSA,L,NC]
+# PHPBB FILES ALL MODES
+RewriteRule ^resources/[a-z0-9_-]+/(thumb/)?([0-9]+)$ download/file.php?id=$2&t=$1 [QSA,L,NC]
+# PROFILES THROUGH USERNAME
+RewriteRule ^member/([^/]+)/?$ memberlist.php?mode=viewprofile&un=$1 [QSA,L,NC]
+# USER MESSAGES THROUGH USERNAME
+RewriteRule ^member/([^/]+)/(topics|posts)/?(page([0-9]+)\.html)?$ search.php?author=$1&sr=$2&start=$4 [QSA,L,NC]
+# GROUPS ALL MODES
+RewriteRule ^(group|[a-z0-9_-]*-g)([0-9]+)(-([0-9]+))?\.html$ memberlist.php?mode=group&g=$2&start=$4 [QSA,L,NC]
+# POST
+RewriteRule ^post([0-9]+)\.html$ viewtopic.php?p=$1 [QSA,L,NC]
+# ACTIVE TOPICS
+RewriteRule ^active-topics(-([0-9]+))?\.html$ search.php?search_id=active_topics&start=$2&sr=topics [QSA,L,NC]
+# UNANSWERED TOPICS
+RewriteRule ^unanswered(-([0-9]+))?\.html$ search.php?search_id=unanswered&start=$2&sr=topics [QSA,L,NC]
+# NEW POSTS
+RewriteRule ^newposts(-([0-9]+))?\.html$ search.php?search_id=newposts&start=$2&sr=topics [QSA,L,NC]
+# UNREAD POSTS
+RewriteRule ^unreadposts(-([0-9]+))?\.html$ search.php?search_id=unreadposts&start=$2 [QSA,L,NC]
+# THE TEAM
+RewriteRule ^the-team\.html$ memberlist.php?mode=leaders [QSA,L,NC]
+# HERE IS A GOOD PLACE TO ADD OTHER PHPBB RELATED REWRITERULES
+
+# FORUM WITHOUT ID & DELIM ALL MODES (SAME DELIM)
+# THESE THREE LINES MUST BE LOCATED AT THE END OF YOUR HTACCESS TO WORK PROPERLY
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z0-9_-]+)/?(page([0-9]+)\.html)?$ viewforum.php?forum_uri=$1&start=$3 [QSA,L,NC]
+# FIX RELATIVE PATHS : FILES
+RewriteRule ^.+/(style\.php|ucp\.php|mcp\.php|faq\.php|download/file.php)$ $1 [QSA,L,NC,R=301]
+# FIX RELATIVE PATHS : IMAGES
+RewriteRule ^.+/(styles/.*|images/.*)/$ $1 [QSA,L,NC,R=301]
+# END PHPBB PAGES
+#####################################################
