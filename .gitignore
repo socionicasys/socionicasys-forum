@@ -1,4 +1,4 @@
 forum/cache/*.php
-forum/gym_sitemaps/cache/*.php
-forum/phpbb_seo/cache/*.php
+forum/gym_sitemaps/cache/*
+forum/phpbb_seo/cache/*
 forum/config.php
