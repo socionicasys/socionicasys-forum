@@ -19,22 +19,83 @@ function popup(url, width, height, name)
 /**
 * Jump to page
 */
-function jumpto()
-{
+// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+function jumpto() {
 	var page = prompt(jump_page, on_page);
 
-	if (page !== null && !isNaN(page) && page == Math.floor(page) && page > 0)
-	{
-		if (base_url.indexOf('?') == -1)
-		{
-			document.location.href = base_url + '?start=' + ((page - 1) * per_page);
+	if (page !== null && !isNaN(page) && page == Math.floor(page) && page > 0) {
+		var seo_page = (page - 1) * per_page;
+		var anchor = '';
+		var anchor_parts = base_url.split('#');
+		if ( anchor_parts[1] ) {
+			base_url = anchor_parts[0];
+			anchor = '#' + anchor_parts[1];
 		}
-		else
-		{
-			document.location.href = base_url.replace(/&amp;/g, '&') + '&start=' + ((page - 1) * per_page);
+		if ( base_url.indexOf('?') >= 0 ) {
+			document.location.href = base_url.replace(/&amp;/g, '&') + '&start=' + seo_page + anchor;
+		} else if ( seo_page > 0 ) {
+			var seo_type1 = base_url.match(/\.[a-z0-9]+$/i);
+			if (seo_type1 !== null) {
+				document.location.href = base_url.replace(/\.[a-z0-9]+$/i, '') + seo_delim_start + seo_page + seo_type1 + anchor;
+			}
+			var seo_type2 = base_url.match(/\/$/);
+			if (seo_type2 !== null) {
+				document.location.href = base_url + seo_static_pagination + seo_page + seo_ext_pagination + anchor;
+			}
+		} else {
+			document.location.href = base_url + anchor;
 		}
 	}
 }
+// Open external links in new window in a XHTML 1.x compliant way.
+/**
+*  phpbb_seo_href()
+*  Fixes href="#something" links with virtual directories
+*  Optionally open external or marked with a css class links in a new window
+*  in a XHTML 1.x compliant way.
+*/
+function phpbb_seo_href() {
+	var current_domain = document.domain.toLowerCase();
+	if (!current_domain || !document.getElementsByTagName) return;
+	if (seo_external_sub && current_domain.indexOf('.') >= 0) {
+		current_domain = current_domain.replace(new RegExp(/^[a-z0-9_-]+\.([a-z0-9_-]+\.([a-z]{2,6}|[a-z]{2,3}\.[a-z]{2,3}))$/i), '$1');
+	}
+	if (seo_ext_classes) {
+		var extclass = new RegExp("(^|\s)(" + seo_ext_classes + ")(\s|$)");
+	}
+	if (seo_hashfix) {
+		var basehref = document.getElementsByTagName('base')[0];
+		if (basehref) {
+			basehref = basehref.href;
+			var hashtest = new RegExp("^(" + basehref + "|)#[a-z0-9_-]+$");
+			var current_href = document.location.href.replace(/#[a-z0-9_-]+$/i, "");
+		} else {
+			seo_hashfix = false;
+		}
+	}
+	var hrefels = document.getElementsByTagName("a");
+	var hrefelslen = hrefels.length;
+	for (var i = 0; i < hrefelslen; i++) {
+		var el = hrefels[i];
+		var hrefinner = el.innerHTML.toLowerCase();
+		if (el.onclick || (el.href == '') || (el.href.indexOf('javascript') >=0 ) || (el.href.indexOf('mailto') >=0 ) || (hrefinner.indexOf('<a') >= 0) ) {
+			continue;
+		}
+		if (seo_hashfix && el.hash && hashtest.test(el.href)) {
+			el.href = current_href + el.hash;
+		}
+		if (seo_external) {
+			if ((el.href.indexOf(current_domain) >= 0) && !(seo_ext_classes && extclass.test(el.className))) {
+				continue;
+			}
+			el.onclick = function () { window.open(this.href); return false; };
+		}
+	}
+}
+if (seo_external || seo_hashfix) {
+	onload_functions.push('phpbb_seo_href()');
+}
+// www.phpBB-SEO.com SEO TOOLKIT END
 
 /**
 * Mark/unmark checklist

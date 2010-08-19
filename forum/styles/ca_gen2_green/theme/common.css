@@ -601,3 +601,27 @@ p.rules a {
 	line-height: 1px;
 	background: transparent;
 }
+
+/* GYM Sitemaps & RSS - www.phpbb-seo.com */
+div.gymsublist {
+	display:block;
+	position:relative;
+	padding-left:10px;
+	padding-top:5px;
+	padding-bottom:10px;
+	padding-right:0;
+	margin:0;
+}
+div.gymsublist ul {
+	display:block;
+	position:relative;
+	height:1%;
+	padding-left:30px;
+}
+div.gymsublist ul li {
+	display:block;
+	position:relative;
+	line-height:18px;
+	font-size:11px;
+}
+/* GYM Sitemaps & RSS - www.phpbb-seo.com */

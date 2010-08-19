@@ -199,7 +199,7 @@
 
 			<p class="author"><!-- IF S_IS_BOT -->{postrow.MINI_POST_IMG}<!-- ELSE --><a href="{postrow.U_MINI_POST}">{postrow.MINI_POST_IMG}</a><!-- ENDIF --> {postrow.POST_DATE} <!-- IF postrow.POST_AUTHOR_FULL --><span id="author{postrow.S_ROW_COUNT}" style="display: none;">{L_POST_BY_AUTHOR} {postrow.POST_AUTHOR_FULL}</span><!-- ENDIF --></p>
 
-			<h3<!-- IF postrow.S_FIRST_ROW --> class="first"<!-- ENDIF -->><!-- IF postrow.POST_ICON_IMG --><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" /> <!-- ENDIF --><a href="#p{postrow.POST_ID}">{postrow.POST_SUBJECT}</a></h3>
+			<h3<!-- IF postrow.S_FIRST_ROW --> class="first"<!-- ENDIF -->><!-- IF postrow.POST_ICON_IMG --><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" /> <!-- ENDIF --><a href="{U_VIEW_TOPIC}#p{postrow.POST_ID}">{postrow.POST_SUBJECT}</a></h3>
 
 			<!-- IF postrow.S_POST_UNAPPROVED or postrow.S_POST_REPORTED -->
 				<p class="rules">
@@ -298,6 +298,43 @@
 		{S_FORM_TOKEN}
 	</fieldset>
 	</form>
+<!-- ENDIF -->
+
+<!-- IF S_RELATED_RESULTS --><div class="clear">&nbsp;</div><br /><br />
+<div class="forumbg">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_RELATED_TOPICS}</dt>
+					<dd class="posts">{L_REPLIES}</dd>
+					<dd class="views">{L_VIEWS}</dd>
+					<dd class="lastpost"><span>{L_LAST_POST}</span></dd>
+				</dl>
+			</li>
+		</ul>
+
+	<ul class="topiclist forums">
+	<!-- BEGIN related -->
+	<li class="row bg1<!-- IF related.S_POST_ANNOUNCE --> announce<!-- ENDIF --><!-- IF related.S_POST_STICKY --> sticky<!-- ENDIF --><!-- IF related.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
+		<dl class="icon" style="background-image: url({related.TOPIC_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+			<dt <!-- IF related.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{related.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->><!-- IF related.S_UNREAD_TOPIC --><a href="{related.U_NEWEST_POST}">{NEWEST_POST_IMG}</a> <!-- ENDIF --><a class="topictitle" href="{related.U_TOPIC}" title="{related.TOPIC_TITLE} : {related.FORUM}">{related.TOPIC_TITLE}</a>
+			<!-- IF related.S_TOPIC_UNAPPROVED --><a href="{related.U_MCP_QUEUE}">{UNAPPROVED_IMG}</a> <!-- ENDIF -->
+			<!-- IF related.S_TOPIC_REPORTED --><a href="{related.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
+			<!-- IF related.PAGINATION --><strong class="pagination"><span>{related.PAGINATION}</span></strong><!-- ENDIF -->
+			<!-- IF related.ATTACH_ICON_IMG -->{related.ATTACH_ICON_IMG} <!-- ENDIF -->{L_POST_BY_AUTHOR} {related.TOPIC_AUTHOR_FULL} &raquo; {related.FIRST_POST_TIME}
+			</dt>
+			<dd class="posts">{related.REPLIES} <dfn>{L_REPLIES}</dfn></dd>
+			<dd class="views">{related.VIEWS} <dfn>{L_VIEWS}</dfn></dd>
+			<dd class="lastpost"><span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} {related.LAST_POST_AUTHOR_FULL}
+				<a href="{related.U_LAST_POST}">{LAST_POST_IMG}</a><br />{related.LAST_POST_TIME}
+				<!-- IF related.U_FORUM and not related.S_POST_GLOBAL --><br /><a class="topictitle" href="{related.U_FORUM}" title="{related.FORUM}">{related.FORUM}</a><!-- ENDIF --></span></dd>
+		</dl>
+	</li>
+	<!-- END related -->
+	</ul>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
 <!-- ENDIF -->
 
 <!-- IF S_DISPLAY_ONLINE_LIST -->

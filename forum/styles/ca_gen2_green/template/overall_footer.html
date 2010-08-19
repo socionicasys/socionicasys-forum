@@ -14,6 +14,15 @@
                     <li class="rightside"><!-- IF U_TEAM --><a href="{U_TEAM}">{L_THE_TEAM}</a> | <!-- ENDIF --><!-- IF not S_IS_BOT --><a href="{U_DELETE_COOKIES}">{L_DELETE_COOKIES}</a> | <!-- ENDIF --><span class="timezone">{S_TIMEZONE}</span></li>
                 </ul>
         
+		<!-- IF GYM_LINKS -->
+		<ul class="linklist">
+			<!-- IF GYM_HTML_NEWS_LINK --><li class="leftside">{GYM_HTML_NEWS_LINK}</li><!-- ENDIF -->
+			<!-- IF GYM_HTML_MAP_LINK --><li class="leftside">{GYM_HTML_MAP_LINK}</li><!-- ENDIF -->
+			<!-- IF GYM_GOOGLE_LINK --><li class="leftside">{GYM_GOOGLE_LINK}</li><!-- ENDIF -->
+			<!-- IF GYM_RSS_LINK --><li class="leftside">{GYM_RSS_LINK}</li><!-- ENDIF -->
+			<!-- IF GYM_RSS_CHAN_LINK --><li class="leftside">{GYM_RSS_CHAN_LINK}</li><!-- ENDIF -->
+		</ul>
+		<!-- ENDIF -->
                 {$CA_BLOCK_END}
             </div>
         </div>
@@ -56,5 +65,15 @@
 
 </div>
 
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-18053386-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
 </body>
 </html>
