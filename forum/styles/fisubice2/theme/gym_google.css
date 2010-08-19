@@ -1,15 +1,14 @@
 /*  phpBB 3.0 Style Sheet
     --------------------------------------------------------------
-	Style name:		fisubice2
-	Based on style:	subsilver2 (the default phpBB 2 style)
+	Style name:		subsilver2
+	Based on style:	subSilver (the default phpBB 2 style)
 	Original author:	subBlue ( http://www.subBlue.com/ )
-	Modified by:		phpBBservice.nl ( http://www.phpbbservice.nl )
+	Modified by:		psoTFX and the phpBB team ( http://www.phpbb.com )
 	
 	This is an alternative style for phpBB3 for those wishing to stay with
 	the familiar subSilver style of phpBB version 2.x
 	
 	Copyright 2006 phpBB Group ( http://www.phpbb.com/ )
-	Copyright 2007 phpBBservice.nl team ( http://www.phpBBservice.nl )
     --------------------------------------------------------------
 */
 
@@ -28,36 +27,20 @@ html {
 body {
 	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
 	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
-	color: #000000;
-	background-color: #ecf0f6;
+	color: #323D4F;
+	background-color: #FFFFFF;
 	font-size: 62.5%; /* This sets the default font size to be equivalent to 10px */
-	margin:6px;
-	padding:0;
-}
-
-.bodyline{
-    background: #f7f8fc;
-    border: 1px solid #98aab1;
-}
-
-.topbkg{
-    background: #dbe3ee url(./images/cellpic_bkg.jpg) repeat-x;
-}
-
-.topnav{
-    font-size: 10px;
-    background: #b0c4d8 url(./images/cellpic_nav.gif) repeat-x;
-    height: 21px;
-    white-space:nowrap;
-    border: 0px solid #91a0ae;
-    border-bottom: 1px solid #91a0ae;
+	margin: 0;
 }
 
 #wrapheader {
-    min-height: 120px;
+	min-height: 120px;
 	height: auto !important;
 	height: 120px;
-	background-repeat: repeat-x;
+/*	background-image: url('./images/background.gif');
+	background-repeat: repeat-x;*/
+/*	padding: 0 25px 15px 25px;*/
+	padding: 0;
 }
 
 #wrapcentre {
@@ -73,12 +56,20 @@ body {
 	width: 100%;
 	margin: 0;
 	background-color: #ECECEC;
+	border-width: 1px;
+	border-style: solid;
 	border-color: #A9B8C2;
 }
 
 #logodesc {
+	margin-bottom: 5px;
+	padding: 5px 25px;
 	background: #D9DFE4;
 	border-bottom: 1px solid #4787A7;
+}
+
+#menubar {
+	margin: 0 25px;
 }
 
 #datebar {
@@ -93,14 +84,28 @@ body {
 }
 
 .forumrules {
-	background-color: #d7e2ef;
+	background-color: #F9CC79;
 	border-width: 1px;
-    padding: 4px;
+	border-style: solid;
+	border-color: #BB9860;
+	padding: 4px;
 	font-weight: normal;
 	font-size: 1.1em;
 	font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
-	border: 1px solid #98aab1;
 }
+
+.forumrules h3 {
+	color: red;
+}
+
+#pageheader { }
+#pagecontent { }
+#pagefooter { }
+
+#poll { }
+#postrow { }
+#postdata { }
+
 
 /*  Text
  --------------------- */
@@ -128,7 +133,6 @@ h3 {
 }
 
 h4 {
-    color: #516a88;
 	margin: 0;
 	font-size: 1.1em;
 	font-weight: bold;
@@ -227,13 +231,10 @@ p.topicdetails {
 
 .postauthor {
 	color: #000000;
-	font-size: 11px;
-	font-weight: bold
 }
 
 .postdetails {
-	font-size: 10px;
-	color: #00396a;
+	color: #000000;
 }
 
 .postbody {
@@ -267,6 +268,10 @@ p.topicdetails {
 	font-weight: bold;
 }
 
+.cattitle {
+
+}
+
 .gen {
 	margin: 1px 1px;
 	font-size: 1.2em;
@@ -278,7 +283,8 @@ p.topicdetails {
 }
 
 .gensmall {
-	font-size:10px
+	margin: 1px 1px;
+	font-size: 1em;
 }
 
 .copyright {
@@ -300,49 +306,26 @@ p.topicdetails {
 
 
 /* Tables
- ------------ */ 
-.forumline , .tablebg {
-    background: #ffffff;
-	border: 1px solid #486386;
-}
-
-td.cat {
-    font-weight: bold;
-	letter-spacing: 1px;
-	color: #516a88;
-    height: 29px;
-	text-indent: 6px; 
-	font-size: 11px;
-}
-
-.border {
-    border-bottom: 1px solid #FFFFFF;
-}
- 
+ ------------ */
 th {
-	color: #516a88;
-	font-size: 11px;
+	color: #FFA34F;
+	font-size: 1.1em;
 	font-weight: bold;
-	background-color: #c6d3e4;
+	background-color: #006699;
 	background-image: url('./images/cellpic3.gif');
-    height: 27px;
 	white-space: nowrap;
-	text-align: center;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding: 7px 5px;
 }
 
 td {
 	padding: 2px;
 }
-
 td.profile {
 	padding: 4px;
 }
 
-table.poll {
-    margin-top: 5px;
-	font-size: 11px;
+.tablebg {
+	background-color: #A9B8C2;
 }
 
 .catdiv {
@@ -352,38 +335,37 @@ table.poll {
 	border: 0;
 	background: white url('./images/cellpic2.jpg') repeat-y scroll top left;
 }
-
 .rtl .catdiv {
 	background: white url('./images/cellpic2_rtl.jpg') repeat-y scroll top right;
 }
 
 .cat {
-    height: 28px;
+	height: 28px;
 	margin: 0;
 	padding: 0;
 	border: 0;
-    background-color: #C7D0D7;
+	background-color: #C7D0D7;
 	background-image: url('./images/cellpic1.gif');
 	text-indent: 4px;
 }
 
 .row1 {
-	background-color: #f4f6fb;
+	background-color: #ECECEC;
 	padding: 4px;
 }
 
 .row2 {
-	background-color: #e1e9f2;
+	background-color: #DCE1E5;
 	padding: 4px;
 }
 
 .row3 {
-	background-color: #d7e2ef;
-    padding: 4px;
+	background-color: #C0C8D0;
+	padding: 4px;
 }
 
 .spacer {
-    background:#cad9ea;
+	background-color: #D1D7DC;
 }
 
 hr {
@@ -400,50 +382,51 @@ hr {
 
 /* Links
  ------------ */
-
-a:link, a:active, a:visited, a.postlink{
-    color:#32475f;text-decoration:none;
+a:link {
+	color: #006597;
+	text-decoration: none;
 }
 
-a:hover{
-    color:#839fbc;
-	text-decoration:underline;
+a:active,
+a:visited {
+	color: #005784;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #D46400;
+	text-decoration: underline;
 }
 
 a.forumlink {
-	color: #32475f;
+	color: #069;
 	font-weight: bold;
 	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 	font-size: 1.2em;
 }
 
-a.forumlink:hover {
-	color: #839fbc;
-    text-decoration: underline;
+a.topictitle {
+	margin: 1px 0;
+	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	font-size: 1.2em;
 }
 
-.topictitle {
-	font-size:11px;
-	font-weight:bold;
-}
-
-a.topictitle:visited{
-    color:#496687;
-}
-
-a.topictitle:hover{
-    color:#839fbc;
+a.topictitle:visited {
+	color: #5493B4;
+	text-decoration: none;
 }
 
 th a,
 th a:visited {
-	color: #5c81b1;
+	color: #FFA34F !important;
 	text-decoration: none;
 }
 
 th a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
+
 
 /* Form Elements
  ------------ */
@@ -451,35 +434,34 @@ form {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	display:inline;
 }
 
 input {
 	color: #333333;
 	font-family: "Lucida Grande", Verdana, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 1.1em;
 	font-weight: normal;
 	padding: 1px;
-	border:1px solid #000000;
-	background-color: #FFFFFF;
+	border: 1px solid #A9B8C2;
+	background-color: #FAFAFA;
 }
 
 textarea {
-	background-color: #FFFFFF;
+	background-color: #FAFAFA;
 	color: #333333;
 	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
-	font-size: 11px; 
+	font-size: 1.3em; 
 	line-height: 1.4em;
 	font-weight: normal;
-	border:1px solid #000000;
+	border: 1px solid #A9B8C2;
 	padding: 2px;
 }
 
 select {
 	color: #333333;
-	background-color: #FFFFFF;
+	background-color: #FAFAFA;
 	font-family: "Lucida Grande", Verdana, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 1.1em;
 	font-weight: normal;
 	border: 1px solid #A9B8C2;
 	padding: 1px;
@@ -511,44 +493,43 @@ input.radio {
 .btnbbcode {
 	color: #000000;
 	font-weight: normal;
-	font-size: 11px;
+	font-size: 1.1em;
 	font-family: "Lucida Grande", Verdana, Helvetica, sans-serif;
-	background-color: #fafafa;
-	border: 1px solid #000000;
+	background-color: #EFEFEF;
+	border: 1px solid #666666;
 }
 
 .btnmain {
 	font-weight: bold;
-	background-color: #fafafa;
-	border:1px solid #000000;
+	background-color: #ECECEC;
+	border: 1px solid #A9B8C2;
 	cursor: pointer;
 	padding: 1px 5px;
-	font-size: 10px;
+	font-size: 1.1em;
 }
 
 .btnlite {
 	font-weight: normal;
-	background-color: #fafafa;
-	border:1px solid #000000;
+	background-color: #ECECEC;
+	border: 1px solid #A9B8C2;
 	cursor: pointer;
 	padding: 1px 5px;
-	font-size: 10px;
+	font-size: 1.1em;
 }
 
 .btnfile {
 	font-weight: normal;
-	background-color: #FFFFFF;
-	border:1px solid #000000;
+	background-color: #ECECEC;
+	border: 1px solid #A9B8C2;
 	padding: 1px 5px;
 	font-size: 1.1em;
 }
 
 .helpline {
-	background: #e1e9f2;
+	background-color: #DEE3E7;
 	border-style: none;
-	border:0 solid;
-	font-size:10px;
 }
+
 
 /* BBCode
  ------------ */
@@ -571,16 +552,15 @@ input.radio {
 .quotecontent, .attachcontent {
 	margin: 0 5px 10px 5px;
 	padding: 5px;
-	border-color: #d1d7dc;
+	border-color: #A9B8C2;
 	border-width: 0 1px 1px 1px;
 	border-style: solid;
 	font-weight: normal;
-	font-size: 11px;
-	line-height: 125%;
+	font-size: 1em;
 	line-height: 1.4em;
 	font-family: "Lucida Grande", "Trebuchet MS", Helvetica, Arial, sans-serif;
 	background-color: #FAFAFA;
-	color: #444444;
+	color: #4B5C77;
 }
 
 .attachcontent {
@@ -603,13 +583,13 @@ input.radio {
 	direction: ltr;
 	margin: 0 5px 10px 5px;
 	padding: 5px;
-	border-color: #d1d7dc;
+	border-color: #A9B8C2;
 	border-width: 0 1px 1px 1px;
 	border-style: solid;
 	font-weight: normal;
 	color: #006600;
-	font-size: 12px;
-	font-family: Courier,"Courier New",sans-serif;
+	font-size: 0.85em;
+	font-family: Monaco, 'Courier New', monospace;
 	background-color: #FAFAFA;
 }
 
@@ -637,6 +617,7 @@ input.radio {
 	color: #DD0000;
 }
 
+
 /* Private messages
  ------------------ */
 .pm_marked_colour {
@@ -654,6 +635,7 @@ input.radio {
 .pm_foe_colour {
 	background-color: #DD0000;
 }
+
 
 /* Misc
  ------------ */
@@ -682,38 +664,3 @@ pre {
 .username-coloured {
 	font-weight: bold;
 }
-
-/* subforum images */
-.subforum.read {  
-    background: url(./images/icon_post_target.gif) center left no-repeat;  
-    padding-left: 12px;  
-}
-  
-.subforum.unread {  
-    background: url(./images/icon_post_target_unread.gif) center left no-repeat;  
-    padding-left: 12px;  
-}
-
-/* GYM Sitemaps & RSS - www.phpbb-seo.com */
-div.gymsublist {
-	display:block;
-	position:relative;
-	padding-left:10px;
-	padding-top:5px;
-	padding-bottom:10px;
-	padding-right:0;
-	margin:0;
-}
-div.gymsublist ul {
-	display:block;
-	position:relative;
-	height:1%;
-	padding-left:30px;
-}
-div.gymsublist ul li {
-	display:block;
-	position:relative;
-	line-height:18px;
-	font-size:11px;
-}
-/* GYM Sitemaps & RSS - www.phpbb-seo.com */
