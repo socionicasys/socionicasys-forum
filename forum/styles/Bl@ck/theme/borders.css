@@ -1,0 +1,88 @@
+/* 
+	--------------------------------------------------------------
+* @name borders.css
+* @package phpBB 3.0.6
+* @version $Id: v 0.9 1/08/2010
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+	--------------------------------------------------------------
+*/
+#wrap {
+	padding: 0px 20px;
+	margin: 0px auto;
+}
+.outside {
+	margin: 0px auto;
+	min-width: 1000px; /* Keep this! don't remove, instead lower it to 900px or 950px but not lower, */
+	max-width: 1360px; /* You can remove this but it's recommended you keep it for high resolution monitors */
+	width : 90%; /* change here to set the total width of the forum */
+}
+/* additional proSilver Markup Styles outside rounded
+----------------------------------------------------------- */
+ .top-left, .top-right, .bottom-left, .bottom-right {
+	height: 20px;       /* CHANGE: replace by the height of one of your corners (= 1/2 height of the image) */
+	font-size: 2px;    /* DNC: correction IE for height of the <div>'s */
+}
+.top-left {
+	background-image: url("{T_THEME_PATH}/images/corners_top.png");
+	background-repeat:no-repeat; /* CHANGE: path and name of your image */
+	background-position: 0 -20px; /* CHANGE: replace second number by negative height of one of your corners */
+	margin-left: 1px;  /* CHANGE: replace by the width of one of your corners */
+	margin-top: 0px;  /* CHANGE: replace by the height of one of your corners */
+	margin-right: 9px; /* CHANGE: replace by the width of one of your corners */
+}
+.top-right {
+	background-image: url("{T_THEME_PATH}/images/corners_top.png");
+	background-repeat:no-repeat; /* CHANGE: path and name of your image */
+	background-position: 100% 0;    /* DNC: position right corner at right side, no vertical changes */
+	margin-left: 0px;  /* CHANGE: replace by the width of one of your corners */
+	margin-top: -9px;  /* CHANGE: replace by the height of one of your corners */
+	margin-right: 1px; /* CHANGE: replace by the width of one of your corners */
+}
+.top-center {
+	background-image: url("{T_THEME_PATH}/images/bg_headers.gif"); /* CHANGE: path and name of your image */
+	background-position: 0 0px; /* CHANGE: replace second number by negative height of one of your corners */
+	height: 20px;       /* CHANGE: replace by the height of one of your corners (= 1/2 height of the image) */
+	font-size: 2px;    /* DNC: correction IE for height of the <div>'s */
+	margin-left: 20px;  /* CHANGE: replace by the width of one of your corners */
+	margin-top: -20px;  /* CHANGE: replace by the height of one of your corners */
+	margin-right: 20px; /* CHANGE: replace by the width of one of your corners */
+	margin-bottom: -20px; /* CHANGE: replace by the width of one of your corners */
+}
+.bottom-left {
+	background-image: url("{T_THEME_PATH}/images/corners_bottom.png");
+	background-repeat:no-repeat; /* CHANGE: path and name of your image */
+	background-position: 0 0px; /* CHANGE: replace second number by negative height of one of your corners */
+	margin-right: 0px; /* CHANGE: replace by the width of one of your corners */
+	margin-left: 1px;  /* CHANGE: replace by the width of one of your corners */
+	margin-top: 0px;  /* CHANGE: replace by the height of one of your corners */
+}
+.bottom-right {
+	background-image: url("{T_THEME_PATH}/images/corners_bottom.png");
+	background-repeat:no-repeat; /* CHANGE: path and name of your image */
+	background-position: 100% -20px; /* CHANGE: replace second number by negative height of one of your corners */
+	margin-right: 1px; /* CHANGE: replace by the width of one of your corners */
+	margin-left: 0px;  /* CHANGE: replace by the width of one of your corners */
+	margin-top: -20px;  /* CHANGE: replace by the height of one of your corners */
+}
+.bottom-center {
+	background-image: url("{T_THEME_PATH}/images/bg_footers.gif"); /* CHANGE: path and name of your image */
+	background-position: 0 0px; /* CHANGE: replace second number by negative height of one of your corners */
+	height: 20px;       /* CHANGE: replace by the height of one of your corners (= 1/2 height of the image) */
+	font-size: 2px;    /* DNC: correction IE for height of the <div>'s */
+	margin-left: 20px;  /* CHANGE: replace by the width of one of your corners */
+	margin-top: -20px;  /* CHANGE: replace by the height of one of your corners */
+	margin-right: 20px; /* CHANGE: replace by the width of one of your corners */
+	margin-bottom: -20px; /* CHANGE: replace by the width of one of your corners */
+}
+.inside {
+	border-left: 0px solid #000000; /* YCC: color & properties of the left-borderline */
+	border-right: 0px solid #000000;/* YCC: color & properties of the right-borderline */
+	background: #FFFFFF;            /* YCC: background-color of the inside */
+	color: #000000;                 /* YCC: default text-color of the inside */
+	padding-left: 0px;              /* YCC: all texts at some distance of the left border */
+	padding-right: 0px;             /* YCC: all texts at some distance of the right border */
+	margin-left: 7px;  /* CHANGE: replace by the width of one of your corners */
+	margin-right: 4px; /* CHANGE: replace by the width of one of your corners */
+}
+.notopgap { margin-top: 0; }    /* DNC: to avoid splitting of the box */
+.nobottomgap { margin-bottom: 0; } /* DNC: to avoid splitting of the box */
