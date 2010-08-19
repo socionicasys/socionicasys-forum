@@ -57,7 +57,7 @@
 			<td class="row1" width="140" align="center">
 				<p class="topicdetails" style="white-space: nowrap;">{topicrow.LAST_POST_TIME}</p>
 				<p class="topicdetails">{topicrow.LAST_POST_AUTHOR_FULL}
-					<!-- IF not S_IS_BOT --><a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a><!-- ENDIF -->
+					<a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a>
 				</p>
 			</td>
 		</tr>
@@ -93,6 +93,7 @@
     		<h2><a class="titles" href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2>
     	<!-- ENDIF -->
 
+		<!-- IF GYM_LINKS_CAT --><h3>{GYM_HTML_FORUM_NEWS_LINK} {GYM_HTML_FORUM_MAP_LINK} {GYM_RSS_FORUM_LINK} {GYM_GOOGLE_FORUM_LINK}</h3><!-- ENDIF -->
 		<!-- IF MODERATORS -->
 			<p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p>
 		<!-- ENDIF -->
@@ -217,7 +218,7 @@
 				<td class="row1" width="140" align="center">
 					<p class="topicdetails" style="white-space: nowrap;">{topicrow.LAST_POST_TIME}</p>
 					<p class="topicdetails">{topicrow.LAST_POST_AUTHOR_FULL}
-						<!-- IF not S_IS_BOT --><a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a><!-- ENDIF -->
+						<a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a>
 					</p>
 				</td>
 			</tr>

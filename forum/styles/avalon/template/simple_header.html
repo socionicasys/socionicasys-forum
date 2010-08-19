@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" xml:lang="{S_USER_LANG}">
 <head>
 <!-- INCLUDE ca_config.html -->
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+{SEO_BASE_HREF}
 <meta http-equiv="content-type" content="text/html; charset={S_CONTENT_ENCODING}" />
+<title>{PAGE_TITLE} | <!-- IF S_IN_MCP -->{L_MCP} | <!-- ELSEIF S_IN_UCP -->{L_UCP} | <!-- ENDIF -->{SITENAME}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta http-equiv="content-language" content="{S_USER_LANG}" />
 <meta http-equiv="content-style-type" content="text/css" />
 <meta http-equiv="imagetoolbar" content="no" />
 {META}
-<title>{SITENAME} - <!-- IF S_IN_MCP -->{L_MCP} - <!-- ELSEIF S_IN_UCP -->{L_UCP} - <!-- ENDIF -->{PAGE_TITLE}</title>
 
 <link rel="stylesheet" href="{T_STYLESHEET_LINK}" type="text/css" />
 <!--[if IE]>
