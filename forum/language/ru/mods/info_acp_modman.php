@@ -1,10 +1,10 @@
 <?php
 /**
 *
-* AutoMOD [English]
+* AutoMOD [Russian]
 *
 * @package language
-* @version $Id: info_acp_modman.php 242 2010-04-29 00:56:35Z jelly_doughnut $
+* @version $Id: info_acp_modman.php 138 2008-12-31 13:31:22Z paul $
 * @copyright (c) 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -40,17 +40,15 @@ $lang = array_merge($lang, array(
 	'ACP_CAT_MODS'			=> 'AutoMOD',
 	'ACP_MODS'				=> 'AutoMOD',
 	'ACP_AUTOMOD'			=> 'AutoMOD',
-	'ACP_AUTOMOD_CONFIG'	=> 'AutoMOD Configuration',
+	'ACP_AUTOMOD_CONFIG'	=> 'Настройка AutoMOD',
 
-	'LOG_MOD_ADD'		=> '<strong>Added new MOD</strong><br />» %s',
-	'LOG_MOD_CHANGE'	=> '<strong>Changed components for MOD</strong><br />» %x',
-	'LOG_MOD_REMOVE'	=> '<strong>Removed MOD</strong><br />» %s',
+	'LOG_MOD_ADD'		=> '<strong>Добавлена модификация</strong><br />» %s',
+	'LOG_MOD_CHANGE'	=> '<strong>Изменены компоненты модификации</strong><br />» %x',
+	'LOG_MOD_REMOVE'	=> '<strong>Удалена модификация</strong><br />» %s',
 
-	'MOD_CHANGELOG'		=> 'MOD Changelog',
+	'MOD_CHANGELOG'		=> 'Журнал изменений',
 
-	'acl_a_mods'		=> array('lang' => 'Can use AutoMOD', 'cat' => 'misc'),
+	'acl_a_mods'		=> array('lang' => 'Может использовать AutoMOD', 'cat' => 'misc'),
 ));
-
-
 
 ?>
