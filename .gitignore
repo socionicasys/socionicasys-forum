@@ -1,5 +1,8 @@
 forum/cache/*.php
 forum/gym_sitemaps/cache/*
 forum/phpbb_seo/cache/*
+forum/store/*.zip
+forum/store/*.tar.gz
+forum/store/*.tar.bz2
 forum/store/mods/*
 forum/config.php
