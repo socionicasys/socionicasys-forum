@@ -163,7 +163,7 @@
 					    <table width="100%" cellspacing="0" cellpadding="0" class="border">
 						    <tr>
 								<td class="postdetails"><div style="float: ;" class="postdetails"><!-- IF postrow.POST_ICON_IMG --><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" title="" />  <!-- ENDIF --> <!-- IF postrow.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{postrow.POST_ID}"></a> <!-- IF S_IS_BOT -->{postrow.MINI_POST_IMG}<!-- ELSE --><a href="{postrow.U_MINI_POST}">{postrow.MINI_POST_IMG}</a><!-- ENDIF --> {L_POSTED}: {postrow.POST_DATE}&nbsp;</div></td>
-							    <td align="right" valign="top" nowrap="nowrap"><div style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT --><!-- IF postrow.U_EDIT --> <a href="{postrow.U_EDIT}">{EDIT_IMG}</a><!-- ENDIF --> <!-- IF postrow.U_QUOTE --> <a href="{postrow.U_QUOTE}">{QUOTE_IMG}</a><!-- ENDIF --><!-- ENDIF --> <a href="{U_VIEW_TOPIC}#wrapheader"><img src="{T_IMAGESET_PATH}/icon_up.gif" alt="{L_BACK_TO_TOP}" width="16" height="18" title="{L_BACK_TO_TOP}" /></a> <!-- IF not S_IS_BOT --><!-- IF postrow.U_REPORT --> <a href="{postrow.U_REPORT}">{REPORT_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_INFO --> <a href="{postrow.U_INFO}">{INFO_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_WARN --> <a href="{postrow.U_WARN}">{WARN_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_DELETE --> <a href="{postrow.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>
+							    <td align="right" valign="top" nowrap="nowrap"><div style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT --><!-- IF postrow.U_EDIT --> <a href="{postrow.U_EDIT}">{EDIT_IMG}</a><!-- ENDIF --> <!-- IF S_QUICK_REPLY and postrow.DECODED_MESSAGE --><a href="#" onclick="addquote({postrow.POST_ID},'{postrow.POST_AUTHOR}'); return false;">{QUOTE_IMG}</a> <!-- ELSE IF postrow.U_QUOTE --><a href="{postrow.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --><!-- ENDIF --> <a href="{U_VIEW_TOPIC}#wrapheader"><img src="{T_IMAGESET_PATH}/icon_up.gif" alt="{L_BACK_TO_TOP}" width="16" height="18" title="{L_BACK_TO_TOP}" /></a> <!-- IF not S_IS_BOT --><!-- IF postrow.U_REPORT --> <a href="{postrow.U_REPORT}">{REPORT_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_INFO --> <a href="{postrow.U_INFO}">{INFO_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_WARN --> <a href="{postrow.U_WARN}">{WARN_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_DELETE --> <a href="{postrow.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>
 							</tr>
 						</table>
 						<table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -181,6 +181,9 @@
 									                <br clear="all" />
 								                <!-- ENDIF -->
 								                <div class="postbody">{postrow.MESSAGE}</div>
+					<!-- IF postrow.U_QUOTE and postrow.DECODED_MESSAGE -->
+						<div id="message_{postrow.POST_ID}" style="display: none;">{postrow.DECODED_MESSAGE}</div>
+					<!-- ENDIF -->
 								                <!-- IF postrow.S_HAS_ATTACHMENTS -->
 								                    <br clear="all" /><br />
 									                <table class="tablebg" width="100%" cellspacing="1">
