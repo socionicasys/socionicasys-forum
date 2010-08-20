@@ -1511,17 +1511,12 @@ class user extends session
 		if ($this->data['user_id'] != ANONYMOUS)
 		{
 			$this->lang_name = (file_exists($this->lang_path . $this->data['user_lang'] . "/common.$phpEx")) ? $this->data['user_lang'] : basename($config['default_lang']);
-
 			$this->date_format = $this->data['user_dateformat'];
-			$this->timezone = $this->data['user_timezone'] * 3600;
-			$this->dst = $this->data['user_dst'] * 3600;
 		}
 		else
 		{
 			$this->lang_name = basename($config['default_lang']);
 			$this->date_format = $config['default_dateformat'];
-			$this->timezone = $config['board_timezone'] * 3600;
-			$this->dst = $config['board_dst'] * 3600;
 
 			/**
 			* If a guest user is surfing, we try to guess his/her language first by obtaining the browser language
@@ -1562,6 +1557,12 @@ class user extends session
 
 		// We include common language file here to not load it every time a custom language file is included
 		$lang = &$this->lang;
+		if (!defined('AUTOMATIC_DST_BOARD_TIMEZONE'))
+		{
+			include($phpbb_root_path . 'includes/automatic_dst.' . $phpEx);
+			automatic_dst_cache($this->data['user_timezone']);
+		}
+		automatic_dst_session();
 
 		// Do not suppress error if in DEBUG_EXTRA mode
 		$include_result = (defined('DEBUG_EXTRA')) ? (include $this->lang_path . $this->lang_name . "/common.$phpEx") : (@include $this->lang_path . $this->lang_name . "/common.$phpEx");
@@ -2126,7 +2127,7 @@ class user extends session
 		}
 
 		// Zone offset
-		$zone_offset = $this->timezone + $this->dst;
+		$zone_offset = $this->timezone + date('I', $gmepoch) * 3600;
 
 		// Show date <= 1 hour ago as 'xx min ago'
 		// A small tolerence is given for times in the future but in the same minute are displayed as '< than a minute ago'

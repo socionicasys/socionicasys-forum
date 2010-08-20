@@ -42,6 +42,7 @@ if (isset($_GET['avatar']))
 	require($phpbb_root_path . 'includes/cache.' . $phpEx);
 	require($phpbb_root_path . 'includes/db/' . $dbms . '.' . $phpEx);
 	require($phpbb_root_path . 'includes/constants.' . $phpEx);
+	require($phpbb_root_path . 'includes/automatic_dst.' . $phpEx);
 
 	$db = new $sql_db();
 	$cache = new cache();

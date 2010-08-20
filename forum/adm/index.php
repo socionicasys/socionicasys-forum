@@ -269,6 +269,11 @@ function build_cfg_template($tpl_type, $key, &$new, $config_key, $vars)
 		$new[$config_key] = '';
 	}
 
+
+	if ($config_key == 'board_timezone')
+	{
+		$new[$config_key] = AUTOMATIC_DST_BOARD_TIMEZONE;
+	}
 	switch ($tpl_type[0])
 	{
 		case 'text':

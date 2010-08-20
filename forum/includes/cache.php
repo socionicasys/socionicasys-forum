@@ -64,6 +64,16 @@ class cache extends acm
 			$this->put('config', $cached_config);
 		}
 
+
+		/**
+		*   AUTOMATIC DAYLIGHT SAVINGS TIME 2
+		*
+		*   If your script halts at this point, you tried to call $cache->obtain_config() without including common.php.
+		*   Add the following line to your main script:
+		*   require($phpbb_root_path . 'includes/automatic_dst.' . $phpEx);
+		*/
+		$config['board_timezone'] = automatic_dst_cache($config['board_timezone']);
+		$config['board_dst'] = AUTOMATIC_DST_BOARD_ISDST;
 		return $config;
 	}
 

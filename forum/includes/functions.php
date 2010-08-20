@@ -1162,7 +1162,10 @@ function tz_select($default = '', $truncate = false)
 	global $user;
 
 	$tz_select = '';
-	foreach ($user->lang['tz_zones'] as $offset => $zone)
+
+	$timezones = automatic_dst_get_timezones();
+
+	foreach ($timezones as $id => $zone)
 	{
 		if ($truncate)
 		{
@@ -1173,11 +1176,8 @@ function tz_select($default = '', $truncate = false)
 			$zone_trunc = $zone;
 		}
 
-		if (is_numeric($offset))
-		{
-			$selected = ($offset == $default) ? ' selected="selected"' : '';
-			$tz_select .= '<option title="' . $zone . '" value="' . $offset . '"' . $selected . '>' . $zone_trunc . '</option>';
-		}
+		$selected = ($id == $default) ? ' selected="selected"' : '';
+		$tz_select .= '<option title="' . $zone . '" value="' . $id . '"' . $selected . '>' . $zone_trunc . '</option>';
 	}
 
 	return $tz_select;
@@ -4306,7 +4306,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		'S_CONTENT_FLOW_BEGIN'	=> ($user->lang['DIRECTION'] == 'ltr') ? 'left' : 'right',
 		'S_CONTENT_FLOW_END'	=> ($user->lang['DIRECTION'] == 'ltr') ? 'right' : 'left',
 		'S_CONTENT_ENCODING'	=> 'UTF-8',
-		'S_TIMEZONE'			=> ($user->data['user_dst'] || ($user->data['user_id'] == ANONYMOUS && $config['board_dst'])) ? sprintf($user->lang['ALL_TIMES'], $user->lang['tz'][$tz], $user->lang['tz']['dst']) : sprintf($user->lang['ALL_TIMES'], $user->lang['tz'][$tz], ''),
+		'S_TIMEZONE'			=> (AUTOMATIC_DST_ISDST) ? sprintf($user->lang['AUTOMATIC_DST_DISPLAY'], strtr(AUTOMATIC_DST_TIMEZONE, $user->lang['automatic_dst_timezones']), $user->lang['tz']['dst']) : sprintf($user->lang['AUTOMATIC_DST_DISPLAY'], strtr(AUTOMATIC_DST_TIMEZONE, $user->lang['automatic_dst_timezones']), ''),
 		'S_DISPLAY_ONLINE_LIST'	=> ($l_online_time) ? 1 : 0,
 		'S_DISPLAY_SEARCH'		=> (!$config['load_search']) ? 0 : (isset($auth) ? ($auth->acl_get('u_search') && $auth->acl_getf_global('f_search')) : 1),
 		'S_DISPLAY_PM'			=> ($config['allow_privmsg'] && !empty($user->data['is_registered']) && ($auth->acl_get('u_readpm') || $auth->acl_get('u_sendpm'))) ? true : false,

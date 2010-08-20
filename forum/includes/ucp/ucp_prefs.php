@@ -42,7 +42,7 @@ class ucp_prefs
 					'dateformat'	=> request_var('dateformat', $user->data['user_dateformat'], true),
 					'lang'			=> basename(request_var('lang', $user->data['user_lang'])),
 					'style'			=> request_var('style', (int) $user->data['user_style']),
-					'tz'			=> request_var('tz', (float) $user->data['user_timezone']),
+					'tz'			=> request_var('tz', AUTOMATIC_DST_TIMEZONE),
 
 					'dst'			=> request_var('dst', (bool) $user->data['user_dst']),
 					'viewemail'		=> request_var('viewemail', (bool) $user->data['user_allow_viewemail']),
@@ -66,7 +66,6 @@ class ucp_prefs
 					$error = validate_data($data, array(
 						'dateformat'	=> array('string', false, 1, 30),
 						'lang'			=> array('match', false, '#^[a-z0-9_\-]{2,}$#i'),
-						'tz'			=> array('num', false, -14, 14),
 					));
 
 					if (!check_form_key('ucp_prefs_personal'))

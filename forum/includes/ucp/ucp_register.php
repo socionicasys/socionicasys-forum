@@ -70,6 +70,7 @@ class ucp_register
 				$user->lang = array();
 				$user->data['user_lang'] = $user->lang_name;
 				$user->add_lang(array('common', 'ucp'));
+				$user->add_lang('mods/automatic_dst');
 			}
 			else
 			{
@@ -101,7 +102,7 @@ class ucp_register
 					'email'				=> strtolower(request_var('email', '')),
 					'email_confirm'		=> strtolower(request_var('email_confirm', '')),
 					'lang'				=> $user->lang_name,
-					'tz'				=> request_var('tz', (float) $config['board_timezone']),
+					'tz'				=> request_var('tz', AUTOMATIC_DST_BOARD_TIMEZONE),
 				));
 
 			}
@@ -165,24 +166,8 @@ class ucp_register
 			$captcha->init(CONFIRM_REG);
 		}
 
-		// Try to manually determine the timezone and adjust the dst if the server date/time complies with the default setting +/- 1
-		$timezone = date('Z') / 3600;
-		$is_dst = date('I');
-
-		if ($config['board_timezone'] == $timezone || $config['board_timezone'] == ($timezone - 1))
-		{
-			$timezone = ($is_dst) ? $timezone - 1 : $timezone;
-
-			if (!isset($user->lang['tz_zones'][(string) $timezone]))
-			{
-				$timezone = $config['board_timezone'];
-			}
-		}
-		else
-		{
-			$is_dst = $config['board_dst'];
-			$timezone = $config['board_timezone'];
-		}
+		$timezone = AUTOMATIC_DST_BOARD_TIMEZONE;
+		$is_dst = AUTOMATIC_DST_BOARD_ISDST;
 
 		$data = array(
 			'username'			=> utf8_normalize_nfc(request_var('username', '', true)),
@@ -191,7 +176,7 @@ class ucp_register
 			'email'				=> strtolower(request_var('email', '')),
 			'email_confirm'		=> strtolower(request_var('email_confirm', '')),
 			'lang'				=> basename(request_var('lang', $user->lang_name)),
-			'tz'				=> request_var('tz', (float) $timezone),
+			'tz'				=> request_var('tz', $timezone),
 		);
 
 		// Check and initialize some variables if needed
@@ -209,7 +194,6 @@ class ucp_register
 					array('string', false, 6, 60),
 					array('email')),
 				'email_confirm'		=> array('string', false, 6, 60),
-				'tz'				=> array('num', false, -14, 14),
 				'lang'				=> array('match', false, '#^[a-z_\-]{2,}$#i'),
 			));
 
@@ -308,7 +292,7 @@ class ucp_register
 					'user_password'			=> phpbb_hash($data['new_password']),
 					'user_email'			=> $data['email'],
 					'group_id'				=> (int) $group_id,
-					'user_timezone'			=> (float) $data['tz'],
+					'user_timezone'			=> $data['tz'],
 					'user_dst'				=> $is_dst,
 					'user_lang'				=> $data['lang'],
 					'user_type'				=> $user_type,
