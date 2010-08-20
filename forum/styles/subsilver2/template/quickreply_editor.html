@@ -1,21 +1,82 @@
-<form method="post" action="{U_QR_ACTION}">
+<form id="postform" method="post" action="{U_QR_ACTION}">
 
 	<table class="tablebg" width="100%" cellspacing="1">
 		<tr>
 			<th align="center" colspan="2">{L_QUICKREPLY}</th>
 		</tr>
+		<!-- IF S_SHOW_TOPIC_ICONS -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_ICON}:</b></td>
+			<td class="row2">
+				<table width="100%" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<td><input type="radio" class="radio" name="icon" value="0"{S_NO_ICON_CHECKED} /><span class="genmed">{L_NO_TOPIC_ICON}</span> <!-- BEGIN topic_icon --><span style="white-space: nowrap;"><input type="radio" class="radio" name="icon" value="{topic_icon.ICON_ID}"{topic_icon.S_ICON_CHECKED} /><img src="{topic_icon.ICON_IMG}" width="{topic_icon.ICON_WIDTH}" height="{topic_icon.ICON_HEIGHT}" alt="" title="" hspace="2" vspace="2" /></span> <!-- END topic_icon --></td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		<!-- ENDIF -->
 		<tr>
 			<td class="row1" width="22%"><b class="genmed">{L_SUBJECT}:</b></td>
 			<td  class="row2" width="78%"><input class="post" style="width:450px" type="text" name="subject" size="45" maxlength="64" tabindex="2" value="{SUBJECT}" /></td>
 		</tr>
 		<tr>
-			<td class="row1" width="22%"><b class="genmed">{L_MESSAGE}:</b></td>
-			<td class="row2" valign="top" align="left" width="78%"><textarea name="message" rows="7" cols="76" tabindex="3"  style="width: 98%;"></textarea> </td>
+			<td class="row1" valign="top"><b class="genmed">{L_MESSAGE_BODY}:</b><br /><span class="gensmall">{L_MESSAGE_BODY_EXPLAIN}&nbsp;</span><br /><br />
+			<!-- IF S_SMILIES_ALLOWED -->
+				<table width="100%" cellspacing="5" cellpadding="0" border="0" align="center">
+				<tr>
+					<td class="gensmall" align="center"><b>{L_SMILIES}</b></td>
+				</tr>
+				<tr>
+					<td align="center">
+						<!-- BEGIN smiley -->
+							<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;" style="line-height: 20px;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" hspace="2" vspace="2" /></a>
+						<!-- END smiley -->
+					</td>
+				</tr>
+
+				<!-- IF S_SHOW_SMILEY_LINK -->
+					<tr>
+						<td align="center"><a class="nav" href="{U_MORE_SMILIES}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a></td>
+					</tr>
+				<!-- ENDIF -->
+
+				</table>
+			<!-- ENDIF -->
+			</td>
+			<td class="row2" valign="top">
+				<script type="text/javascript">
+				// <![CDATA[
+					var form_name = 'postform';
+					var text_name = 'message';
+				// ]]>
+				</script>
+
+				<table width="100%" cellspacing="0" cellpadding="0" border="0">
+				<!-- INCLUDE posting_buttons.html -->
+				<tr>
+					<td valign="top" style="width: 100%;"><textarea name="message" rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" style="width: 98%;">{MESSAGE}</textarea></td>
+					<!-- IF S_BBCODE_ALLOWED -->
+					<td width="80" align="center" valign="top">
+						<script type="text/javascript">
+						// <![CDATA[
+							colorPalette('v', 7, 6)
+						// ]]>
+						</script>
+					</td>
+					<!-- ENDIF -->
+				</tr>
+				</table>
+			</td>
 		</tr>
 		<tr>
 			<td class="cat" colspan="2" align="center">
-				<input class="btnmain" type="submit" accesskey="s" tabindex="6" name="post" value="{L_SUBMIT}" />&nbsp;
-				<input class="btnlite" type="submit" accesskey="f" tabindex="7" name="full_editor" value="{L_FULL_EDITOR}" />
+				<input class="btnlite" type="submit" tabindex="4" name="preview" value="{L_PREVIEW}" />&nbsp;
+				<input class="btnmain" type="submit" accesskey="s" tabindex="5" name="post" value="{L_SUBMIT}" />&nbsp;
+				<!-- IF not S_SHOW_ATTACH_BOX and not S_SHOW_POLL_BOX -->
+					<!-- IF S_SAVE_ALLOWED --><input class="btnlite" type="submit" accesskey="k" tabindex="6" name="save" value="{L_SAVE}" />&nbsp;<!-- ENDIF -->
+				<!-- ENDIF -->
+				<input class="btnlite" type="submit" accesskey="c" tabindex="6" name="cancel" value="{L_CANCEL}" />
 
 				{S_FORM_TOKEN}
 				{QR_HIDDEN_FIELDS}
