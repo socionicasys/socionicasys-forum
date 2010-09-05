@@ -211,6 +211,8 @@ function marklist(id, name, state)
 
 // ]]>
 </script>
+<!-- Loginza widget JavaScript -->
+<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>
 </head>
 <body class="{S_CONTENT_DIRECTION}">
 
@@ -231,6 +233,9 @@ function marklist(id, name, state)
 		<table width="100%" cellspacing="0">
 		<tr>
 			<td class="genmed">
+				<!-- IF not S_IS_BOT and not S_USER_LOGGED_IN -->
+				<a href="https://loginza.ru/api/widget?token_url={LOGINZA_RETURN_URL}" title="Войти через аккаунт соц. сети или OpenID" accesskey="x" class="loginza"><img src="http://s1.loginza.ru/img/sign_in_button_gray.gif" alt="Авторизация" style="vertical-align: bottom;"/></a>
+				<!-- ENDIF -->
 				<!-- IF not S_IS_BOT --><a href="{U_LOGIN_LOGOUT}"><img src="{T_THEME_PATH}/images/icon_mini_login.gif" width="12" height="13" alt="*" /> {L_LOGIN_LOGOUT}</a>&nbsp;<!-- ENDIF -->
 				<!-- IF U_RESTORE_PERMISSIONS --> &nbsp;<a href="{U_RESTORE_PERMISSIONS}"><img src="{T_THEME_PATH}/images/icon_mini_login.gif" width="12" height="13" alt="*" /> {L_RESTORE_PERMISSIONS}</a><!-- ENDIF -->
 				<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN --> &nbsp;<span style="color: red;">{L_BOARD_DISABLED}</span><!-- ENDIF -->
