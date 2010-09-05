@@ -148,7 +148,6 @@ class loginza_register
 			'user_password'			=> phpbb_hash($gen_password),
 			'user_email'			=> strtolower($profile->email),
 			'user_birthday'			=> date('d-m-Y', strtotime($profile->dob)),
-			'user_avatar' 			=> (string)$profile->photo,
 			'user_from' 			=> (string)$profile->address->home->city,
 			'user_icq' 				=> (string)$profile->im->icq,
 			'user_jabber' 			=> (string)$profile->im->jabber,
@@ -165,6 +164,16 @@ class loginza_register
 			'loginza_identity' 		=> $profile->identity,
 			'loginza_provider'		=> $profile->provider
 		);
+
+		$loginza_avatar = $LoginzaProfile->genUserPhoto();
+		if ($loginza_avatar !== null)
+		{
+			$lo_avatar = ImageCreateFromString(file_get_contents($loginza_avatar));
+			$data['user_avatar'] = $loginza_avatar;
+			$data['user_avatar_type'] = 2;
+			$data['user_avatar_width'] = imagesx($lo_avatar);
+			$data['user_avatar_height'] = imagesy($lo_avatar);
+		}
 		
 		$error = array();
 		

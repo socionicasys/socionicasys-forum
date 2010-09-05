@@ -79,6 +79,12 @@ class LoginzaUserProfile {
 		return $this->profile->identity;
 	}
 	
+	public function genUserPhoto () {
+		if (!empty($this->profile->photo)) {
+			return $this->profile->photo;
+		}
+ 	}
+	
 	public function genDisplayName () {
 	 	if ( ($fullname = $this->genFullName()) ) {
 			return $fullname;
