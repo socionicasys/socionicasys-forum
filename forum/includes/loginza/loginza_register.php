@@ -165,6 +165,11 @@ class loginza_register
 			'loginza_provider'		=> $profile->provider
 		);
 
+		if (!empty($profile->dob))
+		{
+			$data['user_birthday'] = date('d-m-Y', strtotime($profile->dob));
+		}
+
 		$loginza_avatar = $LoginzaProfile->genUserPhoto();
 		if ($loginza_avatar !== null)
 		{
