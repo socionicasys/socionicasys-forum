@@ -38,7 +38,7 @@
 <body id="phpbb">
 <!--
 	GYM Sitemaps and RSS XSLTransform
-	(C) 2006, 2007, 2008, 2009 phpBB SEO - http://www.phpbb-seo.com/
+	(C) phpBB SEO - http://www.phpbb-seo.com/
 -->
 			<div id="wrap">
 				<a id="top" name="top" accesskey="t"></a>
@@ -156,7 +156,7 @@
 								</dt>
 								<dd> </dd>
 							</dl>
-							<div class="back2top"><a href="#wrap" class="top" title="{L_BACK_TO_TOP}"></a>{L_BACK_TO_TOP}&#160;</div>
+							<div class="back2top"><a href="{$rss_link}#wrap" class="top" title="{L_BACK_TO_TOP}"></a>{L_BACK_TO_TOP}&#160;</div>
 							<span class="corners-bottom"><span></span></span>
 						</div>
 					</div>
@@ -175,7 +175,7 @@
 	If you cannot (for good reason) retain the full copyright we request you at least leave in place the
 	"Copyright phpBB SEO" line, with "phpBB SEO" linked to www.phpbb-seo.com.
 	If you refuse to include even this, then support and further development on our forums may be affected.
-	The phpBB SEO Team : 2008.
+	The phpBB SEO Team.
 -->
 <div class="copyright">{L_COPY}&#160;<a href="http://feedvalidator.org/check.cgi?url={$rss_link}"><img src="{T_IMAGE_PATH}rss-valid.gif" alt="{L_RSS_VALID}" title="{L_RSS_VALID}" /></a></div>
 </body>

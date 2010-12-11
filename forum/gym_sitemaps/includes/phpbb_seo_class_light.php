@@ -2,8 +2,8 @@
 /**
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: phpbb_seo_class_light.php 172 2009-11-20 10:13:45Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: phpbb_seo_class_light.php 264 2010-06-02 07:13:08Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
 */
@@ -33,6 +33,7 @@ class phpbb_seo {
 	var	$RegEx = array();
 	var	$sftpl = array();
 	var	$url_replace = array();
+	var	$ssl = array('requested' => false, 'forced' => false);
 	var	$light = true;
 	/**
 	* constuctor
@@ -50,14 +51,20 @@ class phpbb_seo {
 			'virtual_root' => false,
 		);
 		// --> DOMAIN SETTING <-- //
-		// Path Settings, only rely on DB
-		$server_protocol = ($config['server_protocol']) ? $config['server_protocol'] : (($config['cookie_secure']) ? 'https://' : 'http://');
+		// SSL, beware with cookie secure, it won't force ssl here,
+		// so you will need to switch to ssl for your user to use cookie based session (no sid)
+		// could be done by using an https link to login form (or within the redirect after login)
+		$this->ssl['requested'] = (bool) ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === true)) || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443));
+		$this->ssl['forced'] = (bool) (($config['server_protocol'] === 'https//'));
+		$this->ssl['use'] = (bool) ($this->ssl['requested'] || $this->ssl['forced']);
+		// Server Settings, rely on DB
+		$server_protocol = $this->ssl['use'] ? 'https://' : 'http://';
 		$server_name = trim($config['server_name'], '/ ');
 		$server_port = max(0, (int) $config['server_port']);
 		$server_port = ($server_port && $server_port <> 80) ? ':' . $server_port : '';
 		$script_path = trim($config['script_path'], '/ ');
 		$script_path = (empty($script_path) ) ? '' : $script_path . '/';
-		$this->seo_path['root_url'] = strtolower($server_protocol . $server_name . $server_port . '/');
+		$this->seo_path['root_url'] = utf8_strtolower($server_protocol . $server_name . $server_port . '/');
 		$this->seo_path['phpbb_urlR'] = $this->seo_path['phpbb_url'] =  $this->seo_path['root_url'] . $script_path;
 		$this->seo_path['phpbb_script'] = $script_path;
 		$this->seo_path['canonical'] = '';
@@ -218,6 +225,20 @@ class phpbb_seo {
 		}
 		$this->seo_path['uri'] = $this->seo_path['root_url'] . $this->seo_path['uri'];
 		return $this->seo_path['uri'];
+	}
+	/**
+	* sslify($url, $ssl = true,  $proto_check = true)
+	* properly set http protocol (eg http or https)
+	* if no protocol is specified, will return false with $proto_check set to true
+	*/
+	function sslify($url, $ssl = true, $proto_check = true) {
+		static $mask = '`^https?://`i';
+		$url = trim($url);
+		if ($url && preg_match($mask, $url)) {
+			$replace = $ssl ? 'https://' : 'http://';
+			return preg_replace($mask, $replace, $url);
+		}
+		return $proto_check ? false : $url;
 	}
 	/**
 	* is_utf8($string)

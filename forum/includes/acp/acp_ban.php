@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_ban.php 10088 2009-09-02 05:12:23Z terrafrost $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -224,7 +224,7 @@ class acp_ban
 				$template->assign_block_vars('ban_reason', array(
 					'BAN_ID'	=> $ban_id,
 					'REASON'	=> $reason,
-					'A_REASON'	=> addslashes(htmlspecialchars_decode($reason)),
+					'A_REASON'	=> addslashes($reason),
 				));
 			}
 		}
@@ -236,7 +236,7 @@ class acp_ban
 				$template->assign_block_vars('ban_give_reason', array(
 					'BAN_ID'	=> $ban_id,
 					'REASON'	=> $reason,
-					'A_REASON'	=> addslashes(htmlspecialchars_decode($reason)),
+					'A_REASON'	=> addslashes($reason),
 				));
 			}
 		}

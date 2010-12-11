@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_google.php 204 2009-12-20 12:04:51Z dcz $
+* @version $Id: gym_google.php 259 2010-03-18 19:25:40Z dcz $
 * @copyright (c) 2006 - 2009 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -43,7 +43,6 @@ $lang = array_merge($lang, array(
 	'GOOGLE_LINKS_CAT_EXPLAIN' => 'Display or not links to the sitemap of the current forum. These links are added below the forum title.<br/>This feature requires that links on forum page display is activated in the main configuration.',
 	// Reset settings
 	'GOOGLE_ALL_RESET' => '<b>All</b> Google sitemaps modules',
-	'GOOGLE_URL' => 'Google Sitemaps URL',
 	'GOOGLE_URL_EXPLAIN' => 'Enter the full URL to your sitemapIndex eg http://www.example.com/eventual_dir/ if sitemap.php is installed in http://www.example.com/eventual_dir/.<br/>This option is useful when phpBB is not installed in the domain\'s root and you would like to list URLs from the domain’s root level in your Google sitemaps.',
 	'GOOGLE_PING' => 'Google Ping',
 	'GOOGLE_PING_EXPLAIN' => 'Pings Google each time a sitemap gets refreshed.',

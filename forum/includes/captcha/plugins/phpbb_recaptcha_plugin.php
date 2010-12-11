@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: phpbb_recaptcha_plugin.php 10420 2010-01-17 17:25:14Z toonarmy $
+* @version $Id$
 * @copyright (c) 2006, 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -314,10 +314,7 @@ class phpbb_recaptcha extends phpbb_default_captcha
 		}
 		else
 		{
-			if ($answers[1] === 'incorrect-captcha-sol')
-			{
-				return $user->lang['RECAPTCHA_INCORRECT'];
-			}
+			return $user->lang['RECAPTCHA_INCORRECT'];
 		}
 	}
 

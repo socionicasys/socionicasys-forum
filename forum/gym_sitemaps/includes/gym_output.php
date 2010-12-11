@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_output.php 112 2009-09-30 17:21:34Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: gym_output.php 262 2010-04-20 11:06:58Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -164,16 +164,18 @@ class gym_output {
 	* @access private
 	*/
 	function setup_cache() {
+		global $phpbb_seo;
 		// For module inclusion in ACP : No cache
 		if ( defined('ADMIN_START') ) {
 			return;
 		}
 		// build cache file name
+		$ssl_bit = $phpbb_seo->ssl['use'] ? 'ssl_' : '';
 		$file_name = ( !empty($this->options['module_sub']) ?  $this->options['module_sub'] : '' ) . trim(str_replace(array('&amp;', '/'), '-', $this->options['extra_params_full']),'-') . '-a' . $this->options['auth_param'];
 		if ($this->gym_master->gym_config['gym_cript_cache']) {
 			$file_name = md5( $file_name );
 		}
-		$file_name = $this->gym_master->actions['action_type'] . '_' . ( ( !empty($this->options['module_main']) ) ?  $this->options['module_main'] . '_' : 'main_' ) . $file_name . $this->cache['cache_file_ext'];
+		$file_name = $this->gym_master->actions['action_type'] . '_' . ( ( !empty($this->options['module_main']) ) ?  $this->options['module_main'] . '_' : 'main_' ) . $ssl_bit . $file_name . $this->cache['cache_file_ext'];
 		$this->cache['file'] = $this->gym_master->path_config['gym_path'] . 'cache/' . $file_name;
 		// Output, first check cache
 		if ($this->cache['do_cache'] && $this->check_cache($this->cache['file'])) {
@@ -310,6 +312,10 @@ class gym_output {
 	function init_gzip() {
 		global $config;
 		$this->gzip_config['gzip'] = $config['gzip_compress'] ? 1 : intval($this->gym_master->set_module_option('gzip', $this->gym_master->override['gzip']));
+		// if gunzip is only activated for GYM, we turn it on for phpBB also
+		if ($this->gzip_config['gzip'] && !$config['gzip_compress']) {
+			$config['gzip_compress'] = 1;
+		}
 		if (!$this->check_gzip() && $this->gzip_config['gzip']) {
 			$this->gzip_config['gzip'] = false;
 		}

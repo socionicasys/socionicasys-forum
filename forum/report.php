@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: report.php 10284 2009-11-24 14:27:17Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

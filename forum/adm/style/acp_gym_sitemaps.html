@@ -46,7 +46,7 @@
 		<p>{ERROR_MSG}</p>
 	</div>
 <!-- ENDIF -->
-<form id="acp_board" method="post" action="{U_ACTION}">
+<form id="acp_gym" method="post" action="{U_ACTION}">
 
 <!-- BEGIN options -->
 	<!-- IF options.S_LEGEND -->
@@ -64,17 +64,15 @@
 
 	<!-- ENDIF -->
 <!-- END options -->
-
-<!-- IF S_AUTH -->
-	<!-- BEGIN auth_tpl -->
-		{auth_tpl.TPL}
-	<!-- END auth_tpl -->
-<!-- ENDIF -->
+</fieldset>
 <!-- IF S_SUBMIT_BUTTON -->
+<fieldset>
 	<p class="submit-buttons">
 		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
 	</p>
+	{S_FORM_TOKEN}
+</fieldset>
 <!-- ENDIF -->
 </form>
 <!-- IF S_MENU_MODULE -->

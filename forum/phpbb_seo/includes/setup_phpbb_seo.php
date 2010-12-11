@@ -2,7 +2,7 @@
 /**
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: setup_phpbb_seo.php 222 2010-02-27 13:08:48Z dcz $
+* @version $Id: setup_phpbb_seo.php 262 2010-04-20 11:06:58Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -309,6 +309,16 @@ class setup_phpbb_seo {
 		}
 		$this->start = '';
 		return 0;
+	}
+	/**
+	* get_canonical
+	* Returns the canonical url if ever built
+	* Beware with ssl :
+	* 	Since we want zero duplicate, the canonical element will only use https when ssl is forced
+	* 	(eg set as THE server protocol in config) and will use http in other cases.
+	*/
+	function get_canonical() {
+		return $this->sslify($this->seo_path['canonical'], $this->ssl['forced'], true);
 	}
 	// <-- Zero Duplicate
 }

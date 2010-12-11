@@ -2,7 +2,7 @@
 /**
 *
 * @package acm
-* @version $Id: acm_eaccelerator.php 10309 2009-12-09 22:16:53Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005, 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

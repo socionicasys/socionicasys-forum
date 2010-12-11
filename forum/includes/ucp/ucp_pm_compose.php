@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_pm_compose.php 10325 2009-12-12 00:06:01Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1054,7 +1054,7 @@ function compose_pm($id, $mode, $action)
 		'S_COMPOSE_PM'			=> true,
 		'S_EDIT_POST'			=> ($action == 'edit'),
 		'S_SHOW_PM_ICONS'		=> $s_pm_icons,
-		'S_BBCODE_ALLOWED'		=> $bbcode_status,
+		'S_BBCODE_ALLOWED'		=> ($bbcode_status) ? 1 : 0,
 		'S_BBCODE_CHECKED'		=> ($bbcode_checked) ? ' checked="checked"' : '',
 		'S_SMILIES_ALLOWED'		=> $smilies_status,
 		'S_SMILIES_CHECKED'		=> ($smilies_checked) ? ' checked="checked"' : '',

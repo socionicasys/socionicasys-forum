@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_jabber.php 10305 2009-12-08 17:09:48Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

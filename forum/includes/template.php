@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: template.php 10460 2010-01-26 16:52:46Z naderman $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group, sections (c) 2001 ispi of Lincoln Inc
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

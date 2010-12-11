@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: questionnaire.php 10430 2010-01-19 19:08:51Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

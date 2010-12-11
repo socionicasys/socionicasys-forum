@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: google_forum.php 175 2009-11-21 13:58:04Z dcz $
+* @version $Id: google_forum.php 254 2010-03-12 15:08:58Z dcz $
 * @copyright (c) 2006 - 2009 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -134,7 +134,7 @@ class google_forum {
 					$this->gym_master->gym_error(401, '',  __FILE__, __LINE__);
 				}
 				// This forum is allowed, so let's start
-				$forum_sitemap_url = sprintf($this->url_config['google_forum_tpl'], $forum_id, str_replace($phpbb_seo->seo_delim['forum'] . $forum_id, '', $phpbb_seo->set_url($forum_data['forum_name'], $forum_id)));
+				$forum_sitemap_url = sprintf($this->url_config['google_forum_tpl'], $forum_id, str_replace($phpbb_seo->seo_delim['forum'] . $forum_id, '', $phpbb_seo->set_url($forum_data['forum_name'], $forum_id, 'forum')));
 				// Approval and pagination
 				$paginated = $config['posts_per_page'];
 				$forum_data['topic_count'] = (int) $forum_data['forum_topics'];
@@ -256,7 +256,7 @@ class google_forum {
 				$num_sitemaps++;
 			}
 			// Build sitemap url
-			$sitemap_data[$forum_id]['url'] = sprintf($this->url_config['google_forum_tpl'], $forum_id, str_replace($phpbb_seo->seo_delim['forum'] . $forum_id, '', $phpbb_seo->set_url($forum_data['forum_name'], $forum_id)));
+			$sitemap_data[$forum_id]['url'] = sprintf($this->url_config['google_forum_tpl'], $forum_id, str_replace($phpbb_seo->seo_delim['forum'] . $forum_id, '', $phpbb_seo->set_url($forum_data['forum_name'], $forum_id, 'forum')));
 			$sitemap_data[$forum_id]['lastmod'] = $forum_data['forum_last_post_time'] > $config['board_startdate'] ? $forum_data['forum_last_post_time'] : $config['board_startdate'];
 		}// End Forum map loop
 		$db->sql_freeresult($result);

@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_html.php 112 2009-09-30 17:21:34Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: gym_html.php 262 2010-04-20 11:06:58Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -41,15 +41,15 @@ class gym_html extends gym_sitemaps {
 			$this->cache_config,
 			// Other stuff required here
 			array(
-				'main_cache_on' => (boolean) $this->set_module_option('main_cache_on', $this->gym_config['html_override']),
-				'opt_cache_on' => (boolean) $this->set_module_option('opt_cache_on', $this->gym_config['html_override']),
-				'main_cache_ttl' => round($this->set_module_option('main_cache_ttl', $this->gym_config['html_override']),2) * 3600,
-				'opt_cache_ttl' => round($this->set_module_option('opt_cache_ttl', $this->gym_config['html_override']),2) * 3600,
+				'main_cache_on' => (boolean) $this->set_module_option('main_cache_on', $this->override['cache']),
+				'opt_cache_on' => (boolean) $this->set_module_option('opt_cache_on', $this->override['cache']),
+				'main_cache_ttl' => round($this->set_module_option('main_cache_ttl', $this->override['cache']),2) * 3600,
+				'opt_cache_ttl' => round($this->set_module_option('opt_cache_ttl', $this->override['cache']),2) * 3600,
 			)
 		);
 		$this->html_config = array(
 			'html_c_info' => $this->gym_config['html_c_info'],
-			'html_url' => $this->gym_config['html_url'],
+			'html_url' => $phpbb_seo->sslify($this->gym_config['html_url'], $phpbb_seo->ssl['use'], false),
 			'html_pagination' => (int) $this->set_module_option('pagination', $this->override['pagination']),
 			'html_item_pagination' => (int) $this->set_module_option('item_pagination', $this->override['pagination']),
 			'html_pagination_limit' => (int) max(1, $this->set_module_option('pagination_limit', $this->override['pagination'])),
@@ -241,17 +241,19 @@ class gym_html extends gym_sitemaps {
 		}
 		$template->set_filenames(array('body' => 'gym_sitemaps/index_body.html'));
 		$this->cache_config['do_cache_main'] = (boolean) ($this->cache_config['do_cache_main'] && $this->actions['is_public']);
+		$this->cache_config['do_cache_opt'] = (boolean) ($this->cache_config['do_cache_opt'] && $this->actions['is_public']);
 		$cache_find = array('`(\?|&amp;|&)sid\=[a-z0-9]+`i', '`[\s]+`');
 		$cache_replace = array('',' ');
+		$ssl_bit = $phpbb_seo->ssl['use'] ? 'ssl_' : '';
 		// Main output
 		if (!empty($this->output_data['left_col_tpl'])) {
 			$template->set_filenames(array('left_col' => $this->output_data['left_col_tpl']));
 			if ($this->cache_config['do_cache_main'] && !empty($this->output_data['left_col_cache_file'])) {
-				$cache_file = '_gym_html_' . $this->output_data['left_col_cache_file'] . '_' . $user->data['user_lang'] . '_' . $this->start;
+				$cache_file = '_gym_html_' . $this->output_data['left_col_cache_file'] . '_' . $ssl_bit . $user->data['user_lang'] . '_' . $this->start;
 				if (($left_col = $cache->get($cache_file)) === false) {
 					$module_obj->html_main();
 					$left_col = $template->assign_display('left_col', '', true);
-					// Strip whitespaces
+					// Strip whitespaces and sids
 					$left_col = preg_replace($cache_find, $cache_replace, $left_col );
 					$cache->put($cache_file, $left_col, $this->cache_config['main_cache_ttl']);
 				}
@@ -264,12 +266,12 @@ class gym_html extends gym_sitemaps {
 		// Optional output
 		if (!empty($this->output_data['right_col'])) {
 			if ($this->cache_config['do_cache_opt'] && !empty($this->output_data['right_col_cache_file'])) {
-				$cache_file = '_gym_html_' . $this->output_data['right_col_cache_file'] . '_' . $user->data['user_lang'];
+				$cache_file = '_gym_html_' . $this->output_data['right_col_cache_file'] . '_' . $ssl_bit . $user->data['user_lang'];
 				if (($right_col = $cache->get($cache_file)) === false) {
 					$module_obj->html_module();
 					$template->set_filenames(array('right_col' => $this->output_data['right_col_tpl']));
 					$right_col = $template->assign_display('right_col', '', true);
-					// Strip whitespaces
+					// Strip whitespaces and sids
 					$right_col = preg_replace($cache_find, $cache_replace, $right_col );
 					$cache->put($cache_file, $right_col, $this->cache_config['opt_cache_ttl']);
 				}
@@ -352,19 +354,24 @@ class gym_html extends gym_sitemaps {
 	* @access private
 	*/
 	function html_index() {
-		global $phpEx, $phpbb_root_path, $user, $template, $cache, $phpbb_seo;
+		global $phpEx, $phpbb_root_path, $user, $template, $cache, $phpbb_seo, $config;
 		if ($this->actions['html_news_list']) {
 			// Add index page in navigation links
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME' => $user->lang['HTML_MAP'],
-				'U_VIEW_FORUM'	=> append_sid($this->html_config['html_url']. $this->url_config['html_default']))
-			);
+				'U_VIEW_FORUM'	=> append_sid($this->html_config['html_url']. $this->url_config['html_default']),
+			));
 			$this->url_config['current'] = $this->html_config['html_url'] . $this->url_config['html_news_default'];
 			$this->actions['is_auth'] = true;
-			$this->actions['is_active'] = !empty($this->gym_config['html_rss_news_url']);
+			$src_url = $this->gym_config['html_rss_news_url'];
+			// if the source is set on the same domain, hanlde ssl properly
+			if (strpos($src_url, $config['server_name']) !== false) {
+				$src_url = $phpbb_seo->sslify($src_url, $phpbb_seo->ssl['use']);
+			}
+			$this->actions['is_active'] = $src_url ? 1 : 0;
 			$params = array(
 				// Full URL to the RSS 2.0 feed
-				'url' => str_replace('&amp;', '&', $this->gym_config['html_rss_news_url']),
+				'url' => str_replace('&amp;', '&', $src_url),
 				'desc' => true,
 				'html' => true,
 				'limit' => (int) $this->gym_config['html_rss_news_limit'],
@@ -373,7 +380,8 @@ class gym_html extends gym_sitemaps {
 			$template->assign_vars(array('GYM_RSS_SLIDE_SP' => false));
 			$template->set_filenames(array('index_data' => 'gym_sitemaps/gym_link_body.html'));
 		} else {
-			$cache_file = '_gym_html_map_' . $user->data['user_lang'];
+			$ssl_bit = $phpbb_seo->ssl['use'] ? 'ssl_' : '';
+			$cache_file = '_gym_html_map_' . $ssl_bit . $user->data['user_lang'];
 			if (($this->output_data['module_data'] = $cache->get($cache_file)) === false) {
 				$this->load_modules('html_index');
 				$cache->put($cache_file, $this->output_data['module_data']);
@@ -386,24 +394,22 @@ class gym_html extends gym_sitemaps {
 				foreach ($this->output_data['module_data'] as $module_name => $module_data) {
 					// First modules
 					$template->assign_block_vars('module', array(
-							'TITLE' => $module_data['title'],
-							'NEWS_TITLE' => sprintf($user->lang['HTML_NEWS_OF'], $module_data['title']),
-							'MAP_TITLE' => sprintf($user->lang['HTML_MAP_OF'], $module_data['title']),
-							'DESC' => $module_data['desc'],
-							'IMG' => $module_data['img'],
-							'MAP_URL' => append_sid($module_data['map_url']),
-							'NEWS_URL' => append_sid($module_data['news_url']),
-						)
-					);
+						'TITLE' => $module_data['title'],
+						'NEWS_TITLE' => sprintf($user->lang['HTML_NEWS_OF'], $module_data['title']),
+						'MAP_TITLE' => sprintf($user->lang['HTML_MAP_OF'], $module_data['title']),
+						'DESC' => $module_data['desc'],
+						'IMG' => $module_data['img'],
+						'MAP_URL' => append_sid($module_data['map_url']),
+						'NEWS_URL' => append_sid($module_data['news_url']),
+					));
 					// Then the module maps & news pages
 					foreach ($module_data['links'] as $data) {
 						$template->assign_block_vars('module.links', array(
-								'MAP_TITLE' => $data['map_title'],
-								'MAP_URL' => append_sid($data['map_url']),
-								'NEWS_TITLE' => $data['news_title'],
-								'NEWS_URL' => append_sid($data['news_url']),
-							)
-						);
+							'MAP_TITLE' => $data['map_title'],
+							'MAP_URL' => append_sid($data['map_url']),
+							'NEWS_TITLE' => $data['news_title'],
+							'NEWS_URL' => append_sid($data['news_url']),
+						));
 					}
 				}
 			}
@@ -416,8 +422,7 @@ class gym_html extends gym_sitemaps {
 			'HTML_NEWS_URL' => $this->html_config['html_allow_news'] ? append_sid($this->html_config['html_url'] . $this->url_config['html_news_default']) : '',
 			'NEWS_IMG_SRC' => $this->path_config['gym_img_url'] . 'html_news.gif',
 			'ROOT_PATH' => $phpbb_root_path,
-			)
-		);
+		));
 		$return = $template->assign_display('index_data', '', true);
 		return $return;
 	}

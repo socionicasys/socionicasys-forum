@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_php_info.php 8479 2008-03-29 00:22:48Z naderman $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -35,9 +35,9 @@ class acp_php_info
 
 		$this->tpl_name = 'acp_php_info';
 		$this->page_title = 'ACP_PHP_INFO';
-		
+
 		ob_start();
-		@phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_VARIABLES);
+		phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_VARIABLES);
 		$phpinfo = ob_get_clean();
 
 		$phpinfo = trim($phpinfo);

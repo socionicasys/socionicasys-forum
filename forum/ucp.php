@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp.php 10090 2009-09-03 09:25:16Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -22,7 +22,7 @@ require($phpbb_root_path . 'includes/functions_module.' . $phpEx);
 $id 	= request_var('i', '');
 $mode	= request_var('mode', '');
 
-if ($mode == 'login' || $mode == 'logout' || $mode == 'confirm')
+if (in_array($mode, array('login', 'logout', 'confirm', 'sendpassword', 'activate')))
 {
 	define('IN_LOGIN', true);
 }
@@ -67,7 +67,7 @@ switch ($mode)
 if (!empty($_POST['token'])) {
 	$module->load('loginza', 'register');
 } else {
-	$module->load('ucp', 'register');
+		$module->load('ucp', 'register');
 }
 		$module->display($user->lang['REGISTER']);
 	break;

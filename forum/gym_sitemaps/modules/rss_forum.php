@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: rss_forum.php 240 2010-03-04 11:01:10Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: rss_forum.php 262 2010-04-20 11:06:58Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -303,7 +303,7 @@ class rss_forum {
 						$this->gym_master->gym_error(401, '', __FILE__, __LINE__);
 					}
 					// This forum is allowed, so let's start
-					$forum_rss_url = $this->module_config['rss_url'] . ($this->module_config['rss_modrewrite'] ? $phpbb_seo->set_url($forum_data['forum_name'], $forum_id)  . '/' : $this->url_config['rss_forum_pre'] . $forum_id);
+					$forum_rss_url = $this->module_config['rss_url'] . ($this->module_config['rss_modrewrite'] ? $phpbb_seo->set_url($forum_data['forum_name'], $forum_id, 'forum')  . '/' : $this->url_config['rss_forum_pre'] . $forum_id);
 					// Build Yahoo notify URL
 					// If the URL is not rewritten, we cannot use "&", get rid of options in such cases.
 					if ($this->module_config['rss_yahoo_notify']) {
@@ -509,7 +509,7 @@ class rss_forum {
 				// In case we are going to output forum data many times, let's build this once
 				if (empty($this->forum_cache[$forum_id])) {
 					// Set mod rewrite & type
-					$this->forum_cache[$forum_id]['forum_rss_url'] =  $this->module_config['rss_url'] . ($this->module_config['rss_modrewrite'] ? $phpbb_seo->set_url($forum_data[$forum_id]['forum_name'], $forum_id)  . '/' : $this->url_config['rss_forum_pre'] . $forum_id) . $this->url_config['extra_paramsE'] . $this->url_config['rss_forum_file'];
+					$this->forum_cache[$forum_id]['forum_rss_url'] =  $this->module_config['rss_url'] . ($this->module_config['rss_modrewrite'] ? $phpbb_seo->set_url($forum_data[$forum_id]['forum_name'], $forum_id, 'forum')  . '/' : $this->url_config['rss_forum_pre'] . $forum_id) . $this->url_config['extra_paramsE'] . $this->url_config['rss_forum_file'];
 					$this->forum_cache[$forum_id]['forum_url'] = $this->gym_master->forum_url($forum_data[$forum_id]['forum_name'], $forum_id);
 					$this->forum_cache[$forum_id]['forum_name'] = $forum_data[$forum_id]['forum_name'];
 					$this->forum_cache[$forum_id]['approve'] = 0;

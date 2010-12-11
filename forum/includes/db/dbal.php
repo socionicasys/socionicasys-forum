@@ -2,7 +2,7 @@
 /**
 *
 * @package dbal
-* @version $Id: dbal.php 10529 2010-02-23 23:46:43Z naderman $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

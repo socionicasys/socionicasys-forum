@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_inactive.php 10310 2009-12-09 22:55:10Z toonarmy $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

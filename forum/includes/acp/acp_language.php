@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_language.php 10498 2010-02-17 18:40:22Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1120,12 +1120,12 @@ class acp_language
 		{
 			while (($file = readdir($dp)) !== false)
 			{
-				if (!is_dir($phpbb_root_path . 'language/' . $file))
+				if ($file[0] == '.' || !is_dir($phpbb_root_path . 'language/' . $file))
 				{
 					continue;
 				}
 
-				if ($file[0] != '.' && file_exists("{$phpbb_root_path}language/$file/iso.txt"))
+				if (file_exists("{$phpbb_root_path}language/$file/iso.txt"))
 				{
 					if (!in_array($file, $installed))
 					{

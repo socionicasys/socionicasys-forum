@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: html_forum.php 112 2009-09-30 17:21:34Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: html_forum.php 262 2010-04-20 11:06:58Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -169,8 +169,7 @@ class html_forum {
 			$pre_set = true;
 		case 'announce':
 			if (!$pre_set) {
-				$this->actions['is_public'] = $this->gym_master->gym_auth['reg'];
-				$this->actions['is_auth'] = $this->actions['is_active'] = !empty($this->module_auth['forum']['read_post']);
+				$this->actions['is_public'] = $this->actions['is_auth'] = $this->actions['is_active'] = !empty($this->module_auth['forum']['read_post']);
 				if (empty($this->actions['auth_view_read'])) {
 					$this->gym_master->gym_error(404, '', __FILE__, __LINE__);
 				}
@@ -181,8 +180,7 @@ class html_forum {
 			}
 		case 'sticky':
 			if (!$pre_set) {
-				$this->actions['is_public'] = $this->gym_master->gym_auth['reg'];
-				$this->actions['is_auth'] = $this->actions['is_active'] = !empty($this->module_auth['forum']['read_post']);
+				$this->actions['is_public'] = $this->actions['is_auth'] = $this->actions['is_active'] = !empty($this->module_auth['forum']['read_post']);
 				if (empty($this->actions['auth_view_read'])) {
 					$this->gym_master->gym_error(404, '', __FILE__, __LINE__);
 				}
@@ -273,8 +271,7 @@ class html_forum {
 				$this->call['display_file'] = $this->url_settings['current'];
 				$this->outputs['left_col_tpl'] = 'gym_sitemaps/display_forums_list.html';
 				$this->outputs['left_col_cache_file'] = "forum_map";
-				$this->actions['is_public'] = $this->gym_master->gym_auth['reg'];
-				$this->actions['is_auth'] = true;
+				$this->actions['is_public'] = $this->actions['is_auth'] = true;
 				$this->actions['is_active'] = (boolean) ($this->module_config['html_allow_cat_news'] || $this->module_config['html_allow_cat_map'] );
 				$this->outputs['right_col'] = $this->call['display_last_topic'] = $this->module_config['html_forum_ltopic'];
 				$this->outputs['page_title'] = sprintf($user->lang['HTML_MAP_OF'], $this->module_config['html_sitename']);
@@ -332,7 +329,7 @@ class html_forum {
 						$result = $db->sql_query($sql);
 						if ($row = $db->sql_fetchrow($result)) {
 							// www.phpBB-SEO.com SEO TOOLKIT BEGIN
-							$phpbb_seo->set_url($row['forum_name'], $forum_id, $phpbb_seo->seo_static['forum']);
+							$phpbb_seo->set_url($row['forum_name'], $forum_id, 'forum');
 							// www.phpBB-SEO.com SEO TOOLKIT END
 							$this->forum_datas[$forum_id] = array_merge($row,  array(
 								'forum_url' => append_sid("{$phpbb_root_path}viewforum.$phpEx", "f=$forum_id"),
@@ -367,7 +364,7 @@ class html_forum {
 							$nav_url = $this->url_settings['html_forum_' . $key];
 							$nav_title = sprintf($user->lang['HTML_' . strtoupper($key) . '_OF'], $this->module_config['html_sitename']);
 						}
-						$this->outputs['left_col_cache_file'] = "forum_$forum_id$key";
+						$this->outputs['left_col_cache_file'] = "forum_$key" . "_$forum_id";
 						// Enable forum tracking
 						$_REQUEST['f'] = $this->call['forum_id'];
 						// Track user viewing this forum
@@ -462,6 +459,7 @@ class html_forum {
 		// Wee need to check auth here
 		$this->module_config['last_topics_exclude_list'] = $this->gym_master->set_exclude_list($this->module_config['html_ltopic_exclude']);
 		$forum_auth_ids = array_diff_assoc($this->module_auth['forum']['read_post'], $this->module_config['last_topics_exclude_list']);
+		$all_forum_datas = $forum_datas = array();
 		if (!empty($forum_auth_ids)) {
 			$topic_sql_auth = $db->sql_in_set('t.forum_id', $forum_auth_ids, false, true);
 			$template->assign_vars(array(
@@ -509,7 +507,6 @@ class html_forum {
 				}
 				$sql_array['WHERE'] = $forum_sql_auth;
 				$result = $db->sql_query($db->sql_build_query('SELECT', $sql_array));
-				$all_forum_datas = $forum_datas = array();
 				while ($row = $db->sql_fetchrow($result)) {
 					$forum_id = (int) $row['forum_id'];
 					$forum_datas[$forum_id] = $row;
@@ -566,7 +563,7 @@ class html_forum {
 				if (empty($this->forum_datas[$forum_id])) {
 					$row = & $forum_datas[$forum_id];
 					// www.phpBB-SEO.com SEO TOOLKIT BEGIN
-					$phpbb_seo->set_url($row['forum_name'], $forum_id, $phpbb_seo->seo_static['forum']);
+					$phpbb_seo->set_url($row['forum_name'], $forum_id, 'forum');
 					// www.phpBB-SEO.com SEO TOOLKIT END
 					$this->forum_datas[$forum_id] = array_merge($row,  array(
 						'forum_url' => append_sid("{$phpbb_root_path}viewforum.$phpEx", "f=$forum_id"),

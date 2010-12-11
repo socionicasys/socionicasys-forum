@@ -4,7 +4,7 @@
 * acp_phpbb_seo [English]
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: acp_phpbb_seo.php 203 2009-12-20 12:04:27Z dcz $
+* @version $Id: acp_phpbb_seo.php 249 2010-03-11 05:08:04Z Typo $
 * @copyright (c) 2006 - 2009 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -58,7 +58,7 @@ $lang = array_merge($lang, array(
 	'SEO_MORE_OPTION'	=> 'More Options',
 	'SEO_MORE_OPTION_EXPLAIN' => 'If the first suggested .htaccess does not work.<br/>First make sure mod_rewrite is activated on your server.<br/>Then, make sure you uploaded it in the right folder, and that another one is not perturbing.<br/>If not enough, hit the "more option" button.',
 	'SEO_HTACCESS_SAVE' => 'Save the .htaccess',
-	'SEO_HTACCESS_SAVE_EXPLAIN' => 'If checked, an .htaccess files will be generated upon submit in the phpbb_seo/cache/ folder. It’s ready to go with your last settings, bou will still have to move it in the right place.',
+	'SEO_HTACCESS_SAVE_EXPLAIN' => 'If checked, an .htaccess files will be generated upon submit in the phpbb_seo/cache/ folder. It’s ready to go with your last settings, you will still have to move it in the right place.',
 	'SEO_HTACCESS_ROOT_MSG'	=> 'Once you are ready, you can select the .htaccess code, and paste it in a .htaccess file or use the "Save .htaccess" option bellow.<br/> This .htaccess is meant to be used in the domain’s root folder, which in your case is where %1$s leads to in your FTP.<br/><br/>You can generate an .htaccess meant to be used in the eventual phpBB sub-directory using the "More options" option bellow.',
 	'SEO_HTACCESS_FOLDER_MSG' => 'Once you are ready, you can select the .htaccess code, and paste it in a .htaccess file or use the "Save .htaccess" option bellow.<br/> This .htaccess is meant to be used in the folder where phpBB is installed, which in your case is where %1$s leads to in your FTP.',
 	'SEO_HTACCESS_CAPTION' => 'Caption',

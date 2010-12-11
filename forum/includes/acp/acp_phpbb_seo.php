@@ -2,7 +2,7 @@
 /**
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: acp_phpbb_seo.php 237 2010-03-03 17:04:35Z dcz $
+* @version $Id: acp_phpbb_seo.php 277 2010-11-25 12:09:02Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -661,6 +661,7 @@ class acp_phpbb_seo {
 			$rewritebase = '';
 			$wierd_slash = $this->new_config['wslash'] ? '<b style="color:red">/</b>' : '';
 			$default_slash = $this->new_config['slash'] ? '' : '/';
+
 			if (!empty($phpbb_path )) {
 				$phpbb_path = $phpbb_path . '/';
 				if ($this->new_config['rbase']) {
@@ -680,13 +681,14 @@ class acp_phpbb_seo {
 				'ext' => '#6A5ACD',
 				'delim' => '#FF00FF',
 			);
-			$tpl = array('paginpage' => '/?(<b style="color:#A020F0">%1$s</b>([0-9]+)<b style="color:#6A5ACD">%2$s</b>)?',
-				'pagin' => '(<b style="color:#FF00FF">%1$s</b>([0-9]+))?<b style="color:#6A5ACD">%2$s</b>',
+			$tpl = array('paginpage' => '/?(<b style="color:' . $colors['static'] . '">%1$s</b>([0-9]+)<b style="color:' . $colors['ext'] . '">%2$s</b>)?',
+				'pagin' => '(<b style="color:' . $colors['delim'] . '">%1$s</b>([0-9]+))?<b style="color:' . $colors['ext'] . '">%2$s</b>',
 				'static' => sprintf($colors['color'] , $colors['static'], '%1$s'),
 				'ext' => sprintf($colors['color'] , $colors['ext'], '%1$s'),
 				'delim' => sprintf($colors['color'] , $colors['delim'], '%1$s'),
 			);
 			$modrtype = array( 1 => 'SIMPLE', 2 => 'MIXED', 1 => 'SIMPLE', 3 => 'ADVANCED', 'type' => intval($phpbb_seo->modrtype));
+			//
 			$htaccess_tpl = '<b style="color:blue"># Lines That should already be in your .htacess</b>' . "\n";
 			$htaccess_tpl .= '<b style="color:brown">&lt;Files</b> <b style="color:#FF00FF">"config.{PHP_EX}"</b><b style="color:brown">&gt;</b>' . "\n";
 			$htaccess_tpl .= "\t" . 'Order Allow,Deny' . "\n";
@@ -777,8 +779,9 @@ class acp_phpbb_seo {
 			$htaccess_tpl .= '<b style="color:green">RewriteRule</b> ^{WIERD_SLASH}{PHPBB_LPATH}({STATIC_FORUM}|[a-z0-9_-]*{DELIM_FORUM})([0-9]+){FORUM_PAGINATION}$ {DEFAULT_SLASH}{PHPBB_RPATH}viewforum.{PHP_EX}?f=$2&amp;start=$4 [QSA,L,NC]' . "\n";
 			$htaccess_tpl .= '<b style="color:blue"># TOPIC WITH VIRTUAL FOLDER ALL MODES</b>' . "\n";
 			$htaccess_tpl .= '<b style="color:green">RewriteRule</b> ^{WIERD_SLASH}{PHPBB_LPATH}({STATIC_FORUM}|[a-z0-9_-]*{DELIM_FORUM})([0-9]+)/({STATIC_TOPIC}|[a-z0-9_-]*{DELIM_TOPIC})([0-9]+){TOPIC_PAGINATION}$ {DEFAULT_SLASH}{PHPBB_RPATH}viewtopic.{PHP_EX}?f=$2&amp;t=$4&amp;start=$6 [QSA,L,NC]' . "\n";
-			$htaccess_tpl .= '<b style="color:blue"># GLOBAL ANNOUNCES WITH VIRTUAL FOLDER ALL MODES</b>' . "\n";
-			$htaccess_tpl .= '<b style="color:green">RewriteRule</b> ^{WIERD_SLASH}{PHPBB_LPATH}{STATIC_GLOBAL_ANNOUNCE}{EXT_GLOBAL_ANNOUNCE}({STATIC_TOPIC}|[a-z0-9_-]*{DELIM_TOPIC})([0-9]+){TOPIC_PAGINATION}$ {DEFAULT_SLASH}{PHPBB_RPATH}viewtopic.{PHP_EX}?t=$2&amp;start=$4 [QSA,L,NC]' . "\n";
+		//	Not needed any more
+		//	$htaccess_tpl .= '<b style="color:blue"># GLOBAL ANNOUNCEMENTS WITH VIRTUAL FOLDER ALL MODES</b>' . "\n";
+		//	$htaccess_tpl .= '<b style="color:green">RewriteRule</b> ^{WIERD_SLASH}{PHPBB_LPATH}{STATIC_GLOBAL_ANNOUNCE}{EXT_GLOBAL_ANNOUNCE}({STATIC_TOPIC}|[a-z0-9_-]*{DELIM_TOPIC})([0-9]+){TOPIC_PAGINATION}$ {DEFAULT_SLASH}{PHPBB_RPATH}viewtopic.{PHP_EX}?t=$2&amp;start=$4 [QSA,L,NC]' . "\n";
 			$htaccess_tpl .= '<b style="color:blue"># TOPIC WITHOUT FORUM ID &amp; DELIM ALL MODES</b>' . "\n";
 			$htaccess_tpl .= '<b style="color:green">RewriteRule</b> ^{WIERD_SLASH}{PHPBB_LPATH}([a-z0-9_-]*)/?({STATIC_TOPIC}|[a-z0-9_-]*{DELIM_TOPIC})([0-9]+){TOPIC_PAGINATION}$ {DEFAULT_SLASH}{PHPBB_RPATH}viewtopic.{PHP_EX}?forum_uri=$1&amp;t=$3&amp;start=$5 [QSA,L,NC]' . "\n";
 			$htaccess_tpl .= $htaccess_common_tpl;
@@ -786,7 +789,7 @@ class acp_phpbb_seo {
 			if (!empty($mods_ht['pos1'])) {
 				$htaccess_tpl .= $mods_ht['pos1'];
 			}
-			$htaccess_tpl .= '<b style="color:blue"># FORUM WITHOUT ID &amp; DELIM ALL MODES (SAME DELIM)</b>' . "\n";
+			$htaccess_tpl .= '<b style="color:blue"># FORUM WITHOUT ID &amp; DELIM ALL MODES</b>' . "\n";
 			if ($phpbb_seo->seo_ext['forum'] != '/') {
 				$htaccess_tpl .= '<b style="color:blue"># THESE FOUR LINES MUST BE LOCATED AT THE END OF YOUR HTACCESS TO WORK PROPERLY</b>' . "\n";
 				$htaccess_tpl .= '<b style="color:green">RewriteCond</b> %{REQUEST_FILENAME} !-f' . "\n";
@@ -846,24 +849,25 @@ class acp_phpbb_seo {
 			}
 			// The tpl array
 			$htaccess_tpl_vars = array();
-			if ($phpbb_seo->seo_opt['virtual_folder']) {
-				$phpbb_seo->seo_ext['forum'] = '/';
-			}
+
 			// handle the suffixes proper in the RegEx
 			// set up pagination reg ex
 			// set up ext bits
 			$seo_ext = array('pagination' => str_replace('.', '\\.', $phpbb_seo->seo_ext['pagination']));
-			$reg_ex_page = sprintf($tpl['paginpage'], $phpbb_seo->seo_static['pagination'], $seo_ext['pagination']);
+			$reg_ex_page = sprintf($tpl['paginpage'], $phpbb_seo->seo_static['pagination'], $seo_ext['pagination'] . ($seo_ext['pagination'] === '/' ? '?' : '') );
 			foreach ( $phpbb_seo->seo_ext as $type => $value) {
 				$seo_ext[$type] = str_replace('.', '\\.', $value);
-				$htaccess_tpl_vars['{' . strtoupper($type) . '_PAGINATION}'] = ($phpbb_seo->seo_ext[$type] === '/') ? $reg_ex_page : sprintf($tpl['pagin'], $phpbb_seo->seo_delim['start'], $seo_ext[$type]);
-				$htaccess_tpl_vars['{EXT_' . strtoupper($type) . '}'] = sprintf($tpl['static'] , $seo_ext[$type]);
+				$htaccess_tpl_vars['{' . strtoupper($type) . '_PAGINATION}'] = ($value === '/') ? $reg_ex_page : sprintf($tpl['pagin'], $phpbb_seo->seo_delim['start'], $seo_ext[$type]);
+				// use url/? to allow both url and url/ to work as expected
+				$htaccess_tpl_vars['{EXT_' . strtoupper($type) . '}'] = sprintf($tpl['ext'] , $seo_ext[$type]) . ($value === '/' ? '?' : '');
 
 			}
-			$htaccess_tpl_vars['{PAGE_PAGINATION}'] = sprintf($tpl['paginpage'], $phpbb_seo->seo_static['pagination'], $seo_ext['pagination']);
+			$htaccess_tpl_vars['{PAGE_PAGINATION}'] = $reg_ex_page;
 			// static bits
 			foreach ( $phpbb_seo->seo_static as $type => $value) {
-				$htaccess_tpl_vars['{STATIC_' . strtoupper($type) . '}'] = sprintf($tpl['static'] , $phpbb_seo->seo_static[$type]);
+				if (!is_array($phpbb_seo->seo_static[$type])) {
+					$htaccess_tpl_vars['{STATIC_' . strtoupper($type) . '}'] = sprintf($tpl['static'] , $phpbb_seo->seo_static[$type]);
+				}
 			}
 			// delim bits
 			foreach ( $phpbb_seo->seo_delim as $type => $value) {

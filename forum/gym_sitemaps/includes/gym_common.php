@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_common.php 185 2009-11-26 09:37:00Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: gym_common.php 264 2010-06-02 07:13:08Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -107,8 +107,9 @@ function obtain_gym_links($gym_links = array()) {
 	$_phpbb_seo = !empty($phpbb_seo);
 	$board_url = $_phpbb_seo ? $phpbb_seo->seo_path['phpbb_url'] : generate_board_url() . '/';
 	$gym_config = array();
-	$cache_file = '_gym_links_' . $user->data['user_lang'];
-	$gym_link_tpl = '<a href="%1$s" title="%3$s" class="gym"><img src="' . $board_url . 'gym_sitemaps/images/%2$s" alt="%3$s"/>&nbsp;%4$s</a>&nbsp;';
+	$ssl_bit = $phpbb_seo->ssl['use'] ? 'ssl_' : '';
+	$cache_file = '_gym_links_' . $ssl_bit . $user->data['user_lang'];
+	$gym_link_tpl = '<a href="%1$s" title="%3$s" class="gym"><img src="' . $board_url . 'gym_sitemaps/images/%2$s" alt="%3$s" width="14", height="14"/>&nbsp;%4$s</a>&nbsp;';
 	if (($links = $cache->get($cache_file)) === false) {
 		obtain_gym_config('main', $gym_config);
 		$user->add_lang('gym_sitemaps/gym_common');
@@ -171,7 +172,7 @@ function obtain_gym_links($gym_links = array()) {
 			}
 			if (!empty($forum_data) ) {
 				if ($_phpbb_seo && empty($phpbb_seo->seo_url['forum'][$forum_id])) {
-					$phpbb_seo->seo_url['forum'][$forum_id] = $phpbb_seo->set_url($forum_name, $forum_id, $phpbb_seo->seo_static['forum']);
+					$phpbb_seo->seo_url['forum'][$forum_id] = $phpbb_seo->set_url($forum_name, $forum_id, 'forum');
 				}
 				if (!empty($html_setup['link_cat']) && (isset($html_setup['auth_guest'][$forum_id]) || (!empty($html_setup['forum_allow_auth']) && !isset($html_setup['forum_exclude'][$forum_id]))) ) {
 					if ($html_setup['forum_allow_cat_news']) {
@@ -243,7 +244,7 @@ function display_feed($params, $tpl_prefix = '') {
 		'striptags' => !empty($params['striptags']),
 	);
 	if (empty($_params['url'])) {
-		return;
+		return false;
 	}
 	$cache_file = '_gym_links_' . md5($user->data['user_lang'] . $_params['url']);
 	if (($feed_data = $cache->get($cache_file)) === false) {
@@ -277,7 +278,9 @@ function display_feed($params, $tpl_prefix = '') {
 			$i++;
 		}
 		unset($feed_data);
+		return true;
 	}
+	return false;
 }
 /**
 * get_override($mode, $key, $gym_config)

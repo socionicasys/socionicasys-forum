@@ -4,7 +4,7 @@
 * search_synonyms [English]
 *
 * @package language
-* @version $Id: search_synonyms.php 10280 2009-11-19 13:22:55Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -77,7 +77,7 @@ $synonyms = array(
 	'foriegn'		=> 'foreign',
 	'fourty'		=> 'forty',
 
-	'gage'			=> 'guage',
+	'gage'			=> 'gauge',
 	'geneology'		=> 'genealogy',
 	'grammer'		=> 'grammar',
 	'gray'			=> 'grey',
@@ -98,7 +98,7 @@ $synonyms = array(
 	'irrevelant'	=> 'irrelevant',
 
 	'jeweler'	=> 'jeweller',
-	'judgement'	=> 'judgment',
+	'judgment'	=> 'judgement',
 
 	'labeled'	=> 'labelled',
 	'labor'		=> 'labour',

@@ -7,7 +7,7 @@
 * This is for authentication via the integrated user table
 *
 * @package login
-* @version $Id: auth_db.php 10431 2010-01-20 00:20:46Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -134,7 +134,8 @@ function login_db(&$username, &$password)
 				// increase login attempt count to make sure this cannot be exploited
 				$sql = 'UPDATE ' . USERS_TABLE . '
 					SET user_login_attempts = user_login_attempts + 1
-					WHERE user_id = ' . $row['user_id'];
+					WHERE user_id = ' . (int) $row['user_id'] . '
+						AND user_login_attempts < ' . LOGIN_ATTEMPTS_MAX;
 				$db->sql_query($sql);
 
 				return array(
@@ -194,7 +195,8 @@ function login_db(&$username, &$password)
 	// Password incorrect - increase login attempts
 	$sql = 'UPDATE ' . USERS_TABLE . '
 		SET user_login_attempts = user_login_attempts + 1
-		WHERE user_id = ' . $row['user_id'];
+		WHERE user_id = ' . (int) $row['user_id'] . '
+			AND user_login_attempts < ' . LOGIN_ATTEMPTS_MAX;
 	$db->sql_query($sql);
 
 	// Give status about wrong password...

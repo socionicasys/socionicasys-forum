@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO Dynamic Meta tags
-* @version $Id: phpbb_seo_meta.php 222 2010-02-27 13:08:48Z dcz $
+* @version $Id: phpbb_seo_meta.php 252 2010-03-12 09:23:51Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License v2
 *
@@ -239,14 +239,14 @@ class seo_meta {
 					$RegEx[] = '`\[(' . $this->mconfig['bbcodestrip'] . ')[^\[\]]*\].*\[/\1[^\[\]]*\]`Usi'; // bbcode to strip
 					$replace[] = ' ';
 				}
-				$RegEx[] = '`\[\/?[^\]\[]*\]`Ui'; // Strip all bbcode tags
+				$RegEx[] = '`\[\/?[a-z0-9\*\+\-]+(?:=(?:&quot;.*&quot;|[^\]]*))?(?::[a-z])?(\:[0-9a-z]{5,})\]`'; // Strip all bbcode tags
 				$replace[] = '';
 				$RegEx[] = '`[\s]+`'; // Multiple spaces
 				$replace[] = ' ';
 			}
 			return $this->word_limit(preg_replace($RegEx, $replace, $text));
 		}
-		return $this->word_limit(preg_replace(array('`<[^>]*>(.*<[^>]*>)?`Usi', '`\[\/?[^\]\[]*\]`Ui', '`[\s]+`'), ' ', $text));
+		return $this->word_limit(preg_replace(array('`<[^>]*>(.*<[^>]*>)?`Usi', '`\[\/?[a-z0-9\*\+\-]+(?:=(?:&quot;.*&quot;|[^\]]*))?(?::[a-z])?(\:[0-9a-z]{5,})\]`', '`[\s]+`'), ' ', $text));
 	}
 	/**
 	* Cut the text according to the number of words.

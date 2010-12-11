@@ -1,7 +1,7 @@
 ##############################################################
-## MOD Title: 		phpBB SEO GYM SItemaps & RSS 2.0.0 => 2.0.1 update
+## MOD Title: 		phpBB SEO GYM SItemaps & RSS 2.0.1 => 2.0.2 update
 ## MOD Author: 		dcz <n/a> http://www.phpbb-seo.com/
-## MOD Description: 	This are the update steps for the phpBB SEO GYM SItemaps & RSS 2.0.0 => 2.0.1 update.
+## MOD Description: 	This are the update steps for the phpBB SEO GYM SItemaps & RSS 2.0.1 => 2.0.2 update.
 ## 			Check http://www.phpbb-seo.com/en/gym-sitemaps-rss/google-yahoo-msn-sitemaps-rss-t2734.html
 ## 			for the latest version or to get help with this MOD
 ##
@@ -17,12 +17,12 @@
 ## Author Notes:
 ## _____________
 ##
-## This are the update steps for the phpBB3 SEO GYM SItemaps & RSS 2.0.0 => 2.0.1 update.
+## This are the update steps for the phpBB3 SEO GYM SItemaps & RSS 2.0.1 => 2.0.2 update.
 ##
 ##############################################################
 ## MOD History:
 ##
-##	2010-03-01 - 1.0
+##	2010-11-20 - 1.0
 ##		- First version released
 ##
 ##############################################################

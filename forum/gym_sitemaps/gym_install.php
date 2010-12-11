@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_install.php 226 2010-03-01 10:11:29Z dcz $
+* @version $Id: gym_install.php 271 2010-11-20 20:53:59Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -14,7 +14,7 @@ define('IN_PHPBB', true);
 define('IN_INSTALL', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-@define('GYM_VERSION', '2.0.1');
+@define('GYM_VERSION', '2.0.2');
 // Try to override some limits - maybe it helps some...
 @set_time_limit(0);
 $mem_limit = @ini_get('memory_limit');
@@ -236,7 +236,7 @@ class module {
 	function redirect($page) {
 		$server_name = (!empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : getenv('SERVER_NAME');
 		$server_port = (!empty($_SERVER['SERVER_PORT'])) ? (int) $_SERVER['SERVER_PORT'] : (int) getenv('SERVER_PORT');
-		$secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 1 : 0;
+		$secure = (bool) ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === true)) || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443));
 
 		$script_name = (!empty($_SERVER['PHP_SELF'])) ? $_SERVER['PHP_SELF'] : getenv('PHP_SELF');
 		if (!$script_name) {
@@ -737,6 +737,7 @@ class install_gym_sitemaps extends module {
 					$sql[] = "CREATE INDEX gym_config_type ON " . GYM_CONFIG_TABLE . " (config_type)";
 					break;
 				case 'mssql':
+				case 'mssqlnative':
 				case 'mssql_odbc':
 					$sql[] = "CREATE TABLE [" . GYM_CONFIG_TABLE . "] (
 							[config_name] [varchar] (255) DEFAULT ('') NOT NULL ,

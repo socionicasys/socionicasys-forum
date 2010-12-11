@@ -2,7 +2,7 @@
 /**
 *
 * @package acm
-* @version $Id: acm_file.php 10379 2009-12-25 15:55:35Z bantu $
+* @version $Id$
 * @copyright (c) 2005, 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -78,8 +78,14 @@ class acm
 
 		if (!$this->_write('data_global'))
 		{
+			if (!function_exists('phpbb_is_writable'))
+			{
+				global $phpbb_root_path;
+				include($phpbb_root_path . 'includes/functions.' . $phpEx);
+			}
+
 			// Now, this occurred how often? ... phew, just tell the user then...
-			if (!@is_writable($this->cache_dir))
+			if (!phpbb_is_writable($this->cache_dir))
 			{
 				// We need to use die() here, because else we may encounter an infinite loop (the message handler calls $cache->unload())
 				die($this->cache_dir . ' is NOT writable.');
@@ -707,7 +713,13 @@ class acm
 	*/
 	function remove_file($filename, $check = false)
 	{
-		if ($check && !@is_writable($this->cache_dir))
+		if (!function_exists('phpbb_is_writable'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . 'includes/functions.' . $phpEx);
+		}
+
+		if ($check && !phpbb_is_writable($this->cache_dir))
 		{
 			// E_USER_ERROR - not using language entry - intended.
 			trigger_error('Unable to remove files within ' . $this->cache_dir . '. Please check directory permissions.', E_USER_ERROR);

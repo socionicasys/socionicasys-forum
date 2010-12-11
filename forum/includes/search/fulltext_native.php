@@ -2,7 +2,7 @@
 /**
 *
 * @package search
-* @version $Id: fulltext_native.php 10399 2010-01-11 23:26:56Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -83,7 +83,9 @@ class fulltext_native extends search_backend
 	{
 		global $db, $user, $config;
 
-		$keywords = trim($this->cleanup($keywords, '+-|()*'));
+		$tokens = '+-|()*';
+
+		$keywords = trim($this->cleanup($keywords, $tokens));
 
 		// allow word|word|word without brackets
 		if ((strpos($keywords, ' ') === false) && (strpos($keywords, '|') !== false) && (strpos($keywords, '(') === false))
@@ -113,6 +115,15 @@ class fulltext_native extends search_backend
 					case '-':
 					case ' ':
 						$keywords[$i] = '|';
+					break;
+					case '*':
+						if ($i === 0 || ($keywords[$i - 1] !== '*' && strcspn($keywords[$i - 1], $tokens) === 0))
+						{
+							if ($i === $n - 1 || ($keywords[$i + 1] !== '*' && strcspn($keywords[$i + 1], $tokens) === 0))
+							{
+								$keywords = substr($keywords, 0, $i) . substr($keywords, $i + 1);
+							}
+						}
 					break;
 				}
 			}

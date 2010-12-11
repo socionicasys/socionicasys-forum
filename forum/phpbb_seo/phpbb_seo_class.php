@@ -2,7 +2,7 @@
 /**
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: phpbb_seo_class.php 236 2010-03-03 08:20:36Z dcz $
+* @version $Id: phpbb_seo_class.php 277 2010-11-25 12:09:02Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -20,7 +20,7 @@ require($phpbb_root_path . "phpbb_seo/includes/setup_phpbb_seo.$phpEx");
 * @package Ultimate SEO URL phpBB SEO
 */
 class phpbb_seo extends setup_phpbb_seo {
-	var	$version = '0.6.4';
+	var	$version = '0.6.6';
 	var	$modrtype = 2; // We set it to mixed as a default value
 	var	$seo_path = array();
 	var	$seo_url = array( 'forum' =>  array(), 'topic' =>  array(), 'user' => array(), 'username' => array(), 'group' => array(), 'file' => array() );
@@ -52,6 +52,7 @@ class phpbb_seo extends setup_phpbb_seo {
 	var	$RegEx = array();
 	var	$sftpl = array();
 	var	$url_replace = array();
+	var	$ssl = array('requested' => false, 'forced' => false);
 	/**
 	* constuctor
 	*/
@@ -61,7 +62,7 @@ class phpbb_seo extends setup_phpbb_seo {
 		// and apparently, the bug is still here in php5.3
 		@ini_set("mbstring.internal_encoding", 'UTF-8');
 		// Nothing should be edited here, please do your custom settings in the
-		// phpbb_seo/includes/phpbb_seo_modules.php instead to make your updates easier.
+		// phpbb_seo/includes/setup_phpbb_seo.php instead to make your updates easier.
 		// reset the rewrite_method for $phpbb_root_path
 		$this->rewrite_method[$phpbb_root_path] = array();
 		// phpBB files must be treated a bit differently
@@ -85,8 +86,14 @@ class phpbb_seo extends setup_phpbb_seo {
 		$this->cache_config['topic'] = array(); // do not change
 		$this->cache_config['settings'] = array(); // do not change
 		// --> DOMAIN SETTING <-- //
-		// Path Settings, only rely on DB
-		$server_protocol = ($config['server_protocol']) ? $config['server_protocol'] : (($config['cookie_secure']) ? 'https://' : 'http://');
+		// SSL, beware with cookie secure, it won't force ssl here,
+		// so you will need to switch to ssl for your user to use cookie based session (no sid)
+		// could be done by using an https link to login form (or within the redirect after login)
+		$this->ssl['requested'] = (bool) ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === true)) || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443));
+		$this->ssl['forced'] = (bool) (($config['server_protocol'] === 'https//'));
+		$this->ssl['use'] = (bool) ($this->ssl['requested'] || $this->ssl['forced']);
+		// Server Settings, rely on DB
+		$server_protocol = $this->ssl['use'] ? 'https://' : 'http://';
 		$server_name = trim($config['server_name'], '/ ');
 		$server_port = max(0, (int) $config['server_port']);
 		$server_port = ($server_port && $server_port <> 80) ? ':' . $server_port : '';
@@ -117,7 +124,7 @@ class phpbb_seo extends setup_phpbb_seo {
 			// basenamed page name (for example: index)
 			$this->seo_opt['req_file'] = urlencode(htmlspecialchars(str_replace(".$phpEx", '', basename($this->seo_opt['req_self']))));
 		}
-		// Load settings from phpbb_seo/includes/phpbb_seo_modules.php
+		// Load settings from phpbb_seo/includes/setup_phpbb_seo.php
 		$this->init_phpbb_seo();
 		$this->seo_path['phpbb_filesR'] = $this->seo_path['phpbb_urlR'] . $this->seo_static['file_index'] . $this->seo_delim['file'];
 		// see if we have some custom replacement
@@ -803,7 +810,7 @@ class phpbb_seo extends setup_phpbb_seo {
 			$forum_uri = request_var('forum_uri', '');
 			unset($_GET['forum_uri'], $_REQUEST['forum_uri']);
 		}
-		if (empty($forum_uri)) {
+		if (empty($forum_uri) || $forum_uri == $this->seo_static['global_announce']) {
 			return 0;
 		}
 		if ($id = @array_search($forum_uri, $this->cache_config['forum']) ) {
@@ -836,6 +843,20 @@ class phpbb_seo extends setup_phpbb_seo {
 			$this->cache_config['cached'] = false;
 			return false;
 		}
+	}
+	/**
+	* sslify($url, $ssl = true,  $proto_check = true)
+	* properly set http protocol (eg http or https)
+	* if no protocol is specified, will return false with $proto_check set to true
+	*/
+	function sslify($url, $ssl = true, $proto_check = true) {
+		static $mask = '`^https?://`i';
+		$url = trim($url);
+		if ($url && preg_match($mask, $url)) {
+			$replace = $ssl ? 'https://' : 'http://';
+			return preg_replace($mask, $replace, $url);
+		}
+		return $proto_check ? false : $url;
 	}
 	/**
 	* is_utf8($string)

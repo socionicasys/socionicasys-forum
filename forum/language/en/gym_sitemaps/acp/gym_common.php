@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_common.php 204 2009-12-20 12:04:51Z dcz $
+* @version $Id: gym_common.php 279 2010-11-26 09:19:15Z dcz $
 * @copyright (c) 2006 - 2009 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -46,11 +46,13 @@ $lang = array_merge($lang, array(
 	'GYM_LINKS_CAT_EXPLAIN' => 'Display or not links to the available GYM pages on a forum page. These links are added below the forum title.',
 	// Google sitemaps
 	'GOOGLE' => 'Google',
+	'GOOGLE_URL' => 'Google Sitemaps URL',
 	// Reset settings
 	'GOOGLE_MAIN_RESET' => 'Google Sitemap main options',
 	'GOOGLE_MAIN_RESET_EXPLAIN' => 'Reset all the Google Sitemap main options to default values.',
 	// RSS feeds
 	'RSS' => 'RSS',
+	'RSS_URL' => 'RSS feed URL',
 	'RSS_ALTERNATE' => 'RSS alternate links',
 	'RSS_ALTERNATE_EXPLAIN' => 'Display or not RSS alternate links in browsers navigation bar',
 	'RSS_LINKING_TYPE' => 'RSS Linking Type',
@@ -67,6 +69,7 @@ $lang = array_merge($lang, array(
 	'HTML_MAIN_RESET' => 'Global HTML options',
 	'HTML_MAIN_RESET_EXPLAIN' => 'Reset all the HTML maps and news main options to default values.',
 	'HTML' => 'Html',
+	'HTML_URL' => 'HTML URL',
 
 	// GYM authorisation array
 	'GYM_AUTH_ADMIN' => 'Admin',
@@ -126,7 +129,7 @@ $lang = array_merge($lang, array(
 	'GYM_MAIN' => 'GYM Sitemaps Settings',
 	'GYM_MAIN_EXPLAIN' => 'These are the setting common to all type of output and to all modules.<br/> They can be applied to all type of outputs (html, RSS, Google sitemaps, Yahoo! url list) and/or to all modules depending on your override settings.',
 	'MAIN_MAIN' => 'GYM Sitemaps Overview',
-	'MAIN_MAIN_EXPLAIN' => 'GYM sitemaps is a very flexible and Search Engine Optimized phpBB module. It will allow you to build Google sitemaps, RSS 2.0 feeds, Yahoo! URL lists and html sitemaps for your forum as well as for any part of your website thanks to its modularity.<br/><br/> Each  type (Google, RSS, html & Yahoo) can grab items to list from several applications installed on your site (forum, album etc ...) using a dedicated module.<br/>You can activate / deactivate modules using the install link in each  type ACP, each module has its own configuration pages.<br/><br/>Make sure you check the %1$s, support is provided in the %2$s.<br/>General SEO support and discussion is as well provided on %3$s<br/>%4$s<br/>Enjoy ;-)',
+	'MAIN_MAIN_EXPLAIN' => 'GYM sitemaps is a very flexible and Search Engine Optimized phpBB module. It will allow you to build Google sitemaps, RSS 2.0 feeds, Yahoo! URL lists and html sitemaps for your forum as well as for any part of your website thanks to its modularity.<br/><br/> Each  type (Google, RSS, html &amp; Yahoo) can grab items to list from several applications installed on your site (forum, album etc ...) using a dedicated module.<br/>You can activate / deactivate modules using the install link in each  type ACP, each module has its own configuration pages.<br/><br/>Make sure you check the %1$s, support is provided in the %2$s.<br/>General SEO support and discussion is as well provided on %3$s<br/>%4$s<br/>Enjoy ;-)',
 
 	'GYM_GOOGLE' => 'Google Sitemaps',
 	'GYM_GOOGLE_EXPLAIN' => 'These are the setting common to all Google sitemaps modules (forum, custom etc ...).<br/> They can be applied to all Google sitemaps modules depending on your override settings for this type of output and the main ones.',
@@ -175,7 +178,7 @@ $lang = array_merge($lang, array(
 	'GYM_ZERO_DUPE_ON' => 'Activate the Zero Duplicate',
 	'GYM_ZERO_DUPE_ON_EXPLAIN' => 'This activates the Zero Duplicate for the module links.<br /><u>NOTE :</u> Redirections will only occur when (re)generating the cache in this version.',
 	'GYM_MODRTYPE' => 'URL rewriting type',
-	'GYM_MODRTYPE_EXPLAIN' => 'These options are overridden by the use of the phpBB SEO mod rewrite (auto detection ).<br/>Four levels of url rewriting can be set up here: None, Simple, Mixed and Advanced :<br/><ul><li><b>None :</b> No URL rewriting;<br></li><li><b>Simple :</b>Static URL rewriting for all links, no title injection;<br></li><li><b>Mixed :</b> Forum and category titles are injected in URLs, but topic titles remain statically rewritten;<br></li><li><b>Advanced :</b> All titles are injected in URLs;</li></ul>',
+	'GYM_MODRTYPE_EXPLAIN' => 'These options are overridden by the use of the phpBB SEO mod rewrite (auto detection ).<br/>Four levels of url rewriting can be set up here: None, Simple, Mixed and Advanced :<br/><ul><li><b>None :</b> No URL rewriting;<br/></li><li><b>Simple :</b>Static URL rewriting for all links, no title injection;<br/></li><li><b>Mixed :</b> Forum and category titles are injected in URLs, but topic titles remain statically rewritten;<br/></li><li><b>Advanced :</b> All titles are injected in URLs;</li></ul>',
 
 	'GYM_GZIP' => 'GUNZIP',
 	'GYM_GZIP_EXPLAIN' => 'Here you can set up various gunzip options. Remember that these settings may be overridden depending on your override settings.%1$s',
@@ -212,7 +215,7 @@ $lang = array_merge($lang, array(
 	'GYM_LIMITUP_EXPLAIN' => 'Enter here how many paginated pages, starting from the last one, to output.',
 
 	'GYM_OVERRIDE' => 'Override',
-	'GYM_OVERRIDE_EXPLAIN' => 'GYM sitemaps is fully modular. Each output type (Google, RSS ...) uses its own output modules corresponding to the type of item to list. For example, the first module for all types of output is the forum module, listing items from the forum.<br/> Many options, such as URL rewriting, caching, gunzip compression etc ..., are repeated on several levels of the GYM sitemaps ACP. This allow you to use different settings for the same option depending on the type of output and the output module. But it can occur that you would prefer to, for example, activate URL rewriting on all the GYM sitemaps module at once (all outputs types and all modules).<br/> That’s what the Override setting will allow you to do for many types of settings. <br/>The inheritance process goes from the highest level of settings (Main configuration) to the output type level (Google, RSS ...) and ends at the lowest level : the output modules (forum, album ...)<br/>Overrinding settings can take three values :<br/><ul><li><b>Global :</b> The Main settings will be used;<br></li><li><b>Output Type :</b> The output type settings will be used for its modules;<br></li><li><b>Module :</b> The lowest available setting will be used, e.g., the module’s one first, and if not set, the output type one and so on up to the global setting if available.</li></ul>',
+	'GYM_OVERRIDE_EXPLAIN' => 'GYM sitemaps is fully modular. Each output type (Google, RSS ...) uses its own output modules corresponding to the type of item to list. For example, the first module for all types of output is the forum module, listing items from the forum.<br/> Many options, such as URL rewriting, caching, gunzip compression etc ..., are repeated on several levels of the GYM sitemaps ACP. This allow you to use different settings for the same option depending on the type of output and the output module. But it can occur that you would prefer to, for example, activate URL rewriting on all the GYM sitemaps module at once (all outputs types and all modules).<br/> That’s what the Override setting will allow you to do for many types of settings. <br/>The inheritance process goes from the highest level of settings (Main configuration) to the output type level (Google, RSS ...) and ends at the lowest level : the output modules (forum, album ...)<br/>Overrinding settings can take three values :<br/><ul><li><b>Global :</b> The Main settings will be used;<br/></li><li><b>Output Type :</b> The output type settings will be used for its modules;<br/></li><li><b>Module :</b> The lowest available setting will be used, e.g., the module’s one first, and if not set, the output type one and so on up to the global setting if available.</li></ul>',
 	'GYM_OVERRIDE_ON' => 'Activate Main Override',
 	'GYM_OVERRIDE_ON_EXPLAIN' => 'You can here Activate / Deactivate the main overrinding. Deactivating is the same as setting all overrides to "module", letting the output type’s override settings to set the module override.',
 	'GYM_OVERRIDE_MAIN' => 'Default Overriding',
@@ -248,5 +251,13 @@ $lang = array_merge($lang, array(
 	'GYM_METHOD_CHARS' => 'By characters',
 	'GYM_METHOD_WORDS' => 'By words',
 	'GYM_METHOD_LINES' => 'By lines',
+
+	// script location checking
+	'GYM_WRONG_PHPBB_URL' => 'phpBB server settings are not correct. You must proprely configure your <a href="%1$s"><b>Server URL settings</b></a>.<br/><a href="http://www.phpbb-seo.com/en/phpbb-forum/server-and-cookie-settings-t4451.html" onclick ="window.open(this.href); return false;">More details about this</a>',
+	'GYM_WRONG_SCRIPT_URL' => 'The configured URL for <b>%1$s</b> mode is wrong. It must lead to where the <b>%2$s</b> file is located on your server.',
+	'GYM_WRONG_SCRIPT_DOMAIN' => 'The configured URL for <b>%1$s</b> mode is not consistant with phpBB one. The URL must use the same domain or sub-domain and the same protocol (http:// or https://) as phpBB. It must contain <b>%2$s</b> and lead to the directory containing <b>%3$s</b> on your server.',
+	'GYM_WRONG_SCRIPT2_PHPBB' => 'Even though the configured URL for <b>%1$s</b> mode is correct, the path to phpBB ($phpbb_root_path) set in <b>%2$s%3$s</b> is wrong. This can only occur when $phpbb_root_path was manually modified and / or the file was moved.<br/>Note that $phpbb_root_path must be a valide relative path from the directory where <b>%3$s</b> is to the directory where phpBB is installed, and that it must start with "./".<br/>According to your settings, $phpbb_root_path should be set to <b>%4$s</b> in <b>%3$s</b>.',
+	'GYM_WRONG_SITEMAP_LOCATION' => 'Your <b>sitemap.php</b> file is located in a place from where it cannot be used to list forum URLs.<br/>It must be placed <b>inside or above</b> the phpBB directory to be valid.<br/>Configured location : <b>%1$s</b><br/>phpBB location : <b>%2$s</b>',
+	'GYM_GO_CONFIG_SCRIPT_URL' => 'Go fix configuration : <a href="%2$s"><b>%1$s</b></a>',
 ));
 ?>

@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_style.php 112 2009-09-30 17:21:34Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: gym_style.php 278 2010-11-25 15:28:16Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -12,15 +12,20 @@
 define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
+$gym_cache_path = $phpbb_root_path . 'gym_sitemaps/cache/';
 
-// Report all errors, except notices
-error_reporting(E_ALL ^ E_NOTICE);
+// Report all errors, except notices and deprecation messages
+if (!defined('E_DEPRECATED'))
+{
+	define('E_DEPRECATED', 8192);
+}
+error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
 if (version_compare(PHP_VERSION, '6.0.0-dev', '<')) {
 	@set_magic_quotes_runtime(0);
 }
 // Load Extensions
-if (!empty($load_extensions)) {
+if (!empty($load_extensions) && function_exists('dl')) {
 	$load_extensions = explode(',', $load_extensions);
 	foreach ($load_extensions as $extension) {
 		@dl(trim($extension));
@@ -37,31 +42,35 @@ $action_expected = array('rss', 'google');
 $type_expected = array('css', 'xsl');
 
 // Language
-$language = (isset($_GET['lang']) && !is_array($_GET['lang'])) ? htmlspecialchars($_GET['lang']) : '';
-$action = isset($_GET['action']) && in_array($_GET['action'], $action_expected) ? trim($_GET['action']) : '';
-$type = isset($_GET['type']) && in_array($_GET['type'], $type_expected) ? trim($_GET['type']) : '';
-$theme_id = isset($_GET['theme_id']) ? intval($_GET['theme_id']) : '';
+$language = (isset($_GET['lang']) && !is_array($_GET['lang'])) ? htmlspecialchars(basename((string) $_GET['lang'])) : '';
+$action = isset($_GET['action']) && @in_array($_GET['action'], $action_expected) ? trim($_GET['action']) : '';
+$gym_style_type = isset($_GET['type']) && @in_array($_GET['type'], $type_expected) ? $_GET['type'] : '';
+$theme_id = isset($_GET['theme_id']) ? @intval($_GET['theme_id']) : '';
 
-if (empty($language) && empty($action) && empty($type) && empty($theme_id)) {
+if (empty($language) && empty($action) && empty($gym_style_type) && empty($theme_id)) {
 	// grabb vars like this because browser are not aggreeing on how to handle & in xml. FF only accpet & where IE and opera only accept &amp;
-	$qs = !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : '';
-	preg_match('`action-(rss|google),type-(xsl),lang-([a-z_]+),theme_id-([0-9]+)`i', $qs, $matches );
-	$language = !empty($matches[3])  ? htmlspecialchars($matches[3]) : '';
-	$action = !empty($matches[1]) && in_array($matches[1], $action_expected) ? trim($matches[1]) : '';
-	$type = !empty($matches[2]) && in_array($matches[2], $type_expected) ? trim($matches[2]) : '';
-	$theme_id = !empty($matches[4])  ? intval($matches[4]) : '';
+	$qs = isset($_SERVER['QUERY_STRING']) ? trim($_SERVER['QUERY_STRING']) : '';
+	if ($qs && preg_match('`action-(rss|google),type-(xsl),lang-([a-z_]+),theme_id-([0-9]+)`i', $qs, $matches )) {
+		$language = $matches[3];
+		$action = in_array($matches[1], $action_expected) ? $matches[1] : '';
+		$gym_style_type = in_array($matches[2], $type_expected) ? $matches[2] : '';
+		$theme_id = intval($matches[4]);
+	}
 }
-$content_type = $type == 'css' ? 'text/css' : 'text/xml';
-// Expire time of seven days if not recached
-$cache_ttl = 7*86400;
+$content_type = $gym_style_type == 'css' ? 'text/css' : 'text/xml';
+// Expire time of 15 days if not recached
+$cache_ttl = 15*86400;
 $recache = false;
 $theme = false;
 // Let's go
-if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) {
+if (!empty($action) && !empty($gym_style_type) && !empty($language) && !empty($theme_id)) {
+	// detect ssl
+	$ssl_requested = (bool) ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === true)) || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443));
+	$ssl_bit = $ssl_requested ? 'ssl_' : '';
 	// build cache file name
-	$file = "{$phpbb_root_path}gym_sitemaps/cache/style_{$action}_{$language}_$theme_id.$type";
-	if (file_exists($file)) {
-		$cached_time = filemtime($file);
+	$cached_file = "{$gym_cache_path}style_{$action}_{$ssl_bit}{$language}_$theme_id.$gym_style_type";
+	if (file_exists($cached_file)) {
+		$cached_time = filemtime($cached_file);
 		$expire_time = $cached_time + $cache_ttl;
 		$recache = $expire_time < time() ? true : /*(filemtime($style_file) > $cached_time ? true :*/ false/*)*/;
 	} else {
@@ -71,7 +80,7 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 	if (!$recache) {
 		header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', $expire_time));
 		header('Content-type: ' . $content_type . '; charset=UTF-8');
-		readfile($file);
+		readfile($cached_file);
 		// We are done with this call
 		exit;
 	} else {
@@ -122,21 +131,17 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 			$theme = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 		}
-		// Determine style file name
-		$tpath = $type == 'xsl' ? $theme['template_path'] . '/template/gym_sitemaps' : $theme['theme_path'] . '/theme';
-		$style_file = $phpbb_root_path . "styles/$tpath/gym_{$action}.$type";
-		if (!file_exists($style_file)) {
-			// Degrade to default styling
-			$style_file = $phpbb_root_path . "gym_sitemaps/style/gym_{$action}.$type";
-			$load_phpbb_css = false;
-		}
 		$db->sql_close();
 		if (!empty($cache)) {
 			$cache->unload();
 		}
-		// No available style
-		if (!$theme) {
-			exit;
+		// Determine style file name
+		$tpath = $gym_style_type == 'xsl' ? $theme['template_path'] . '/template/gym_sitemaps' : $theme['theme_path'] . '/theme';
+		$style_file = $phpbb_root_path . "styles/$tpath/gym_{$action}.$gym_style_type";
+		if (!file_exists($style_file)) {
+			// Degrade to default styling
+			$style_file = $phpbb_root_path . "gym_sitemaps/style/gym_{$action}.$gym_style_type";
+			$load_phpbb_css = false;
 		}
 		// Load the language file
 		if (file_exists($phpbb_root_path . 'language/' . $language . '/gym_sitemaps/gym_common.' . $phpEx)) {
@@ -147,12 +152,12 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 			require($phpbb_root_path . 'language/' . $language . '/gym_sitemaps/gym_common.' . $phpEx);
 			require($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
 		}
-		// Do not recache is up to date, recompile if the stylesheet was updated
-		$file = "{$phpbb_root_path}gym_sitemaps/cache/style_{$action}_{$language}_$theme_id.$type";
-		if (file_exists($file)) {
-			$cached_time = filemtime($file);
+		// Do not recache if up to date, recompile only if the source stylesheet was updated
+		$cached_file = "{$gym_cache_path}style_{$action}_{$ssl_bit}{$language}_$theme_id.$gym_style_type";
+		if (file_exists($cached_file)) {
+			$cached_time = filemtime($cached_file);
 			$expire_time = $cached_time + $cache_ttl;
-			$recache = $expire_time < time() ? true : (filemtime($style_file) > $cached_time ? true : false);
+			$recache = $expire_time < time() ? true : (@filemtime($style_file) > $cached_time ? true : false);
 		} else {
 			$recache = true;
 			$expire_time = time() + $cache_ttl;
@@ -160,11 +165,19 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 		if (!$recache) {
 			header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', $expire_time));
 			header('Content-type: ' . $content_type . '; charset=UTF-8');
-			readfile($file);
+			readfile($cached_file);
 			exit;
 		}
+		// No available style
+		if (!$theme) {
+			exit;
+		}
+
+
 		// Path Settings
-		$server_protocol = ($config['server_protocol']) ? $config['server_protocol'] : (($config['cookie_secure']) ? 'https://' : 'http://');
+		$ssl_forced = (bool) (($config['server_protocol'] === 'https//'));
+		$ssl_use = (bool) ($ssl_requested || $ssl_forced);
+		$server_protocol = $ssl_use ? 'https://' : 'http://';
 		$server_name = trim($config['server_name'], '/ ');
 		$server_port = max(0, (int) $config['server_port']);
 		$server_port = ($server_port && $server_port <> 80) ? ':' . $server_port . '/' : '/';
@@ -180,7 +193,7 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 			'{S_CONTENT_DIRECTION}'	=> $lang['DIRECTION'],
 			'{S_USER_LANG}'		=> $language
 		);
-		if ($type == 'xsl') {
+		if ($gym_style_type == 'xsl') {
 			$replace = array_merge($replace, array(
 				'{T_CSS_PATH}'		=> "{$phpbb_url}gym_sitemaps/gym_style.$phpEx?action=$action&amp;type=css&amp;lang={$language}&amp;theme_id={$theme_id}",
 				'{L_HOME}'		=> $lang['GYM_HOME'],
@@ -188,9 +201,10 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 				'{L_LINK}'		=> $lang['GYM_LINK'],
 				'{L_LASTMOD_DATE}'	=> $lang['GYM_LASTMOD_DATE'],
 				'{ROOT_URL}'		=> $root_url,
+				'{HTTP_PROTO_REQUEST}'	=> $server_protocol,
 				'{PHPBB_URL}'		=> $phpbb_url,
 				// Do not remove !
-				'{L_COPY}'		=>  '<a href="http://www.phpbb-seo.com/" title="GYM Sitemaps &amp; RSS &#169; 2006, 2007, 2008 phpBB SEO" class="copyright"><img src="' . $phpbb_url . 'gym_sitemaps/images/phpbb-seo.png" alt="' . $lang['GYM_SEO'] . '"/></a>',
+				'{L_COPY}'		=>  '<a href="http://www.phpbb-seo.com/" title="GYM Sitemaps &amp; RSS &#169; 2006, ' . date('Y') . ' phpBB SEO" class="copyright"><img src="' . $phpbb_url . 'gym_sitemaps/images/phpbb-seo.png" alt="' . $lang['GYM_SEO'] . '"/></a>',
 				'{L_SEARCH_ADV_EXPLAIN}' => $lang['SEARCH_ADV_EXPLAIN'],
 				'{L_CHANGE_FONT_SIZE}'  => $lang['CHANGE_FONT_SIZE'],
 				'{L_SEARCH_ADV}' 	=> $lang['SEARCH_ADV'],
@@ -233,7 +247,7 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 			}
 		}
 		// Load the required stylsheet template
-		if ( $load_phpbb_css && $type == 'css' ) {
+		if ( $load_phpbb_css && $gym_style_type == 'css' ) {
 			@ini_set('user_agent','GYM Sitemaps &amp; RSS / www.phpBB-SEO.com');
 			@ini_set('default_socket_timeout', 10);
 			$phpbb_css = @file_get_contents("{$phpbb_url}style.php?id={$theme_id}&lang={$language}");
@@ -249,18 +263,18 @@ if (!empty($action) && !empty($type) && !empty($language) && !empty($theme_id)) 
 			$output = str_replace(array_keys($replace), array_map('numeric_entify_utf8', array_values($replace)), $style_tpl);
 		}
 		if ($strip_spaces) {
-			if ($type === 'xsl') {
+			if ($gym_style_type === 'xsl') {
 				$output = preg_replace(array('`<\!--.*-->`Us', '`[\s]+`'), ' ', $output);
 			} else {
 				$output = preg_replace(array('`/\*.*\*/`Us', '`[\s]+`'), ' ', $output);
 			}
 		}
-		$handle = @fopen($file, 'wb');
+		$handle = @fopen($cached_file, 'wb');
 		@flock($handle, LOCK_EX);
 		@fwrite($handle, $output);
 		@flock($handle, LOCK_UN);
 		@fclose ($handle);
-		@chmod($file, 0666);
+		@chmod($cached_file, 0666);
 
 		header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', $expire_time));
 		header('Content-type: ' . $content_type . '; charset=UTF-8');

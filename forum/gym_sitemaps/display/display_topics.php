@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: display_topics.php 112 2009-09-30 17:21:34Z dcz $
+* @version $Id: display_topics.php 254 2010-03-12 15:08:58Z dcz $
 * @copyright (c) 2006 - 2009 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -141,7 +141,7 @@ class display_topics {
 			// Start with the forum
 			if (!$s_global && empty($master->forum_datas[$forum_id])) {
 				// www.phpBB-SEO.com SEO TOOLKIT BEGIN
-				$phpbb_seo->set_url($forum_datas[$forum_id]['forum_name'], $forum_id, $phpbb_seo->seo_static['forum']);
+				$phpbb_seo->set_url($forum_datas[$forum_id]['forum_name'], $forum_id, 'forum');
 				// www.phpBB-SEO.com SEO TOOLKIT END
 				$master->forum_datas[$forum_id] = array_merge($forum_datas[$forum_id],  array(
 					'forum_url' => append_sid("{$phpbb_root_path}viewforum.$phpEx", "f=$forum_id"),

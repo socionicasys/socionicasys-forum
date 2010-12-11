@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_sitemaps.php 156 2009-11-18 08:23:02Z dcz $
-* @copyright (c) 2006 - 2009 www.phpbb-seo.com
+* @version $Id: gym_sitemaps.php 272 2010-11-21 13:56:31Z dcz $
+* @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -499,7 +499,7 @@ class gym_sitemaps {
 	*/
 	function forum_url($forum_name, $forum_id) {
 		global $phpbb_seo;
-		return $phpbb_seo->seo_opt['url_rewrite'] ? $phpbb_seo->set_url($forum_name, $forum_id, $phpbb_seo->seo_static['forum']) : sprintf($this->url_config['forum_tpl'], $forum_id);
+		return $phpbb_seo->seo_opt['url_rewrite'] ? $phpbb_seo->set_url($forum_name, $forum_id, 'forum') : sprintf($this->url_config['forum_tpl'], $forum_id);
 	}
 	/**
 	* topic_url($topic_title, $topic_id, $forum_url, $forum_id) builds forum url with proper options
@@ -554,6 +554,8 @@ class gym_sitemaps {
 	function seo_kill_dupes($url) {
 		global $user, $auth, $_SID, $phpbb_seo;
 		$url = str_replace('&amp;', '&', $url);
+		// if an https request lead us here or if it is forced, then use it as a reference
+		$url = $phpbb_seo->sslify($url, $phpbb_seo->ssl['use']);
 		if ($this->url_config['zero_dupe']) {
 			$requested_url = $this->url_config['uri'];
 			if (!empty($_REQUEST['explain']) && (boolean) ($auth->acl_get('a_') && defined('DEBUG_EXTRA'))) {
