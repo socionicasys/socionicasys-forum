@@ -6,7 +6,7 @@ Colours and backgrounds for common.css
 html, body {
 	color: #68696D;
 	background-color: #393939;
-	background-image: url("{T_THEME_PATH}/images/carbon.gif");
+	background: url("{T_THEME_PATH}/images/lights.jpg") repeat-x top center #767a7f fixed;
 }
 
 h1 {
@@ -20,6 +20,12 @@ h2 {
 h3 {
 	border-bottom-color: #CCCCCC;
 	color: #4C525D;
+}
+
+h3 a:hover {
+	border-bottom-color: #CCCCCC;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 5px;
 }
 
 hr {
@@ -49,14 +55,17 @@ hr.dashed {
 /* Round cornered boxes and backgrounds
 ---------------------------------------- */
 .headerbar {
-	background-color: #FFFFFF;
+	background-color: transparent;
 	color: #000000;
 }
 
 .navbar {
 	background-color: #E8E8E8;
 }
-
+.navbar a:hover {
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
+}
 .forabg {
 	background-color: #5D5F62;
 	background-image: url("{T_THEME_PATH}/images/bg_list.gif");
@@ -200,7 +209,18 @@ dl.details dd {
 ---------------------------------------- */
 
 .copyright {
-	color: #555555;
+	background-color: transparent;
+	color: #111;
+}
+.copyright a:link {
+	color: #000;
+}
+.copyright a:visited {
+	color: #000;
+}
+.copyright a:hover {
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 .error {
@@ -210,7 +230,10 @@ dl.details dd {
 .reported {
 	background-color: #F7ECEF;
 }
-
+em a:hover,li a:hover,p a:hover {
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
+}
 li.reported:hover {
 	background-color: #ECD5D8 !important;
 }
@@ -235,22 +258,23 @@ Colours and backgrounds for links.css
 
 a:link	{ color: #454B54; }
 a:visited	{ color: #454B54; }
-a:hover	{ color: #D31141; }
+a:hover	{ color: #232323; text-shadow: #3180db 0px 0px 3px;  }
 a:active	{ color: #7B828D; }
 
 /* Links on gradient backgrounds */
-#search-box a:link{color: #454B54;}
-#search-box a:visited {color: #454B54;}
-#search-box a:hover{color: #7B828D;}
+#search-box a:link {color: #000;}
+#search-box a:visited {color: #000;}
+#search-box a:hover{color: #000; text-shadow: #3180db 0px 0px 3px;}
 
 .navbg a:link, .forumbg .header a:link, .forabg, th a:link {
-	color: #FFFFFF;
+	color: #454B540;
 }
 .navbg a:visited, .forumbg .header a:visited, .forabg, th a:visited {
-	color: #FFFFFF;
+	color: #454B540;
 }
 .navbg a:hover, .forumbg .header a:hover, .forabg .header a:hover, th a:hover {
-	color: #CED3D9;
+	color: #454B540;
+	text-shadow: #3180db 0px 0px 3px;
 }
 #search-box a:active, .navbg a:active, .forumbg .header a:active, .forabg, th a:active {
 	color: #E0E3E7;
@@ -264,7 +288,8 @@ a.forumtitle {
 /* a.forumtitle:visited { color: #454B54; } */
 
 a.forumtitle:hover {
-	color: #BC2A4D;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 5px;
 }
 
 a.forumtitle:active {
@@ -278,7 +303,8 @@ a.topictitle {
 /* a.topictitle:visited { color: #7B828D; } */
 
 a.topictitle:hover {
-	color: #BC2A4D;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 5px;
 }
 
 a.topictitle:active {
@@ -301,8 +327,9 @@ a.topictitle:active {
 }
 
 .postlink:hover {
-	background-color: #E1E3E5;
-	color: #3A3F46;
+	background-color: #e8e9eb;
+	color: #0D4473;
+	text-shadow: #3180db 0px 0px 4px;
 }
 
 .signature a, .signature a:visited, .signature a:active, .signature a:hover {
@@ -313,9 +340,9 @@ a.topictitle:active {
 .postprofile a:link, .postprofile a:active, .postprofile a:visited, .postprofile dt.author a {
 	color: #454B54;
 }
-
-.postprofile a:hover, .postprofile dt.author a:hover {
-	color: #D31141;
+.postprofile a:hover,.postprofile dt.author a:hover {
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 /* Profile searchresults */	
@@ -347,11 +374,13 @@ a.up:hover {
 }
 
 a.left:hover {
-	color: #7B828D;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 a.right:hover {
-	color: #7B828D;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 
@@ -430,7 +459,7 @@ ul.topiclist dd.searchextra {
 }
 
 .content h2, .panel h2 {
-	color: #4C525D;
+	color: #232323;
 	border-bottom-color:  #CCCCCC;
 }
 
@@ -752,11 +781,13 @@ ul.cplist {
 }
 
 #tabs a:hover span {
-	color: #BC2A4D;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 #tabs .activetab a {
 	border-bottom-color: #D9DADC;
+	color: #232323;
 }
 
 #tabs .activetab a span {
@@ -764,7 +795,8 @@ ul.cplist {
 }
 
 #tabs .activetab a:hover span {
-	color: #000000;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 /* Mini tabbed menu used in MCP
@@ -798,18 +830,19 @@ ul.cplist {
 
 #navigation a:hover {
     background-image: none;
-	background-color: #B6B8BA;
-	color: #BC2A4D;
+	background-color: #FFF;
+	color: #333;
 }
 
 #navigation #active-subsection a {
-	color: #D31141;
+	color: #232323;
 	background-color: #F9F9F9;
 	background-image: none;
 }
 
 #navigation #active-subsection a:hover {
-	color: #D31141;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 /* Preferences pane layout
@@ -1008,7 +1041,8 @@ a.button1, a.button1:link, a.button1:visited, a.button1:active, a.button2, a.but
 /* Hover states */
 a.button1:hover, input.button1:hover, a.button2:hover, input.button2:hover, input.button3:hover {
 	border-color: #BC2A4D;
-	color: #BC2A4D;
+	color: #232323;
+	text-shadow: #3180db 0px 0px 3px;
 }
 
 input.search {
