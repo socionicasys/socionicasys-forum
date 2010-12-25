@@ -21,7 +21,7 @@ body {
 	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
 	font-size: 10px;
 	margin: 0;
-	padding: 12px 0;
+	/*padding: 12px 0;*/
 }
 
 h1 {
@@ -126,7 +126,7 @@ p.right {
 #logo {
 	float: left;
 	width: auto;
-	padding: 10px 13px 0 10px;
+	/*padding: 10px 13px 0 10px;*/
 }
 
 a#logo:hover {
@@ -187,6 +187,11 @@ a#logo:hover {
 	color: #FFFFFF;
 	margin-bottom: 4px;
 	padding: 0 5px;
+}
+
+/* Bl@ck custom class - removes corner images over header/site logo bar */
+.headerbar span.corners-top,.headerbar span.corners-bottom,.headerbar span.corners-top span,.headerbar span.corners-bottom span {
+background-image:none;
 }
 
 .navbar {
