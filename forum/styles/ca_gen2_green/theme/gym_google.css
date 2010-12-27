@@ -22,7 +22,7 @@ html { font-size: 100%;
 	margin-bottom: 1px;
 }
 body { /* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
-	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-family: 'Trebuchet MS', 'Trebuchet', 'Arial', sans-serif;
 	color: #828282;
 	background-color: #FFFFFF;
 	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
@@ -31,7 +31,6 @@ body { /* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
 	padding: 12px 0;
 }
 h1 { /* Forum name */
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	margin-right: 200px;
 	color: #FFFFFF;
 	margin-top: 15px;
@@ -39,7 +38,6 @@ h1 { /* Forum name */
 	font-size: 2em;
 }
 h2 { /* Forum header titles */
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	font-weight: normal;
 	color: #3f3f3f;
 	font-size: 2em;
@@ -48,7 +46,6 @@ h2 { /* Forum header titles */
 h2.solo { margin-bottom: 1em; }
 
 h3 { /* Sub-headers (also used as post headers, but defined later) */
-	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	text-transform: uppercase;
 	border-bottom: 1px solid #CCCCCC;
@@ -59,10 +56,9 @@ h3 { /* Sub-headers (also used as post headers, but defined later) */
 	margin-top: 20px;
 }
 h4 { /* Forum and topic list titles */
-	font-family: "Trebuchet MS", Verdana, Helvetica, Arial, Sans-serif;
 	font-size: 1.3em;
 }
-h5 { font-family: "Trebuchet MS",Verdana, Arial, Helvetica, sans-serif;
+h5 {
 	float: right;
 	font-weight:bold;
 	font-size:16px;
@@ -241,7 +237,6 @@ ul.rightside { float: right;
 /* Misc layout styles
 ---------------------------------------- */
 dl.details {
-	/*font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;*/
 	font-size: 1.1em;
 }
 dl.details dt {
@@ -308,7 +303,7 @@ a:active	{ color: #d2d2d2; text-decoration: none; }
 	text-decoration: none;
 }
 /* Links for forum/topic lists */
-a.forumtitle { font-family: "Trebuchet MS", Helvetica, Arial, Sans-serif;
+a.forumtitle {
 	font-size: 1.2em;
 	font-weight: bold;
 	color: #898989;
@@ -319,7 +314,7 @@ a.forumtitle:hover { color: #bcbcbc;
 	text-decoration: underline;
 }
 a.forumtitle:active { color: #898989; }
-a.topictitle { font-family: "Trebuchet MS", Helvetica, Arial, Sans-serif;
+a.topictitle {
 	font-size: 1.2em;
 	font-weight: bold;
 	color: #898989;
@@ -472,9 +467,6 @@ li.header dt, li.header dd { line-height: 1em;
 	color: #FFFFFF;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	font-size: 1em;
-	font-family: Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
 }
 li.header dt { font-weight: bold;}
 li.header dd { margin-left: 1px;}
@@ -567,7 +559,6 @@ div[class].topic-actions { height: auto; }
 	margin: 0 0 0.3em 0 !important;
 	text-transform: none;
 	border: none;
-	font-family: "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
 	line-height: 125%;
 }
 .postbody h3 img { /* Also see tweaks.css */
@@ -580,7 +571,7 @@ div[class].topic-actions { height: auto; }
 .content { min-height: 3em;
 	overflow: hidden;
 	line-height: 1.4em;
-	font-family: "Lucida Grande", "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
+	font-family: 'Lucida Grande', 'Trebuchet MS', 'Trebuchet', 'Arial', sans-serif;
 	font-size: 1em;
 	color: #333333;
 }
@@ -597,12 +588,12 @@ div[class].topic-actions { height: auto; }
 	margin-bottom: 1em;
 	line-height: 1.4em;
 }
-.content p { font-family: "Lucida Grande", "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
+.content p {
 	font-size: 1.2em;
 	margin-bottom: 1em;
 	line-height: 1.4em;
 }
-dl.faq { font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+dl.faq {
 	font-size: 1.1em;
 	margin-top: 1em;
 	margin-bottom: 2em;
@@ -626,7 +617,6 @@ dl.faq dt { font-weight: bold;
 /* Post author */
 p.author { margin: 0 15em 0.6em 0;
 	padding: 0 0 5px 0;
-	font-family: Verdana, Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	line-height: 1.2em;
 }
@@ -646,7 +636,7 @@ dd .signature { margin: 0;
 	border: none;
 }
 /* Post noticies */
-.notice { font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+.notice {
 	width: auto;
 	margin-top: 1.5em;
 	padding-top: 0.2em;
@@ -733,7 +723,7 @@ dl.codebox code { /* Also see tweaks.css */
 	clear: left;
 }
 .pm-message .attachbox { background-color: #f3f3f3; }
-.attachbox dt { font-family: Arial, Helvetica, sans-serif;
+.attachbox dt {
 	text-transform: uppercase;
 }
 .attachbox dd { margin-top: 4px;
@@ -766,14 +756,13 @@ div.inline-attachment dl.thumbnail, div.inline-attachment dl.file { display: blo
 	margin-bottom: 4px;
 }
 div.inline-attachment p { font-size: 100%; }
-dl.file { font-family: Verdana, Arial, Helvetica, sans-serif;
+dl.file {
 	display: block;
 }
 dl.file dt { text-transform: none;
 	margin: 0;
 	padding: 0;
 	font-weight: bold;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 dl.file dd { color: #666666;
 	margin: 0;
@@ -786,14 +775,13 @@ dl.thumbnail img { padding: 3px;
 }
 dl.thumbnail dd { color: #666666;
 	font-style: italic;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 .attachbox dl.thumbnail dd { font-size: 100%; }
 dl.thumbnail dt a:hover { background-color: #EEEEEE;}
 dl.thumbnail dt a:hover img { border: 1px solid #d2d2d2; }
 /* Post poll styles
 ----------------------------------------*/
-fieldset.polls { font-family: "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif; }
+fieldset.polls {}
 fieldset.polls dl { margin-top: 5px;
 	border-top: 1px solid #e2e2e2;
 	padding: 5px 0 0 0;
@@ -822,7 +810,6 @@ fieldset.polls dd { float: left;
 fieldset.polls dd.resultbar { width: 50%;}
 fieldset.polls dd input { margin: 2px 0; }
 fieldset.polls dd div { text-align: right;
-	font-family: Arial, Helvetica, sans-serif;
 	color: #FFFFFF;
 	font-weight: bold;
 	padding: 0 2px;
@@ -1009,7 +996,6 @@ ul.profile-icons li.info-icon, ul.profile-icons li.report-icon	{ margin: 0 3px 0
 /* General form styles
 ----------------------------------------*/
 fieldset { border-width: 0;
-	font-family: Verdana, Helvetica, Arial, sans-serif;
 	font-size: 1.1em;
 }
 input { font-weight: normal;
@@ -1017,9 +1003,8 @@ input { font-weight: normal;
 	vertical-align: middle;
 	padding: 0 3px;
 	font-size: 1em;
-	font-family: Verdana, Helvetica, Arial, sans-serif;
 }
-select {font-family: Verdana, Helvetica, Arial, sans-serif;
+select {
 	font-weight: normal;
 	cursor: pointer;
 	vertical-align: middle;
@@ -1029,7 +1014,7 @@ select {font-family: Verdana, Helvetica, Arial, sans-serif;
 }
 option { padding-right: 1em; }
 option.disabled-option { color: graytext; }
-textarea { font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+textarea {
 	width: 60%;
 	padding: 2px;
 	font-size: 1em;
@@ -1116,7 +1101,6 @@ a.button1, input.button1, input.button3, a.button2, input.button2 {
 	width: auto !important;
 	padding-top: 1px;
 	padding-bottom: 1px;
-	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
 	color: #000;
 	background: #FAFAFA none repeat-x top;
 }

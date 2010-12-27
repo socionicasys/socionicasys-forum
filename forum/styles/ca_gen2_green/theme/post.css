@@ -79,7 +79,6 @@ html>body .post-content {
 	margin: 0 0 0.3em 0 !important;
 	text-transform: none;
 	border: none;
-	font-family: "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
 	line-height: 125%;
 }
 
@@ -108,7 +107,6 @@ html>body .post-content {
 p.author {
     float: right;
 	padding: 0 0 5px 0;
-	font-family: Verdana, Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	line-height: 1.2em;
 }
@@ -277,7 +275,6 @@ dl.codebox code {
 }
 
 .attachbox dt {
-	font-family: Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 }
 
@@ -335,7 +332,6 @@ div.inline-attachment p {
 }
 
 dl.file {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 	display: block;
 }
 
@@ -344,7 +340,6 @@ dl.file dt {
 	margin: 0;
 	padding: 0;
 	font-weight: bold;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 dl.file dd {
@@ -362,7 +357,6 @@ dl.thumbnail img {
 dl.thumbnail dd {
 	color: #666666;
 	font-style: italic;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .attachbox dl.thumbnail dd {
@@ -494,7 +488,6 @@ html>body .profile-buttons li a {
 }
 .post-viewprofile h3 {
     clear: both;
-	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	text-transform: uppercase;
 	padding-bottom: 2px;
