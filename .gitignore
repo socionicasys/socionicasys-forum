@@ -1,3 +1,4 @@
+.idea
 forum/cache/*.php
 forum/gym_sitemaps/cache/*
 forum/phpbb_seo/cache/*
