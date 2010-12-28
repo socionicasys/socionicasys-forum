@@ -1212,7 +1212,7 @@ while ($row = $db->sql_fetchrow($result))
 			$id_cache[] = $poster_id;
 
 			$user_cache[$poster_id] = array(
-				'joined'		=> $user->format_date($row['user_regdate']),
+				'joined'		=> $user->format_date($row['user_regdate'], 'd.m.Y'),
 				'posts'			=> $row['user_posts'],
 				'warnings'		=> (isset($row['user_warnings'])) ? $row['user_warnings'] : 0,
 				'from'			=> (!empty($row['user_from'])) ? $row['user_from'] : '',
