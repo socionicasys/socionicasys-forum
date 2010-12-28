@@ -109,7 +109,7 @@ li.header dl.icon {
 li.header dl.icon dt {
 	/* Tweak for headers alignment when folder icon used */
 	padding-left: 4px;
-	padding-right: 50px;
+	padding-right: 44px;
 }
 
 /* Forum list column styles */
@@ -145,7 +145,7 @@ dl.icon dt li {
 
 dd.lastpost {
 	width: 25%;
-	font-size: 1.1em;
+	font-size: 1.2em;
 }
 
 dd.redirect {
