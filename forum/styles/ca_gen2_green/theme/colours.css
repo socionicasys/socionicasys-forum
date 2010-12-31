@@ -300,7 +300,7 @@ Colours and backgrounds for links.css
 a:link	{ color: #6ebb21; }
 a:visited	{ color: #6ebb21; }
 a:hover	{ color: #E51210; }
-a:active	{ color: #6ebb21; }
+a:active	{ color: #579905; }
 
 /* Links on gradient backgrounds */
 .navbg a:link {
