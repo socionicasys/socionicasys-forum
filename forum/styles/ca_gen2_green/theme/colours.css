@@ -21,11 +21,11 @@ p {
 }
 
 h1, h2 {
-	color: #6ebb21;
+	color: #579905;
 }
 
 h3, div.post-viewprofile h3 {
-	color: #6ebb21;
+	color: #579905;
 	background-image: url("{T_THEME_PATH}/images/bg_h3.gif");
 }
 
@@ -97,7 +97,7 @@ hr.dashed {
 }
 
 #search-box a:hover, .topnav a:hover, .topnav .current a, .topnav .current a:visited, .topnav .current a:hover {
-	color: #6ebb21;
+	color: #579905;
 }
 
 #search-box a:active, .topnav a:active, .topnav .current a:active {
@@ -239,7 +239,7 @@ dl.details dd {
 }
 
 .sep {
-	color: #6ebb21;
+	color: #579905;
 }
 
 #smiley-box {
@@ -251,12 +251,12 @@ dl.details dd {
 
 .pagination span strong {
 	color: #fff;
-	background-color: #6ebb21;
-	border-color: #6ebb21;
+	background-color: #579905;
+	border-color: #579905;
 }
 
 .pagination span a, .pagination span a:link, .pagination span a:visited, .pagination span a:active {
-	color: #6ebb21;
+	color: #579905;
 	background-color: #e5e5e5;
 	border-color: #c0c0c0;
 }
@@ -318,10 +318,10 @@ a:active	{ color: #579905; }
 }
 
 .navbg a:hover {
-	color: #6ebb21;
+	color: #579905;
 }
 .forumbg .header a:hover, .forabg .header a:hover, th a:hover {
-    color: #6ebb21;
+    color: #579905;
 }
 
 .navbg a:active {
@@ -332,7 +332,7 @@ a:active	{ color: #579905; }
 }
 
 .block-new .header a:link, .block-new .header a:visited, .block-new th a:link, .block-new th a:visited {
-	color: #6ebb21;
+	color: #579905;
 }
 
 .block-new .header a:hover, .block-new .header a:active, .block-new th a:hover, .block-new th a:active {
@@ -341,7 +341,7 @@ a:active	{ color: #579905; }
 
 /* Links for forum/topic lists */
 a.forumtitle, a.forumtitle:visited, a.topictitle, a.topictitle:visited {
-	color: #6ebb21;
+	color: #579905;
 }
 
 a.forumtitle:hover, a.topictitle:hover {
@@ -349,7 +349,7 @@ a.forumtitle:hover, a.topictitle:hover {
 }
 
 a.forumtitle:active, a.topictitle:active {
-	color: #6ebb21;
+	color: #579905;
 }
 
 .row-new a.forumtitle, .row-new a.forumtitle:visited, .row-new a.topictitle, .row-new a.topictitle:visited, .pm-notify-new a, .pm-notify-new a:visited {
@@ -364,15 +364,15 @@ a.forumtitle:active, a.topictitle:active {
 
 /* Post body links */
 .postlink {
-	color: #6ebb21;
+	color: #579905;
 }
 
 .postlink:visited {
-	color: #6ebb21;
+	color: #579905;
 }
 
 .postlink:active {
-	color: #6ebb21;
+	color: #579905;
 }
 
 .postlink:hover {
@@ -385,7 +385,7 @@ a.forumtitle:active, a.topictitle:active {
 
 /* Profile links */
 .postprofile a:link, .postprofile a:active, .postprofile a:visited, .postprofile dt.author a {
-	color: #6ebb21;
+	color: #579905;
 }
 
 .postprofile a:hover, .postprofile dt.author a:hover {
@@ -427,11 +427,11 @@ a.up:hover {
 }
 
 a.left:hover {
-	color: #6ebb21;
+	color: #579905;
 }
 
 a.right:hover {
-	color: #6ebb21;
+	color: #579905;
 }
 
 
@@ -509,7 +509,7 @@ ul.topiclist dd.searchextra {
 }
 
 .content h2, .panel h2 {
-	color: #6ebb21;
+	color: #579905;
 	border-bottom-color:  #e0e0e0;
 }
 
@@ -633,7 +633,7 @@ dl.thumbnail dt a:hover {
 }
 
 dl.thumbnail dt a:hover img {
-	border-color: #6ebb21;
+	border-color: #579905;
 }
 
 /* Post poll styles
@@ -753,7 +753,7 @@ Colours and backgrounds for cp.css
 
 #tabs a span, #minitabs a span {
 	background-image: url("{T_THEME_PATH}/images/bg_tabs2.gif");
-	color: #6ebb21;
+	color: #579905;
 }
 
 #tabs a:hover span, #minitabs a:hover span {
@@ -761,7 +761,7 @@ Colours and backgrounds for cp.css
 }
 
 #tabs .activetab a span, #minitabs .activetab a span {
-	color: #6ebb21;
+	color: #579905;
 }
 
 #tabs .activetab a:hover span, #minitabs .activetab a:hover span {
@@ -773,7 +773,7 @@ Colours and backgrounds for cp.css
 
 /* Link styles for the sub-section links */
 #navigation a {
-	color: #6ebb21;
+	color: #579905;
 	border-top-color: #fff;
 	border-bottom-color: #e0e0e0;
 	background-color: #FFF;
@@ -879,7 +879,7 @@ Colours and backgrounds for cp.css
 }
 
 .pmlist li.pm_friend_colour, .pm_friend_colour {
-	border-color: #6ebb21;
+	border-color: #579905;
 }
 
 .pmlist li.pm_foe_colour, .pm_foe_colour {
@@ -975,7 +975,7 @@ input.button3, a.button2, input.button2 {
 
 a.button1, input.button1 {
 	border-color: #c2c2c2;
-	color: #6ebb21;
+	color: #579905;
 	background-color: #FFF;
 }
 
@@ -989,12 +989,12 @@ a.button2, a.button2:link, a.button2:visited, a.button2:active {
 }
 
 a.button1, a.button1:link, a.button1:visited, a.button1:active {
-	color: #6ebb21;
+	color: #579905;
 }
 
 /* Hover states */
 a.button2:hover, input.button2:hover, input.button3:hover, * html input.button2, * html input.button3 {
-    color: #6ebb21;
+    color: #579905;
     border-color: #a5a5a5;
 }
 
