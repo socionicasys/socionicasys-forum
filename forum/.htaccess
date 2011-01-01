@@ -21,8 +21,8 @@ RewriteEngine On
 # REWRITE BASE
 RewriteBase /forum/
 # HERE IS A GOOD PLACE TO FORCE CANONICAL DOMAIN
-# RewriteCond %{HTTP_HOST} !^test\.socionicasys\.ru$ [NC]
-# RewriteRule ^(.*)$ http://test.socionicasys.ru/forum/$1 [QSA,L,R=301]
+# RewriteCond %{HTTP_HOST} !^socionicasys\.ru$ [NC]
+# RewriteRule ^(.*)$ http://socionicasys.ru/forum/$1 [QSA,L,R=301]
 
 # DO NOT GO FURTHER IF THE REQUESTED FILE / DIR DOES EXISTS
 RewriteCond %{REQUEST_FILENAME} -f
@@ -42,8 +42,6 @@ RewriteRule . - [L]
 RewriteRule ^(forum|[a-z0-9_-]*-f)([0-9]+)/?(page([0-9]+)\.html)?$ viewforum.php?f=$2&start=$4 [QSA,L,NC]
 # TOPIC WITH VIRTUAL FOLDER ALL MODES
 RewriteRule ^(forum|[a-z0-9_-]*-f)([0-9]+)/(topic|[a-z0-9_-]*-t)([0-9]+)(-([0-9]+))?\.html$ viewtopic.php?f=$2&t=$4&start=$6 [QSA,L,NC]
-# GLOBAL ANNOUNCES WITH VIRTUAL FOLDER ALL MODES
-RewriteRule ^announces/(topic|[a-z0-9_-]*-t)([0-9]+)(-([0-9]+))?\.html$ viewtopic.php?t=$2&start=$4 [QSA,L,NC]
 # TOPIC WITHOUT FORUM ID & DELIM ALL MODES
 RewriteRule ^([a-z0-9_-]*)/?(topic|[a-z0-9_-]*-t)([0-9]+)(-([0-9]+))?\.html$ viewtopic.php?forum_uri=$1&t=$3&start=$5 [QSA,L,NC]
 # PHPBB FILES ALL MODES
@@ -68,7 +66,16 @@ RewriteRule ^unreadposts(-([0-9]+))?\.html$ search.php?search_id=unreadposts&sta
 RewriteRule ^the-team\.html$ memberlist.php?mode=leaders [QSA,L,NC]
 # HERE IS A GOOD PLACE TO ADD OTHER PHPBB RELATED REWRITERULES
 
-# FORUM WITHOUT ID & DELIM ALL MODES (SAME DELIM)
+#####################################################
+# GYM Sitemaps & RSS
+# Global channels
+RewriteRule ^rss(/(news)+)?(/(digest)+)?(/(short|long)+)?/?$ gymrss.php?channels&$2&$4&$6 [QSA,L,NC]
+# HTML Global news & maps
+RewriteRule ^(news|maps)/?(page([0-9]+)\.html)?$ map.php?$1&start=$3 [QSA,L,NC]
+# END GYM Sitemaps & RSS
+#####################################################
+
+# FORUM WITHOUT ID & DELIM ALL MODES
 # THESE THREE LINES MUST BE LOCATED AT THE END OF YOUR HTACCESS TO WORK PROPERLY
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -78,4 +85,23 @@ RewriteRule ^.+/(style\.php|ucp\.php|mcp\.php|faq\.php|download/file.php)$ $1 [Q
 # FIX RELATIVE PATHS : IMAGES
 RewriteRule ^.+/(styles/.*|images/.*)/$ $1 [QSA,L,NC,R=301]
 # END PHPBB PAGES
+#####################################################
+
+#####################################################
+# GYM Sitemaps & RSS
+# HTML Module additional modes
+RewriteRule ^(news|maps)/([a-z0-9_-]+)(/([a-z0-9_-]+))?/?(page([0-9]+)\.html)?$ map.php?$2=$4&$1&start=$6 [QSA,L,NC]
+# Main feeds & channels
+RewriteRule ^rss(/(news)+)?(/(digest)+)?(/(short|long)+)?(/([a-z0-9_-]+))?/([a-z0-9_]+)\.xml(\.gz)?$ gymrss.php?$9=$8&$2&$4&$6&gzip=$10 [QSA,L,NC]
+# Module feeds
+RewriteRule ^[a-z0-9_-]*-[a-z]{1,2}([0-9]+)(/(news)+)?(/(digest)+)?(/(short|long)+)?/([a-z0-9_]+)\.xml(\.gz)?$ gymrss.php?$8=$1&$3&$5&$7&gzip=$9 [QSA,L,NC]
+# Module feeds without ids
+RewriteRule ^([a-z0-9_-]+)(/(news)+)?(/(digest)+)?(/(short|long)+)?/([a-z0-9_]+)\.xml(\.gz)?$ gymrss.php?nametoid=$1&$3&$5&$7&modulename=$8&gzip=$9 [QSA,L,NC]
+# Google SitemapIndex
+RewriteRule ^sitemapindex\.xml(\.gz)?$ sitemap.php?gzip=$1 [QSA,L,NC]
+# Module cat sitemaps
+RewriteRule ^[a-z0-9_-]+-([a-z]{1,2})([0-9]+)\.xml(\.gz)?$ sitemap.php?module_sep=$1&module_sub=$2&gzip=$3 [QSA,L,NC]
+# Module sitemaps
+RewriteRule ^([a-z0-9_]+)-([a-z0-9_-]+)\.xml(\.gz)?$ sitemap.php?$1=$2&gzip=$3 [QSA,L,NC]
+# END GYM Sitemaps & RSS
 #####################################################
