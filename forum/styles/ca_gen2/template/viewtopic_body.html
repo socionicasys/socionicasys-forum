@@ -243,7 +243,7 @@
                 <!-- IF postrow.U_REPORT --><li class="report-icon"><a href="{postrow.U_REPORT}" title="{L_REPORT_POST}"><span>{L_REPORT_POST}</span></a></li><!-- ENDIF -->
                 <!-- IF postrow.U_WARN --><li class="warn-icon"><a href="{postrow.U_WARN}" title="{L_WARN_USER}"><span>{L_WARN_USER}</span></a></li><!-- ENDIF -->
                 <!-- IF postrow.U_INFO --><li class="info-icon"><a href="{postrow.U_INFO}" title="{L_INFORMATION}"><span>{L_INFORMATION}</span></a></li><!-- ENDIF -->
-                <!-- IF S_QUICK_REPLY and postrow.DECODED_MESSAGE --><li class="quote-icon"><a href="#postingbox" onclick="addquote({postrow.POST_ID}, '{postrow.POST_AUTHOR}');" title="{L_QUOTE} {postrow.POST_AUTHOR}"><span>{L_QUOTE} {postrow.POST_AUTHOR}</span></a></li><!-- ELSE IF postrow.U_QUOTE --><li class="quote-icon"><a href="{postrow.U_QUOTE}" title="{L_REPLY_WITH_QUOTE}"><span>{L_REPLY_WITH_QUOTE}</span></a></li><!-- ENDIF -->
+                <!-- IF S_QUICK_REPLY and postrow.DECODED_MESSAGE --><li class="quote-icon"><a href="{postrow.U_QUOTE}" onclick="addquote({postrow.POST_ID}, '{postrow.POST_AUTHOR}'); return false;" title="{L_QUOTE} {postrow.POST_AUTHOR}"><span>{L_QUOTE} {postrow.POST_AUTHOR}</span></a></li><!-- ELSE IF postrow.U_QUOTE --><li class="quote-icon"><a href="{postrow.U_QUOTE}" title="{L_REPLY_WITH_QUOTE}"><span>{L_REPLY_WITH_QUOTE}</span></a></li><!-- ENDIF -->
                 <!-- IF postrow.U_EDIT --><li class="edit-icon"><a href="{postrow.U_EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
             </ul>
 		<!-- ENDIF -->

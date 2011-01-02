@@ -170,7 +170,7 @@
 				<img src="{T_THEME_PATH}/images/spacer.gif" width="120" height="1" alt="" />
 			</td>
 			<td width="100%" height="25" class="row" valign="top">
-				<!-- IF not S_IS_BOT --><div style="float: {S_CONTENT_FLOW_END};"><!-- IF postrow.U_EDIT --><a href="{postrow.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF S_QUICK_REPLY and postrow.DECODED_MESSAGE --><a href="#" onclick="addquote({postrow.POST_ID},'{postrow.POST_AUTHOR}'); return false;">{QUOTE_IMG}</a> <!-- ELSE IF postrow.U_QUOTE --><a href="{postrow.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --></div><!-- ENDIF -->
+				<!-- IF not S_IS_BOT --><div style="float: {S_CONTENT_FLOW_END};"><!-- IF postrow.U_EDIT --><a href="{postrow.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF S_QUICK_REPLY and postrow.DECODED_MESSAGE --><a href="{postrow.U_QUOTE}" onclick="addquote({postrow.POST_ID},'{postrow.POST_AUTHOR}'); return false;">{QUOTE_IMG}</a> <!-- ELSE IF postrow.U_QUOTE --><a href="{postrow.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --></div><!-- ENDIF -->
 				<div class="postsubject"><!-- IF S_IS_BOT -->{postrow.MINI_POST_IMG}<!-- ELSE --><a href="{postrow.U_MINI_POST}"><!-- IF postrow.POST_ICON_IMG --><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" /><!-- ELSE -->{postrow.MINI_POST_IMG}<!-- ENDIF --></a><!-- ENDIF -->&nbsp;{postrow.POST_SUBJECT}</div>
 
 					<!-- IF postrow.S_POST_UNAPPROVED or postrow.S_POST_REPORTED -->
