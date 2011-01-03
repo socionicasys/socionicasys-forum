@@ -1875,7 +1875,7 @@ if ($s_can_vote || $s_quick_reply)
 			'L_ICON'					=> $user->lang['POST_ICON'],
 			'L_MESSAGE_BODY_EXPLAIN'	=> (intval($config['max_post_chars'])) ? sprintf($user->lang['MESSAGE_BODY_EXPLAIN'], intval($config['max_post_chars'])) : '',
 
-			'SUBJECT'				=> 'Re: ' . censor_text($topic_data['topic_title']),
+			'SUBJECT'				=> '',
 			'BBCODE_STATUS'			=> ($s_bbcode) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>'),
 			'IMG_STATUS'			=> ($s_img) ? $user->lang['IMAGES_ARE_ON'] : $user->lang['IMAGES_ARE_OFF'],
 			'FLASH_STATUS'			=> ($s_flash) ? $user->lang['FLASH_IS_ON'] : $user->lang['FLASH_IS_OFF'],
