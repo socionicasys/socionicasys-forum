@@ -147,7 +147,7 @@
 
 			<td align="center" valign="top" class="row">
 				<!-- IF postrow.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{postrow.POST_ID}"></a>
-				<div class="postauthor"<!-- IF postrow.POST_AUTHOR_COLOUR --> style="color: {postrow.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{postrow.POST_AUTHOR}</div>
+				<a class="postauthor" onclick="insert_text('[b]{postrow.POST_AUTHOR}[/b], '); return false;"<!-- IF postrow.U_POST_AUTHOR --> href="{postrow.U_POST_AUTHOR}"<!-- ENDIF --><!-- IF postrow.POST_AUTHOR_COLOUR --> style="color: {postrow.POST_AUTHOR_COLOUR};"<!-- ENDIF -->>{postrow.POST_AUTHOR}</a>
 				<!-- IF postrow.ONLINE_IMG && postrow.S_ONLINE --><div class="postonline">{postrow.ONLINE_IMG}</div><!-- ENDIF -->
 				<!-- IF postrow.RANK_TITLE --><div class="posterrank">{postrow.RANK_TITLE}</div><!-- ENDIF -->
 				<!-- IF postrow.RANK_IMG --><div class="postrankimg">{postrow.RANK_IMG}</div><!-- ENDIF -->

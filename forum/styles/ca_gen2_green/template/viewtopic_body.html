@@ -134,7 +134,7 @@
             </div>
             <div class="profile-top">
                 <p class="profile-author">
-                    <a class="profile-link" id="link{postrow.S_ROW_COUNT}" href="<!-- IF postrow.U_POST_AUTHOR -->{postrow.U_POST_AUTHOR}<!-- ELSE -->javascript:void(0);<!-- ENDIF -->"<!-- IF postrow.POST_AUTHOR_COLOUR --> style="color: {postrow.POST_AUTHOR_COLOUR};"<!-- ENDIF -->>{postrow.POST_AUTHOR}</a>
+                    <a class="profile-link" id="link{postrow.S_ROW_COUNT}" onclick="insert_text('[b]{postrow.POST_AUTHOR}[/b], '); return false;" href="<!-- IF postrow.U_POST_AUTHOR -->{postrow.U_POST_AUTHOR}<!-- ELSE -->javascript:void(0);<!-- ENDIF -->"<!-- IF postrow.POST_AUTHOR_COLOUR --> style="color: {postrow.POST_AUTHOR_COLOUR};"<!-- ENDIF -->>{postrow.POST_AUTHOR}</a>
                 </p>
                 <!-- IF $CA_POPUP -->
                     <div id="popup{postrow.S_ROW_COUNT}" class="profile-buttons">

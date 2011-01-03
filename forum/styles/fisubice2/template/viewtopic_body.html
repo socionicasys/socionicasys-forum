@@ -129,7 +129,7 @@
 				<!-- IF not postrow.S_IGNORE_POST -->
 			    <tr class="<!-- IF postrow.S_ROW_COUNT is even -->row1<!-- ELSE -->row2<!-- ENDIF -->">
 			        <td valign="top" rowspan="2">
-					    <b class="postauthor"<!-- IF postrow.POST_AUTHOR_COLOUR --> style="color: {postrow.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{postrow.POST_AUTHOR_FULL}</b>
+					    <a class="postauthor" onclick="insert_text('[b]{postrow.POST_AUTHOR}[/b], '); return false;"<!-- IF postrow.U_POST_AUTHOR --> href="{postrow.U_POST_AUTHOR}"<!-- ENDIF --><!-- IF postrow.POST_AUTHOR_COLOUR --> style="color: {postrow.POST_AUTHOR_COLOUR};"<!-- ENDIF -->>{postrow.POST_AUTHOR}</a>
 				        <div class="postdetails"><br />
 					        <!-- IF postrow.ONLINE_IMG -->
 						        {postrow.ONLINE_IMG}<br />
