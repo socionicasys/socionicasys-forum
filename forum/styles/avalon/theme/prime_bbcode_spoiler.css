@@ -1,0 +1,47 @@
+/* Hidden: make text and background the same color, for when JavaScript is unavailable. */
+.spoiler-box, .spoiler-hidden {
+	color:#000000;
+	background-color:#000000;
+}
+
+/* Visible */
+.spoiler-visible {
+	color:#000000;
+	background-color:#FFFFFF;
+	visibility:visible;
+}
+
+div.spoiler-visible {
+	display:block;
+}
+
+/* Common */
+div.spoiler {
+	margin: 0.5em 1px 0 25px;
+	border: 1px solid #A9B8C2;
+}
+
+div.spoiler-top {
+	font-style: normal;
+	font-weight: bold;
+	font-size: 0.9em;
+	padding: 0 4px;
+	background-color: #A9B8C2;
+}
+
+div.spoiler-box {
+	font-size: 0.95em;
+}
+
+span.spoiler-hidden, span.spoiler-visible {
+	padding:0 2px;
+}
+
+div.spoiler-hidden, div.spoiler-visible {
+	padding: 5px;
+}
+
+/* Nested spoilers */
+div.spoiler div.spoiler {
+	margin-left:15px;
+}
