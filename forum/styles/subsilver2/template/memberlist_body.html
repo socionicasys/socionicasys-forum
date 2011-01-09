@@ -35,12 +35,13 @@
 <tr>
 	<th nowrap="nowrap">#</th>
 	<th nowrap="nowrap" width="25%" align="{S_CONTENT_FLOW_BEGIN}"><a href="{U_SORT_USERNAME}">{L_USERNAME}</a></th>
-	<th nowrap="nowrap" width="15%"><a href="{U_SORT_JOINED}">{L_JOINED}</a></th>
+	<th nowrap="nowrap" width="12%"><a href="{U_SORT_JOINED}">{L_JOINED}</a></th>
+	<th nowrap="nowrap" width="13%"><a href="{U_SORT_FROM}">{L_FROM}</a></th>
 	<th nowrap="nowrap" width="10%"><a href="{U_SORT_POSTS}">{L_POSTS}</a></th>
-	<th nowrap="nowrap" width="15%"><a href="{U_SORT_RANK}">{L_RANK}</a></th>
-	<th nowrap="nowrap" width="11%">{L_SEND_MESSAGE}</th>
-	<th nowrap="nowrap" width="11%"><a href="{U_SORT_EMAIL}">{L_EMAIL}</a></th>
-	<th nowrap="nowrap" width="11%"><a href="{U_SORT_WEBSITE}">{L_WEBSITE}</a></th>
+	<th nowrap="nowrap" width="10%"><a href="{U_SORT_RANK}">{L_RANK}</a></th>
+	<th nowrap="nowrap" width="10%">{L_SEND_MESSAGE}</th>
+	<th nowrap="nowrap" width="10%"><a href="{U_SORT_EMAIL}">{L_EMAIL}</a></th>
+	<th nowrap="nowrap" width="10%"><a href="{U_SORT_WEBSITE}">{L_WEBSITE}</a></th>
 	<!-- IF S_IN_SEARCH_POPUP and not S_SELECT_SINGLE --><th width="2%" nowrap="nowrap">{L_MARK}</th><!-- ENDIF -->
 </tr>
 <!-- BEGIN memberrow -->
@@ -48,11 +49,11 @@
 	<!-- IF S_SHOW_GROUP -->
 		<!-- IF memberrow.S_FIRST_ROW and memberrow.S_GROUP_LEADER -->
 			<tr class="row3">
-				<td colspan="8"><b class="gensmall">{L_GROUP_LEADER}</b></td>
+				<td colspan="9"><b class="gensmall">{L_GROUP_LEADER}</b></td>
 			</tr>
 		<!-- ELSEIF not memberrow.S_GROUP_LEADER and not $S_MEMBER_HEADER -->
 			<tr class="row3">
-				<td colspan="8"><b class="gensmall">{L_GROUP_MEMBERS}</b></td>
+				<td colspan="9"><b class="gensmall">{L_GROUP_MEMBERS}</b></td>
 			</tr>
 				<!-- DEFINE $S_MEMBER_HEADER = 1 -->
 		<!-- ENDIF -->
@@ -63,6 +64,7 @@
 		<td class="gen" align="center">&nbsp;{memberrow.ROW_NUMBER}&nbsp;</td>
 		<td class="genmed" align="{S_CONTENT_FLOW_BEGIN}">{memberrow.USERNAME_FULL}<!-- IF S_SELECT_SINGLE --> [&nbsp;<a href="#" onclick="insert_single('{memberrow.A_USERNAME}'); return false;">{L_SELECT}</a>&nbsp;]<!-- ENDIF --></td>
 		<td class="genmed" align="center" nowrap="nowrap">&nbsp;{memberrow.JOINED}&nbsp;</td>
+		<td class="genmed" align="center" nowrap="nowrap">{memberrow.LOCATION}</td>
 		<td class="gen" align="center">{memberrow.POSTS}</td>
 		<td class="gen" align="center"><!-- IF memberrow.RANK_IMG -->{memberrow.RANK_IMG}<!-- ELSE -->{memberrow.RANK_TITLE}<!-- ENDIF --></td>
 		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_PM --><a href="{memberrow.U_PM}">{PM_IMG}</a><!-- ENDIF -->&nbsp;</td>
@@ -78,7 +80,7 @@
 <!-- BEGINELSE -->
 
 	<tr>
-		<td class="row1" colspan="<!-- IF S_IN_SEARCH_POPUP -->9<!-- ELSE -->8<!-- ENDIF -->" align="center">
+		<td class="row1" colspan="<!-- IF S_IN_SEARCH_POPUP -->10<!-- ELSE -->9<!-- ENDIF -->" align="center">
 			<span class="gen"><!-- IF S_SHOW_GROUP -->{L_NO_GROUP_MEMBERS}<!-- ELSE -->{L_NO_MEMBERS}<!-- ENDIF --></span>
 		</td>
 	</tr>
@@ -86,7 +88,7 @@
 <!-- END memberrow -->
 
 <tr>
-	<td class="cat" colspan="<!-- IF S_IN_SEARCH_POPUP -->9<!-- ELSE -->8<!-- ENDIF -->" align="center"><!-- IF S_IN_SEARCH_POPUP and not S_SELECT_SINGLE --><input class="btnlite" type="submit" value="{L_SELECT_MARKED}" /><!-- ELSE --><span class="gensmall">{L_SELECT_SORT_METHOD}:</span>&nbsp;<select name="sk">{S_MODE_SELECT}</select>&nbsp; <span class="gensmall">{L_ORDER}</span>&nbsp;<select name="sd">{S_ORDER_SELECT}</select>&nbsp; <input type="submit" name="submit" value="{L_SUBMIT}" class="btnlite" /><!-- ENDIF --></td>
+	<td class="cat" colspan="<!-- IF S_IN_SEARCH_POPUP -->10<!-- ELSE -->9<!-- ENDIF -->" align="center"><!-- IF S_IN_SEARCH_POPUP and not S_SELECT_SINGLE --><input class="btnlite" type="submit" value="{L_SELECT_MARKED}" /><!-- ELSE --><span class="gensmall">{L_SELECT_SORT_METHOD}:</span>&nbsp;<select name="sk">{S_MODE_SELECT}</select>&nbsp; <span class="gensmall">{L_ORDER}</span>&nbsp;<select name="sd">{S_ORDER_SELECT}</select>&nbsp; <input type="submit" name="submit" value="{L_SUBMIT}" class="btnlite" /><!-- ENDIF --></td>
 </tr>
 </table>
 {S_FORM_TOKEN}
