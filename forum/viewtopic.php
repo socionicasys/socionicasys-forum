@@ -1288,6 +1288,10 @@ while ($row = $db->sql_fetchrow($result))
 					}
 
 					$user_cache[$poster_id]['age'] = (int) ($now['year'] - $bday_year - $diff);
+//-- mod: Prime Birthdate ---------------------------------------------------//
+					include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
+					$prime_birthdate->alter_user_cache($user_cache, $row);
+//-- end: Prime Birthdate ---------------------------------------------------//
 				}
 			}
 		}

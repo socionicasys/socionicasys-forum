@@ -68,6 +68,8 @@
 		<dd><select name="tz" id="tz" tabindex="7" style="max-width: 250px;" class="autowidth">{S_TZ_OPTIONS}</select></dd>
 	</dl>
 
+
+	<!-- INCLUDE prime_birthdate.html -->
 	<!-- IF .profile_fields -->
 		<dl><dd><strong>{L_ITEMS_REQUIRED}</strong></dd></dl>
 
@@ -89,8 +91,8 @@
 	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 <!-- ENDIF -->
 
-<!-- IF S_COPPA -->
-<div class="panel">
+<!-- IF S_COPPA or S_COPPA === 0 -->
+<div class="panel" id="coppa_area"<!-- IF not S_COPPA --> style="display:none"<!-- ENDIF -->>
 	{$CA_BLOCK_START}
 
 	<h4>{L_COPPA_COMPLIANCE}</h4>

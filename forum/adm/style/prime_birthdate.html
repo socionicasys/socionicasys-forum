@@ -1,0 +1,25 @@
+<!-- IF PRIME_BIRTHDATE -->
+	<dl>
+		<dt><label for="bday_day">{L_PRIME_BIRTHDATE_NAME}:</label><br /><span>{L_BIRTHDAY_EXPLAIN}</span></dt>
+		<dd>
+			<select name="bday_month" id="bday_month">{S_BIRTHDAY_MONTH_OPTIONS}</select>
+			<select name="bday_day" id="bday_day">{S_BIRTHDAY_DAY_OPTIONS}</select>
+			<select name="bday_year" id="bday_year">{S_BIRTHDAY_YEAR_OPTIONS}</select>
+			<!-- IF S_CURRENT_AGE -->({L_AGE}: {S_CURRENT_AGE})<!-- ENDIF -->
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="show_age1">{L_PRIME_BIRTHDATE_SHOW_AGE}:</label><br /><span>{L_PRIME_BIRTHDATE_SHOW_AGE_EXPLAIN}</span></dt>
+		<dd>
+			<label for="show_age1"><input type="radio" name="show_age" id="show_age1" value="1"<!-- IF S_SHOW_AGE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+			<label for="show_age0"><input type="radio" name="show_age" id="show_age0" value="0"<!-- IF not S_SHOW_AGE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="congrats1">{L_PRIME_BIRTHDATE_CONGRATS}:</label><br /><span>{L_PRIME_BIRTHDATE_CONGRATS_EXPLAIN}</span></dt>
+		<dd>
+			<label for="congrats1"><input type="radio" name="congrats" id="congrats1" value="1"<!-- IF S_SHOW_CONGRATS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+			<label for="congrats0"><input type="radio" name="congrats" id="congrats0" value="0"<!-- IF not S_SHOW_CONGRATS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		</dd>
+	</dl>
+<!-- ENDIF -->

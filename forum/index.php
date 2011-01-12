@@ -112,10 +112,18 @@ if ($config['load_birthdays'] && $config['allow_birthdays'])
 			OR b.ban_exclude = 1)
 			AND u.user_birthday LIKE '" . $db->sql_escape(sprintf('%2d-%2d-', $now['mday'], $now['mon'])) . "%'
 			AND u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')';
+//-- mod: Prime Birthdate ---------------------------------------------------//
+	include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
+	$prime_birthdate->index_inject_sql($sql);
+//-- end: Prime Birthdate ---------------------------------------------------//
 	$result = $db->sql_query($sql);
 
 	while ($row = $db->sql_fetchrow($result))
 	{
+
+//-- mod: Prime Birthdate ---------------------------------------------------//
+		$prime_birthdate->index_alter_birthday_list($row);
+//-- end: Prime Birthdate ---------------------------------------------------//
 		$birthday_list .= (($birthday_list != '') ? ', ' : '') . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
 
 		if ($age = (int) substr($row['user_birthday'], -4))

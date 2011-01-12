@@ -1340,6 +1340,10 @@ class acp_users
 				$data['bday_month']		= request_var('bday_month', $data['bday_month']);
 				$data['bday_year']		= request_var('bday_year', $data['bday_year']);
 				$data['user_birthday']	= sprintf('%2d-%2d-%4d', $data['bday_day'], $data['bday_month'], $data['bday_year']);
+//-- mod: Prime Birthdate ---------------------------------------------------//
+				include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
+				$prime_birthdate->acp_users_get_vars($data, $user_row);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 
 				if ($submit)
@@ -1392,6 +1396,9 @@ class acp_users
 							'user_interests'=> $data['interests'],
 							'user_birthday'	=> $data['user_birthday'],
 						);
+//-- mod: Prime Birthdate ---------------------------------------------------//
+						$prime_birthdate->acp_users_inject_sql($sql_ary, $data);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 						$sql = 'UPDATE ' . USERS_TABLE . '
 							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
@@ -1431,6 +1438,9 @@ class acp_users
 					$s_birthday_year_options .= "<option value=\"$i\"$selected>$i</option>";
 				}
 				unset($now);
+//-- mod: Prime Birthdate ---------------------------------------------------//
+				$prime_birthdate->acp_users_format_fields($data, $s_birthday_day_options, $s_birthday_month_options, $s_birthday_year_options);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 				$template->assign_vars(array(
 					'ICQ'			=> $data['icq'],

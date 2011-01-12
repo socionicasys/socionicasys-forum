@@ -295,6 +295,11 @@ class ucp_profile
 					$data['user_birthday'] = sprintf('%2d-%2d-%4d', $data['bday_day'], $data['bday_month'], $data['bday_year']);
 				}
 
+
+//-- mod: Prime Birthdate ---------------------------------------------------//
+				include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
+				$prime_birthdate->ucp_profile_get_vars($data);
+//-- end: Prime Birthdate ---------------------------------------------------//
 				add_form_key('ucp_profile_info');
 
 				if ($submit)
@@ -328,6 +333,9 @@ class ucp_profile
 					}
 
 					$error = validate_data($data, $validate_array);
+//-- mod: Prime Birthdate ---------------------------------------------------//
+					$prime_birthdate->ucp_profile_error_checking($data, $error);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 					// validate custom profile fields
 					$cp->submit_cp_field('profile', $user->get_iso_lang_id(), $cp_data, $cp_error);
@@ -369,6 +377,9 @@ class ucp_profile
 						if ($config['allow_birthdays'])
 						{
 							$sql_ary['user_birthday'] = $data['user_birthday'];
+//-- mod: Prime Birthdate ---------------------------------------------------//
+							$prime_birthdate->ucp_profile_insert_sql($sql_ary, $data);
+//-- end: Prime Birthdate ---------------------------------------------------//
 						}
 
 						$sql = 'UPDATE ' . USERS_TABLE . '
@@ -413,6 +424,9 @@ class ucp_profile
 						$s_birthday_year_options .= "<option value=\"$i\"$selected>$i</option>";
 					}
 					unset($now);
+//-- mod: Prime Birthdate ---------------------------------------------------//
+					$prime_birthdate->ucp_profile_format_fields($data, $s_birthday_day_options, $s_birthday_month_options, $s_birthday_year_options, $error);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 					$template->assign_vars(array(
 						'S_BIRTHDAY_DAY_OPTIONS'	=> $s_birthday_day_options,

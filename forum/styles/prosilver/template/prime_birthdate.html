@@ -1,0 +1,90 @@
+<!-- IF S_BIRTHDAYS_UCP_PROFILE -->
+
+		<dl>
+			<dt><label for="bday_day">{L_PRIME_BIRTHDATE_NAME}:<!-- IF S_BIRTHDAYS_REQUIRED --> *<!-- ENDIF --></label><br /><span>{L_BIRTHDAY_EXPLAIN}</span></dt>
+			<dd>
+				<select<!-- IF S_BIRTHDAYS_LOCKED --> disabled="disabled"<!-- ENDIF --> name="bday_month" id="bday_month">{S_BIRTHDAY_MONTH_OPTIONS}</select>
+				<select<!-- IF S_BIRTHDAYS_LOCKED --> disabled="disabled"<!-- ENDIF --> name="bday_day" id="bday_day">{S_BIRTHDAY_DAY_OPTIONS}</select>
+				<select<!-- IF S_BIRTHDAYS_LOCKED --> disabled="disabled"<!-- ENDIF --> name="bday_year" id="bday_year">{S_BIRTHDAY_YEAR_OPTIONS}</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="show_age1">{L_PRIME_BIRTHDATE_SHOW_AGE}:</label><br /><span>{L_PRIME_BIRTHDATE_SHOW_AGE_EXPLAIN}</span></dt>
+			<dd>
+				<label for="show_age1"><input type="radio" name="show_age" id="show_age1" value="1"<!-- IF S_SHOW_AGE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="show_age0"><input type="radio" name="show_age" id="show_age0" value="0"<!-- IF not S_SHOW_AGE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<!-- IF S_DISPLAY_BIRTHDAY_LIST -->
+		<dl>
+			<dt><label for="congrats1">{L_PRIME_BIRTHDATE_CONGRATS}:</label><br /><span>{L_PRIME_BIRTHDATE_CONGRATS_EXPLAIN}</span></dt>
+			<dd>
+				<label for="congrats1"><input type="radio" name="congrats" id="congrats1" value="1"<!-- IF S_SHOW_CONGRATS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="congrats0"><input type="radio" name="congrats" id="congrats0" value="0"<!-- IF not S_SHOW_CONGRATS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<!-- ENDIF -->
+
+<!-- ELSEIF S_BIRTHDAYS_ENABLED === 'UCP_AGREEMENT' -->
+	<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+
+	<b class="genmed">{L_PRIME_BIRTHDATE_ENTER}:</b>
+	<div style="margin-top:4px;margin-bottom:1em;">
+		<select name="bday_month">{S_BIRTHDAY_MONTH_OPTIONS}</select>
+		<select name="bday_day">{S_BIRTHDAY_DAY_OPTIONS}</select>
+		<select name="bday_year">{S_BIRTHDAY_YEAR_OPTIONS}</select>
+	</div>
+
+<!-- ELSEIF S_BIRTHDAYS_ENABLED === 'UCP_REGISTER' -->
+
+	<dl>
+		<dt><label>{L_PRIME_BIRTHDATE_NAME}:<!-- IF S_BIRTHDAYS_REQUIRED --> *<!-- ENDIF --></label></dt>
+		<dd><select name="bday_month" onchange="if(check_coppa) check_coppa();">{S_BIRTHDAY_MONTH_OPTIONS}</select>
+			<select name="bday_day" onchange="if(check_coppa) check_coppa();">{S_BIRTHDAY_DAY_OPTIONS}</select>
+			<select name="bday_year" onchange="if(check_coppa) check_coppa();">{S_BIRTHDAY_YEAR_OPTIONS}</select>
+<script type="text/javascript">
+// <![CDATA[
+	/**
+	* Show/Hide COPPA
+	*/
+	function get_age(dd, mm, yy) 
+	{
+		var bdate = new Array(parseInt(dd), parseInt(mm), parseInt(yy));
+		var now   = new Date();			// get current date
+		var age   = parseInt(now.getFullYear()) - bdate[2];
+		if ((bdate[1] > now.getMonth() + 1) || (bdate[1] == now.getMonth() + 1 && now.getDate() < bdate[0]))
+		{
+			age -= 1;
+		}
+		return age;
+	}
+	
+	function check_coppa() 
+	{
+		if (!document.forms || !document.forms['register']) 
+		{
+			return;
+		}
+		var day   = document.forms['register'].bday_day.value   || 0;
+		var month = document.forms['register'].bday_month.value || 0;
+		var year  = document.forms['register'].bday_year.value  || 0;
+		if (month > 0 && day > 0 && year > 0) 
+		{
+			var obj = document.getElementById("coppa_area");
+			var coppa = get_age(day, month, year) < {COPPA_AGE_CUTOFF} ? true : false;
+			if (document.forms['register'].coppa)
+			{
+				document.forms['register'].coppa.value = coppa ? 1 : 0;
+			}
+			if (obj && obj.style)
+			{
+				obj.style.display = coppa ? "" : "none";
+			}
+		}
+	}
+// ]]>
+</script>
+		</dd>
+	</dl>
+
+<!-- ENDIF -->

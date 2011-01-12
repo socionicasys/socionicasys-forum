@@ -68,6 +68,8 @@
 		<dd><select name="tz" id="tz" tabindex="7" class="autowidth">{S_TZ_OPTIONS}</select></dd>
 	</dl>
 
+
+	<!-- INCLUDE prime_birthdate.html -->
 	<!-- IF .profile_fields -->
 		<dl><dd><strong>{L_ITEMS_REQUIRED}</strong></dd></dl>
 
@@ -89,10 +91,10 @@
 	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 <!-- ENDIF -->
 
-<!-- IF S_COPPA -->
+<!-- IF S_COPPA or S_COPPA === 0 -->
 
 
-<div class="panel">
+<div class="panel" id="coppa_area"<!-- IF not S_COPPA --> style="display:none"<!-- ENDIF -->>
 	<div class="inner"><span class="corners-top"><span></span></span>
 
 	<h4>{L_COPPA_COMPLIANCE}</h4>

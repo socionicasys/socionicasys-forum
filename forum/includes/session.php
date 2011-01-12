@@ -1906,6 +1906,10 @@ class user extends session
 				redirect(append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=profile&amp;mode=reg_details'));
 			}
 		}
+//-- mod: Prime Birthdate ---------------------------------------------------//
+		include($phpbb_root_path . 'includes/prime_birthdate.' . $phpEx);
+		$prime_birthdate->enforce_birthdate($this);
+//-- end: Prime Birthdate ---------------------------------------------------//
 
 		return;
 	}
