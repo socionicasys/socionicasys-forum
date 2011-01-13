@@ -668,6 +668,12 @@ pre {
 .username-coloured {
 	font-weight: bold;
 }
+
+/** Pagination: current page number **/
+#pagecontent b strong {
+	font-size: 1.2em;
+}
+
 /* GYM Sitemaps & RSS - www.phpbb-seo.com */
 div.gymsublist {
 	display:block;
