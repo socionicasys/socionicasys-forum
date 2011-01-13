@@ -130,6 +130,7 @@ if(navigator.userAgent && navigator.userAgent.indexOf('Mac OS X') > 0)
         <!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->
             <li<!-- IF $CA_PAGE == 'ucp' --> class="current"<!-- ENDIF -->>
                 <a href="{U_PROFILE}" title="{L_PROFILE}" accesskey="u">{L_PROFILE}</a>
+                <!-- IF S_DISPLAY_PM --> (<a href="{U_PRIVATEMSGS}">{PRIVATE_MESSAGE_INFO}</a>)<!-- ENDIF -->
                 &bull; 
             </li>
             <!-- IF S_DISPLAY_SEARCH -->
