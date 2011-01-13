@@ -545,7 +545,6 @@ if (!class_exists('prime_birthdate'))
 				{
 					if ($this->birthdate_required() && ($result = $this->birthdate_error($birthdate)) !== false)
 					{
-						$agreed = false;
 						$template->assign_var('ERROR', $user->lang[$result] . '<br />');
 					}
 					else if ($this->get_age($birthdate) < COPPA_AGE_CUTOFF && $config['coppa_enable'])
