@@ -60,6 +60,8 @@
 	<td class="row1"><b class="genmed">{L_TIMEZONE}: </b></td>
 	<td class="row2"><select name="tz">{S_TZ_OPTIONS}</select></td>
 </tr>
+
+<!-- INCLUDE prime_birthdate.html -->
 <!-- IF .profile_fields -->
 	<tr>
 		<td class="row2" colspan="2"><span class="gensmall">{L_ITEMS_REQUIRED}</span></td>
@@ -80,8 +82,8 @@
 <!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 <!-- ENDIF -->
 
-<!-- IF S_COPPA -->
-	<tr>
+<!-- IF S_COPPA or S_COPPA === 0 -->
+	<tr id="coppa_area"<!-- IF not S_COPPA --> style="display:none"<!-- ENDIF -->>
 		<th colspan="2" valign="middle">{L_COPPA_COMPLIANCE}</th>
 	</tr>
 	<tr>
