@@ -63,3 +63,8 @@ ul.profile-icons, ul.searchresults {
 
 /* MCP */
 * html ul.topiclist { position: relative; }
+
+/* IE6 post author */
+* html p.author {
+	float: none;
+}
