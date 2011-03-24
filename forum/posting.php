@@ -1158,6 +1158,10 @@ if ($submit || $preview || $refresh)
 			{
 				$data['topic_replies_real'] = $post_data['topic_replies_real'];
 				$data['topic_replies'] = $post_data['topic_replies'];
+//-- mod: Prime Post Revisions ----------------------------------------------//
+				include($phpbb_root_path . 'includes/prime_post_revisions.' . $phpEx);
+				store_post_revision_info($data, $post_data);
+//-- end: Prime Post Revisions ----------------------------------------------//
 			}
 
 			// The last parameter tells submit_post if search indexer has to be run

@@ -238,6 +238,9 @@ define('MODULES_TABLE',				$table_prefix . 'modules');
 define('POLL_OPTIONS_TABLE',		$table_prefix . 'poll_options');
 define('POLL_VOTES_TABLE',			$table_prefix . 'poll_votes');
 define('POSTS_TABLE',				$table_prefix . 'posts');
+//-- mod: Prime Post Revisions ----------------------------------------------//
+define('POST_REVISIONS_TABLE',		$table_prefix . 'post_revisions');
+//-- end: Prime Post Revisions ----------------------------------------------//
 define('PRIVMSGS_TABLE',			$table_prefix . 'privmsgs');
 define('PRIVMSGS_FOLDER_TABLE',		$table_prefix . 'privmsgs_folder');
 define('PRIVMSGS_RULES_TABLE',		$table_prefix . 'privmsgs_rules');

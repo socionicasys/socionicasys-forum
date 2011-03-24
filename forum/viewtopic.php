@@ -1066,6 +1066,10 @@ if (!sizeof($post_list))
 // Holding maximum post time for marking topic read
 // We need to grab it because we do reverse ordering sometimes
 $max_post_time = 0;
+//-- mod: Prime Post Revisions ----------------------------------------------//
+include($phpbb_root_path . 'includes/prime_post_revisions.' . $phpEx);
+$prime_post_revisions = new prime_post_revisions($post_list, $forum_id, $topic_id, $post_id);
+//-- end: Prime Post Revisions ----------------------------------------------//
 
 $sql = $db->sql_build_query('SELECT', array(
 	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',
@@ -1090,10 +1094,17 @@ $result = $db->sql_query($sql);
 
 $now = getdate(time() + $user->timezone + $user->dst - date('Z'));
 
+
+//-- mod: Prime Post Revisions ----------------------------------------------//
+$prime_post_revisions->get_revision_info($post_list, $result, $viewtopic_url, $viewtopic_title);
+//-- end: Prime Post Revisions ----------------------------------------------//
 // Posts are stored in the $rowset array while $attach_list, $user_cache
 // and the global bbcode_bitfield are built
 while ($row = $db->sql_fetchrow($result))
 {
+//-- mod: Prime Post Revisions ----------------------------------------------//
+	$prime_post_revisions->merge_revision_info($post_list, $result, $row);
+//-- end: Prime Post Revisions ----------------------------------------------//
 	// Set max_post_time
 	if ($row['post_time'] > $max_post_time)
 	{
@@ -1525,6 +1536,10 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		$row['post_subject'] = preg_replace('#(?!<.*)(?<!\w)(' . $highlight_match . ')(?!\w|[^<>]*(?:</s(?:cript|tyle))?>)#is', '<span class="posthilit">\1</span>', $row['post_subject']);
 	}
 
+
+//-- mod: Prime Post Revisions ----------------------------------------------//
+	$prime_post_revisions->set_edit_count($row);
+//-- end: Prime Post Revisions ----------------------------------------------//
 	// Editing information
 	if (($row['post_edit_count'] && $config['display_last_edited']) || $row['post_edit_reason'])
 	{
@@ -1550,6 +1565,10 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 			unset($post_storage_list);
 		}
 
+
+//-- mod: Prime Post Revisions ----------------------------------------------//
+		$prime_post_revisions->inject_user_data($row);
+//-- end: Prime Post Revisions ----------------------------------------------//
 		$l_edit_time_total = ($row['post_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
 
 		if ($row['post_edit_reason'])
@@ -1716,6 +1735,10 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		// www.phpBB-SEO.com SEO TOOLKIT END
 	);
 
+
+//-- mod: Prime Post Revisions ----------------------------------------------//
+	$prime_post_revisions->update_postrow($post_list, $i, $rowset, $postrow);
+//-- end: Prime Post Revisions ----------------------------------------------//
 	if (isset($cp_row['row']) && sizeof($cp_row['row']))
 	{
 		$postrow = array_merge($postrow, $cp_row['row']);
@@ -1930,6 +1953,9 @@ if (!empty($config['seo_related'])) {
 	$seo_related = new seo_related();
 	$seo_related->get($topic_data, $forum_id);
 }
+//-- mod: Prime Post Revisions ----------------------------------------------//
+$prime_post_revisions->assign_template_variables($viewtopic_url, $viewtopic_title);
+//-- end: Prime Post Revisions ----------------------------------------------//
 // www.phpBB-SEO.com SEO TOOLKIT END - Related Topics
 // Output the page
 // www.phpBB-SEO.com SEO TOOLKIT BEGIN - TITLE
