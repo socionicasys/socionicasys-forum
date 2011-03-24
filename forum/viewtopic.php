@@ -531,6 +531,12 @@ if ($start < 0 || $start >= $total_posts)
 }
 // www.phpBB-SEO.com SEO TOOLKIT BEGIN -> Zero dupe
 $phpbb_seo->seo_opt['zero_dupe']['start'] = $phpbb_seo->seo_chk_start( $start, $config['posts_per_page'] );
+
+// Changings for primehalo's Post Revision MOD
+$displ_history = request_var('display_history', false);
+$rem_history = request_var('remove_history', '');
+$conf_key = request_var('confirm_key', '');
+
 if (!empty($phpbb_seo->seo_opt['url_rewrite'])) {
 	$phpbb_seo->seo_path['canonical'] = $phpbb_seo->drop_sid(append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start"));
 }
@@ -538,6 +544,11 @@ if ( $post_id && !$view && !$phpbb_seo->set_do_redir_post()) {
 	$phpbb_seo->seo_opt['zero_dupe']['redir_def'] = array(
 		'p' => array('val' => $post_id, 'keep' => true, 'force' => true, 'hash' => "p$post_id"),
 		'hilit' => array('val' => (($highlight_match) ? $highlight : ''), 'keep' => !empty($highlight_match)),
+
+		// Changings for primehalo's Post Revision MOD
+		'display_history' => array('val' => $displ_history, 'keep' => (boolean) ($displ_history == true)),
+		'remove_history' => array('val' => $rem_history, 'keep' => $rem_history),
+		'confirm_key' => array('val' => $conf_key, 'keep' => $conf_key),
 	);
 } else {
 	$seo_watch = request_var('watch', '');
@@ -551,7 +562,13 @@ if ( $post_id && !$view && !$phpbb_seo->set_do_redir_post()) {
 		'uid' => array('val' => $seo_uid, 'keep' => (boolean) ($keep_hash && $seo_uid)),
 		'f' => array('val' => $forum_id, 'keep' => true, 'force' => true),
 		't' => array('val' => $topic_id, 'keep' => true, 'force' => true, 'hash' => $post_id ? "p$post_id" : ''),
-		'p' => array('val' => $post_id, 'keep' =>  ($post_id && $view == 'show' ? true : false), 'hash' => "p$post_id"),
+
+		// Changings for primehalo's Post Revision MOD
+		'p' => array('val' => $post_id, 'keep' =>  ((($post_id && $view == 'show') || $displ_history || !empty($rem_history) || !empty($conf_key)) ? true : false), 'hash' => "p$post_id"),
+		'display_history' => array('val' => $displ_history, 'keep' => (boolean) ($displ_history == true)),
+		'remove_history' => array('val' => $rem_history, 'keep' => $rem_history),
+		'confirm_key' => array('val' => $conf_key, 'keep' => $conf_key),
+
 		'watch' => array('val' => $seo_watch, 'keep' => $keep_watch),
 		'unwatch' => array('val' => $seo_unwatch, 'keep' => $keep_unwatch),
 		'bookmark' => array('val' => $seo_bookmark, 'keep' => (boolean) ($user->data['is_registered'] && $config['allow_bookmarks'] && $seo_bookmark)),
