@@ -311,6 +311,11 @@ if ($mode == 'edit' && !$auth->acl_get('m_edit', $forum_id))
 // Handle delete mode...
 if ($mode == 'delete')
 {
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+	include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+	handle_post_stifle($forum_id, $topic_id, $post_id, $post_data);
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 	handle_post_delete($forum_id, $topic_id, $post_id, $post_data);
 	return;
 }

@@ -35,6 +35,10 @@ class mcp_main
 	{
 		global $auth, $db, $user, $template, $action;
 		global $config, $phpbb_root_path, $phpEx;
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// Include our language file for the logs.
+		$user->add_lang('mods/prime_trash_bin_b');
+//-- end: Prime Trash Bin ---------------------------------------------------//
 
 		$quickmod = ($mode == 'quickmod') ? true : false;
 
@@ -116,6 +120,12 @@ class mcp_main
 					trigger_error('NO_TOPIC_SELECTED');
 				}
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// Intercept the topic deletion (for the moderator control panel).
+				include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+				mcp_stifle_topic($topic_ids);
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 				mcp_delete_topic($topic_ids);
 			break;
 
@@ -129,8 +139,37 @@ class mcp_main
 					trigger_error('NO_POST_SELECTED');
 				}
 
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Intercept the post deletion (for the moderator control panel).
+				include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+				mcp_stifle_post($post_ids);
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 				mcp_delete_post($post_ids);
 			break;
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// Reverse a deletion.
+			case 'undelete_topic':
+				$topic_ids = (!$quickmod) ? request_var('topic_id_list', array(0)) : array(request_var('t', 0));
+				if (!sizeof($topic_ids))
+				{
+					$user->add_lang('mcp');
+					trigger_error('NO_TOPIC_SELECTED');
+				}
+				include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+				mcp_unstifle_topic($topic_ids);
+			break;
+
+			case 'undelete_post':
+				$post_ids = (!$quickmod) ? request_var('post_id_list', array(0)) : array(request_var('p', 0));
+				if (!sizeof($post_ids))
+				{
+					$user->add_lang('mcp');
+					trigger_error('NO_POST_SELECTED');
+				}
+				include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+				mcp_unstifle_post($post_ids);
+			break;
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 		}
 
 		switch ($mode)

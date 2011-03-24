@@ -44,7 +44,7 @@
 	<h2>{L_POST_DETAILS}</h2>
 <!-- ENDIF -->
 
-<div class="panel">
+<div class="panel<!-- IF S_DELETED --> deleted_post<!-- ENDIF -->">
 	<div class="inner"><span class="corners-top"><span></span></span>
 
 	<div class="postbody">
@@ -111,6 +111,7 @@
 				<!-- IF POST_IPADDR -->{POST_IPADDR} ({POST_IP})<!-- ELSE -->{POST_IP}<!-- IF U_LOOKUP_IP --> (<a href="{U_LOOKUP_IP}">{L_LOOKUP_IP}</a>)<!-- ENDIF --><!-- ENDIF -->
 			<!-- ENDIF --></div>
 		<!-- ENDIF -->
+		<!-- IF DELETED_REASON --><hr /><strong>{L_PRIME_POST_DELETED_REASON}:</strong> {DELETED_REASON}<!-- ENDIF -->
 
 	</div>
 
@@ -150,6 +151,7 @@
 				<dd><select name="action">
 					<!-- IF S_CAN_LOCK_POST --><!-- IF S_POST_LOCKED --><option value="unlock_post">{L_UNLOCK_POST} [{L_UNLOCK_POST_EXPLAIN}]</option><!-- ELSE --><option value="lock_post">{L_LOCK_POST} [{L_LOCK_POST_EXPLAIN}]</option><!-- ENDIF --><!-- ENDIF -->
 					<!-- IF S_CAN_DELETE_POST --><option value="delete_post">{L_DELETE_POST}</option><!-- ENDIF -->
+					<!-- IF S_CAN_UNDELETE_POST --><option value="undelete_post">{L_PRIME_UNDELETE_POST}</option><!-- ENDIF -->
 					</select> <input class="button2" type="submit" value="{L_SUBMIT}" />
 				</dd>
 			</dl>

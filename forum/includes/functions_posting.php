@@ -1024,6 +1024,15 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 			AND u.user_id = p.poster_id'
 	));
 
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// When doing topic review, get only posts that aren't mock-deleted.
+	include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+	if (stifle_topics_enabled())
+	{
+		$sql = str_replace('AND u.user_id = p.poster_id', 'AND u.user_id = p.poster_id AND p.post_deleted_time = 0', $sql);
+	}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 	$result = $db->sql_query($sql);
 
 	$bbcode_bitfield = '';
@@ -1135,6 +1144,15 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 			'POSTER_QUOTE'		=> ($show_quote_button && $auth->acl_get('f_reply', $forum_id)) ? addslashes(get_username_string('username', $poster_id, $row['username'], $row['user_colour'], $row['post_username'])) : '')
 		);
 
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Set up what we're going to display for the deleted message (topic review).
+		if (!empty($row['post_deleted_time']))
+		{
+			include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+			set_stifled_post_template_vars($row, $message, $post_subject, ($blockname = $mode . '_row'));
+		}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 		// Display not already displayed Attachments for this post, we already parsed them. ;)
 		if (!empty($attachments[$row['post_id']]))
 		{

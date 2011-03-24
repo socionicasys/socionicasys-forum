@@ -488,6 +488,12 @@ class acp_users
 
 							if (confirm_box(true))
 							{
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Intercept the post deletion (deleting all posts by a specific user).
+								include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+								stifle_users_posts($user_id, $user_row['username'], adm_back_link($this->u_action . '&amp;u=' . $user_id));
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 								// Delete posts, attachments, etc.
 								delete_posts('poster_id', $user_id);
 
@@ -497,6 +503,11 @@ class acp_users
 							else
 							{
 								confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Pass on our variables through the confirmation page.
+									'delete_reason'		=> request_var('delete_reason', '', true),
+									'delete_forever'	=> request_var('delete_forever', false),
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 									'u'				=> $user_id,
 									'i'				=> $id,
 									'mode'			=> $mode,
@@ -1044,6 +1055,15 @@ class acp_users
 					'USER_POSTS'		=> $user_row['user_posts'],
 					'USER_INACTIVE_REASON'	=> $inactive_reason,
 				));
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Add a flag to the template so our Permanent Delete option will appear.
+				include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+				if (stifle_posts_enabled())
+				{
+					$user->add_lang('mods/prime_trash_bin_a');
+					$template->assign_var('S_CAN_DELETE_FOREVER', auth_fake_delete('delete'));
+				}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 
 			break;
 

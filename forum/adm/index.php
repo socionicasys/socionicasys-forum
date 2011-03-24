@@ -25,6 +25,10 @@ require($phpbb_root_path . 'includes/functions_module.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('acp/common');
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// Include our language file for the logs.
+$user->add_lang('mods/prime_trash_bin_b');
+//-- end: Prime Trash Bin ---------------------------------------------------//
 // End session management
 
 // Have they authenticated (again) as an admin for this session?

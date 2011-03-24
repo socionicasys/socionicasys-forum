@@ -1,0 +1,70 @@
+<!-- INCLUDE overall_header.html -->
+
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+
+	<div class="content">
+		<h2>{MESSAGE_TITLE}</h2>
+		<!-- IF ADDITIONAL_MSG --><p>{ADDITIONAL_MSG}</p><!-- ENDIF -->
+<script type="text/javascript"><!--
+function delete_forever_changed(obj)
+{
+	var trash	= document.getElementById('move_to_trash');
+	var shadow	= document.getElementById('move_leave_shadow');
+	var reason	= document.getElementById('delete_reason');
+
+	if (reason)
+	{
+		reason.disabled	= obj.checked;
+		reason.style.backgroundColor = obj.checked ? '#CCCCCC' : '';
+	}
+	if (trash)
+	{
+		trash.disabled = obj.checked;
+		trash.parentNode.style.textDecoration = obj.checked ? 'line-through' : '';
+	}
+	if (shadow)
+	{
+		shadow.disabled	= obj.checked;
+		shadow.parentNode.style.textDecoration	= obj.checked ? 'line-through' : '';
+	}
+}
+
+function move_to_trash_changed(obj)
+{
+	var shadow	= document.getElementById('move_leave_shadow_area');
+	if (shadow)
+	{
+		shadow.style.display = obj.checked ? '' : 'none';
+	}
+}
+// --></script>
+		<fieldset>
+			<dl class="fields2">
+				<dt><label>{L_PRIME_DELETE_REASON}:</label></dt>
+				<dd><input type="text" class="inputbox autowidth" name="delete_reason" id="delete_reason" size="50" maxlength="100" value="" /></dd>
+				<!-- IF S_CAN_USE_TRASH_BIN --><dd><label for="move_to_trash"><input type="checkbox" name="move_to_trash" id="move_to_trash" onclick="move_to_trash_changed(this)" />{L_PRIME_DELETE_TO_TRASH_BIN}</label></dd><!-- ENDIF -->
+				<!-- IF S_CAN_LEAVE_SHADOW --><dd id='move_leave_shadow_area'<!-- IF S_SHADOW_DEFAULT_DISABLED --> style="display:none;"<!-- ENDIF -->><label for="move_leave_shadow"><input type="checkbox" name="move_leave_shadow" id="move_leave_shadow" />{L_LEAVE_SHADOW}</label></dd><!-- ENDIF -->
+				<!-- IF S_CAN_DELETE_FOREVER --><dd><label for="delete_forever"><input type="checkbox" name="delete_forever" id="delete_forever" onclick="delete_forever_changed(this)" />{L_PRIME_DELETE_FOREVER}</label></dd><!-- ENDIF -->
+			</dl>
+			<dl class="fields2">
+				<dt>&nbsp;</dt>
+				<dd><strong>{MESSAGE_TEXT}</strong></dd>
+			</dl>
+		</fieldset>
+	
+		<fieldset class="submit-buttons">
+			{S_HIDDEN_FIELDS}
+			<input type="submit" name="confirm" value="{L_YES}" class="button2" />&nbsp; 
+			<input type="submit" name="cancel" value="{L_NO}" class="button2" />
+		</fieldset>
+
+	</div>
+
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

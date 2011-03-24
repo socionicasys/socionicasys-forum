@@ -48,6 +48,10 @@ class acp_board
 		switch ($mode)
 		{
 			case 'settings':
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+				$user->add_lang('mods/prime_trash_bin_b');
+				include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 				$display_vars = array(
 					'title'	=> 'ACP_BOARD_SETTINGS',
 					'vars'	=> array(
@@ -61,6 +65,10 @@ class acp_board
 						'board_timezone'		=> array('lang' => 'SYSTEM_TIMEZONE',		'validate' => 'string',	'type' => 'select', 'function' => 'tz_select', 'params' => array('{CONFIG_VALUE}', 1), 'explain' => true),
 						'default_style'			=> array('lang' => 'DEFAULT_STYLE',			'validate' => 'int',	'type' => 'select', 'function' => 'style_select', 'params' => array('{CONFIG_VALUE}', false), 'explain' => false),
 						'override_user_style'	=> array('lang' => 'OVERRIDE_STYLE',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+						'topic_delete_mode'		=> array('lang' => 'PRIME_FAKE_DELETE',		'validate' => 'string',	'type' => 'select', 'function' => 'make_fake_delete_select', 'params' => array('{CONFIG_VALUE}'), 'explain' => true),
+						'trash_forum'			=> array('lang' => 'PRIME_TRASH_FORUM',		'validate' => 'string',	'type' => 'select', 'function' => 'make_trash_select', 'params' => array('{CONFIG_VALUE}'), 'explain' => true),
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 
 						'legend2'				=> 'WARNINGS',
 						'warnings_expire_days'	=> array('lang' => 'WARNINGS_EXPIRE',		'validate' => 'int',	'type' => 'text:3:4', 'explain' => true, 'append' => ' ' . $user->lang['DAYS']),
@@ -68,6 +76,14 @@ class acp_board
 						'legend3'					=> 'ACP_SUBMIT_CHANGES',
 					)
 				);
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// If this admin cannot see the Trash forum, then don't show the Trash forum option
+				if (get_trash_forum() && !$auth->acl_get('f_list', get_trash_forum()))
+				{
+					unset($display_vars['vars']['recycle_bin_forum']);
+				}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 			break;
 
 			case 'features':
@@ -441,6 +457,10 @@ class acp_board
 
 		// We validate the complete config if whished
 		validate_config_vars($display_vars['vars'], $cfg_array, $error);
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+		include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+		validate_fake_delete_options($cfg_array, $error);
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 
 		if ($submit && !check_form_key($form_key))
 		{

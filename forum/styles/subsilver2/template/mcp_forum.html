@@ -20,7 +20,7 @@
 	<th width="5%" nowrap="nowrap">&nbsp;{L_MARK}&nbsp;</th>
 </tr>
 <!-- BEGIN topicrow -->
-	<tr>
+	<tr<!-- IF topicrow.S_DELETED --> class="deleted_topic"<!-- ENDIF -->>
 		<td class="row1" width="25" align="center">{topicrow.TOPIC_FOLDER_IMG}</td>
 		<!-- IF S_TOPIC_ICONS -->
 			<!-- td class="row1" width="25" align="center">{topicrow.TOPIC_ICON_IMG}</td -->
@@ -58,6 +58,7 @@
 		<select name="action">
 			<option value="" selected="selected">{L_SELECT_ACTION}</option>
 			<!-- IF S_CAN_DELETE --><option value="delete_topic">{L_DELETE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_UNDELETE --><option value="undelete_topic">{L_PRIME_UNDELETE_POSTS}</option><!-- ENDIF -->
 			<!-- IF S_CAN_MERGE --><option value="merge_topics">{L_MERGE}</option><!-- ENDIF -->
 			<!-- IF S_CAN_MOVE --><option value="move">{L_MOVE}</option><!-- ENDIF -->
 			<!-- IF S_CAN_FORK --><option value="fork">{L_FORK}</option><!-- ENDIF -->

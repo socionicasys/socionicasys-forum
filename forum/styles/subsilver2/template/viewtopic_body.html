@@ -28,6 +28,16 @@
 <br clear="all" /><br />
 
 <div id="pagecontent">
+<!-- IF S_TOPIC_DELETED -->
+	<table class="tablebg deleted_topic" width="100%" cellspacing="1">
+		<tr>
+			<th align="center"><b>{L_PRIME_TOPIC_DELETED_MSG}</b></th>
+		</tr>
+		<tr>
+			<td class="row1" align="center"><table><tr><td align="left"><div class="postbody"><div class="ignore">{DELETED_MSG}</div></div></td></tr></table></td>
+		</tr>
+	</table>
+<!-- ENDIF -->
 
 	<table width="100%" cellspacing="1">
 	<tr>
@@ -127,7 +137,7 @@
 	</table>
 
 <!-- BEGIN postrow -->
-	<table class="tablebg" width="100%" cellspacing="1">
+	<table class="tablebg<!-- IF postrow.S_DELETED --> deleted_post<!-- ENDIF -->" width="100%" cellspacing="1">
 	<!-- IF postrow.S_FIRST_ROW -->
 		<tr>
 			<th>{L_AUTHOR}</th>

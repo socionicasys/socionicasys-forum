@@ -697,6 +697,16 @@ $server_path = (!$view) ? $phpbb_root_path : generate_board_url() . '/';
 // Replace naughty words in title
 $topic_data['topic_title'] = censor_text($topic_data['topic_title']);
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// Adjust the quickmod dropdown list if necessary.
+include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+$topic_deleted = !empty($topic_data['topic_deleted_time']);
+if ($topic_deleted)
+{
+	$topic_mod = fake_delete_alter_quickmod($topic_mod, $forum_id);
+}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 // Send vars to template
 $template->assign_vars(array(
 	'FORUM_ID' 		=> $forum_id,
@@ -1068,6 +1078,22 @@ while ($row = $db->sql_fetchrow($result))
 }
 $db->sql_freeresult($result);
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// Make it so no posts will show up if the topic has been deleted and
+// the user doesn't have the permissions to view the deleted content.
+if ($topic_deleted)
+{
+	if (!auth_fake_delete('list', $forum_id)) // User can't view placeholder, so display "No Topic"
+	{
+		$post_list = array();
+	}
+	else if (!auth_fake_delete('view', $forum_id)) // User can view placeholder, but not the deleted posts
+	{
+		$post_list = array(0); //Needs an element or a "No Topic" message will be displayed
+	}
+}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 if (!sizeof($post_list))
 {
 	if ($sort_days)
@@ -1119,6 +1145,13 @@ $prime_post_revisions->get_revision_info($post_list, $result, $viewtopic_url, $v
 // and the global bbcode_bitfield are built
 while ($row = $db->sql_fetchrow($result))
 {
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// If the post has been deleted, we need to check if the user is allowed to view the placeholder.
+	if (!empty($row['post_deleted_time']) && !auth_fake_delete('list', $forum_id))
+	{
+		continue;
+	}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 //-- mod: Prime Post Revisions ----------------------------------------------//
 	$prime_post_revisions->merge_revision_info($post_list, $result, $row);
 //-- end: Prime Post Revisions ----------------------------------------------//
@@ -1175,6 +1208,23 @@ while ($row = $db->sql_fetchrow($result))
 		'foe'				=> $row['foe'],
 	);
 
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// This is where we make the deletion info available for when the script starts
+// looping through each post to set the template variables. If we're viewing
+// the post's revision history (another MOD), then don't hide the post's content.
+	if (!empty($row['post_deleted_time']) && empty($display_history))
+	{
+		$rowset[$row['post_id']]['post_deleted_from']   = $row['post_deleted_from'];
+		$rowset[$row['post_id']]['post_deleted_user']   = $row['post_deleted_user'];
+		$rowset[$row['post_id']]['post_deleted_time']   = $row['post_deleted_time'];
+		$rowset[$row['post_id']]['post_deleted_reason'] = censor_text($row['post_deleted_reason']);
+
+		// We don't want to display any info about previous edits.
+		$rowset[$row['post_id']]['post_edit_reason'] = '';
+		$rowset[$row['post_id']]['post_edit_count']  = 0;
+	}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 	// Define the global bbcode bitfield, will be used to load bbcodes
 	$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
 
@@ -1761,6 +1811,20 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		$postrow = array_merge($postrow, $cp_row['row']);
 	}
 
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Set up what we're going to display for the deleted message.
+	if (!empty($row['post_deleted_time']))
+	{
+		include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+		set_stifled_post_template_vars($row, $message, $row['post_subject'], $postrow);
+	}
+	// If there is only one post, and the topic has been deleted, then only display the delete icon if user can permanently delete the topic.
+	if ($topic_data['topic_first_post_id'] == $topic_data['topic_last_post_id'] && $topic_data['topic_deleted_time'])
+	{
+		$postrow['U_DELETE'] = auth_fake_delete('delete', isset($topic_data['forum_id'])) ? $postrow['U_DELETE'] : '';
+	}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 	// Dump vars into template
 	$template->assign_block_vars('postrow', $postrow);
 
@@ -1974,6 +2038,16 @@ if (!empty($config['seo_related'])) {
 $prime_post_revisions->assign_template_variables($viewtopic_url, $viewtopic_title);
 //-- end: Prime Post Revisions ----------------------------------------------//
 // www.phpBB-SEO.com SEO TOOLKIT END - Related Topics
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+if ($topic_deleted)
+{
+	$template_vars = set_stifled_topic_template_vars($topic_data, $topic_data['topic_title'], ($blockname = true));
+
+	// This will become the page's title (in the browser's title bar).
+	$topic_data['topic_title'] = $template_vars['TOPIC_TITLE'];
+}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 // Output the page
 // www.phpBB-SEO.com SEO TOOLKIT BEGIN - TITLE
 $extra_title = ($start > 0) ? ' - ' . $user->lang['Page'] . ( floor( ($start / $config['posts_per_page']) ) + 1 ) : '';

@@ -59,6 +59,20 @@
 </div>
 <div class="clear"></div>
 
+
+<!-- IF S_TOPIC_DELETED -->
+	<div id="p0" class="post bg2 deleted_topic">
+		<div class="inner"><span class="corners-top"><span></span></span>
+		<div class="postbody">
+			<h3 class="first">{L_PRIME_TOPIC_DELETED_MSG}</h3>
+			<div class="ignore">
+				{DELETED_MSG}
+			</div>
+		</div>
+		<div class="back2top"><a href="#wrap" class="top" title="{L_BACK_TO_TOP}">{L_BACK_TO_TOP}</a></div>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+<!-- ENDIF -->
 <!-- IF S_HAS_POLL -->
 	<form method="post" action="{S_POLL_ACTION}">
 
@@ -114,7 +128,7 @@
 
 <!-- BEGIN postrow -->
 	<!-- IF postrow.S_FIRST_UNREAD --><a id="unread"></a><!-- ENDIF -->
-	<div id="p{postrow.POST_ID}" class="post <!-- IF postrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF postrow.S_UNREAD_POST --> unreadpost<!-- ENDIF --><!-- IF postrow.S_POST_REPORTED --> reported<!-- ENDIF --><!-- IF postrow.S_ONLINE and not postrow.S_IGNORE_POST --> online<!-- ENDIF -->">
+	<div id="p{postrow.POST_ID}" class="post <!-- IF postrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF postrow.S_UNREAD_POST --> unreadpost<!-- ENDIF --><!-- IF postrow.S_POST_REPORTED --> reported<!-- ENDIF --><!-- IF postrow.S_ONLINE and not postrow.S_IGNORE_POST --> online<!-- ENDIF --><!-- IF postrow.S_DELETED --> deleted_post<!-- ENDIF -->">
 		<div class="inner"><span class="corners-top"><span></span></span>
 
 		<div class="postbody">

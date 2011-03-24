@@ -225,6 +225,15 @@ function mcp_post_details($id, $mode, $action)
 		'U_WHOIS'				=> ($auth->acl_get('m_info', $post_info['forum_id'])) ? append_sid("{$phpbb_root_path}mcp.$phpEx", "i=$id&amp;mode=$mode&amp;action=whois&amp;p=$post_id&amp;ip={$post_info['poster_ip']}") : '',
 	));
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// Set up what we're going to display for the deleted topic. 
+	if (!empty($post_info['post_deleted_time']))
+	{
+		include($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+		set_stifled_post_template_vars($post_info, $message, $post_info['post_subject'], ($blockname = true));
+	}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 	// Get User Notes
 	$log_data = array();
 	$log_count = 0;

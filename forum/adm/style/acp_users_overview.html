@@ -74,6 +74,19 @@
 
 		function display_reason(option)
 		{
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Un-hide the form field used to specify a reason for deleting a user's posts.
+			if (option == 'delposts')
+			{
+				dE('delete_reason_area', 1);
+				return;
+			}
+			else
+			{
+				dE('delete_reason_area', -1);
+			}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 			if (option != 'banuser' && option != 'banemail' && option != 'banip')
 			{
 				dE('reasons', -1);
@@ -114,6 +127,21 @@
 		<dt><label for="quicktools">{L_QUICK_TOOLS}:</label></dt>
 		<dd><select id="quicktools" name="action" onchange="display_reason(this.options[this.selectedIndex].value);">{S_ACTION_OPTIONS}</select></dd>
 	</dl>
+
+<!-- mod: Prime Trash Bin (Posts) -->
+<!-- This is the form field used to specify a reason for deleting a user's posts. -->
+	<div style="display: none;" id="delete_reason_area">
+		<dl>
+			<dt><label for="delete_reason">{L_PRIME_DELETE_POST_REASON}:</label></dt>
+			<dd><input name="delete_reason" type="text" class="text medium" maxlength="100" id="delete_reason" /></dd>
+		</dl>
+		<!-- IF S_CAN_DELETE_FOREVER -->
+		<dl>
+			<dd><label for="delete_forever"><input type="checkbox" name="delete_forever" id="delete_forever" style="cursor:auto;" onchange="document.getElementById('delete_reason').disabled = this.checked;" /> {L_PRIME_DELETE_POSTS_FOREVER}</label></dd>
+		</dl>
+		<!-- ENDIF -->
+	</div>
+<!-- end: Prime Trash Bin (Posts) -->
 	<div style="display: none;" id="reasons">
 		<dl>
 			<dt><label for="ban_reason">{L_BAN_REASON}:</label></dt>
@@ -140,7 +168,7 @@
 		<legend>{L_DELETE_USER}</legend>
 		<dl>
 			<dt><label for="delete_type">{L_DELETE_USER}:</label><br /><span>{L_DELETE_USER_EXPLAIN}</span></dt>
-			<dd><select id="delete_type" name="delete_type"><option class="sep" value="">{L_SELECT_OPTION}</option><option value="retain">{L_RETAIN_POSTS}</option><option value="remove">{L_DELETE_POSTS}</option></select></dd>
+			<dd><select id="delete_type" name="delete_type"><option class="sep" value="">{L_SELECT_OPTION}</option><option value="retain">{L_RETAIN_POSTS}</option><option value="remove">{L_DELETE_POSTS}</option><!-- mod: Prime Trash Bin --><!-- IF S_CAN_DELETE_FOREVER --><option value="remove_forever">{L_PRIME_FOREVER_WHEN_DELETE_USER}</option><!-- ENDIF --><!-- end: Prime Trash Bin --></select></dd>
 		</dl>
 		<p class="quick">
 			<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />

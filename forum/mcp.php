@@ -166,6 +166,11 @@ if ($quickmod)
 		case 'move':
 		case 'delete_post':
 		case 'delete_topic':
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// Set undelete as a valid quickmod option.
+		case 'undelete_post':
+		case 'undelete_topic':
+//-- end: Prime Trash Bin ---------------------------------------------------//
 			$module->load('mcp', 'main', 'quickmod');
 			return;
 		break;

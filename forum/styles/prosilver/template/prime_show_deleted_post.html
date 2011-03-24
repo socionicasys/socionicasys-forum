@@ -1,0 +1,16 @@
+<link href="{T_THEME_PATH}/prime_trash_bin.css" rel="stylesheet" type="text/css" />
+<!-- IF S_POST_DELETED -->
+<script type="text/javascript"><!--
+function show_post(link_obj, post_id)
+{
+	var e = document.getElementById(post_id);
+	if (e)
+	{
+		var d = e.style.display;
+		e.style.display = d == 'none' ? '' : 'none';
+		link_obj.innerHTML = d == 'none' ? '{LA_PRIME_HIDE_DELETED_POST}' : '{LA_PRIME_VIEW_DELETED_POST}'
+	}
+	return(false);
+}
+// --></script>
+<!-- ENDIF -->

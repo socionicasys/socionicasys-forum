@@ -283,6 +283,14 @@ function mcp_forum_view($id, $mode, $action, $forum_info)
 			));
 		}
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+		if (!empty($row['topic_deleted_time']))
+		{
+			include($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+			set_stifled_topic_template_vars($row, $topic_title, $topic_row);
+		}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 		$template->assign_block_vars('topicrow', $topic_row);
 	}
 	unset($topic_rows);

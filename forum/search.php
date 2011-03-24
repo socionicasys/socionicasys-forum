@@ -897,6 +897,24 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 			$hilit = implode('|', $hilit_array);
 		}
 
+
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// If the topic or post has been deleted, we need to check if the user is allowed to view the placeholder.
+		include($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+		$old_match_count = $total_match_count;
+		foreach ($rowset as $key => $row)
+		{
+			if ((!empty($row['topic_deleted_time']) || !empty($row['post_deleted_time'])) && !auth_fake_delete('list', $row['forum_id']))
+			{
+				$total_match_count--;
+				unset($rowset[$key]);
+			}
+		}
+		if ($old_match_count != $total_match_count)
+		{
+			$template->assign_var('SEARCH_MATCHES', str_replace($old_match_count, $total_match_count, $l_search_matches));
+		}
+//-- end: Prime Trash Bin ---------------------------------------------------//
 		foreach ($rowset as $row)
 		{
 			$forum_id = $row['forum_id'];
@@ -1076,6 +1094,16 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				'U_VIEW_FORUM'		=> append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $forum_id),
 				'U_VIEW_POST'		=> (!empty($row['post_id'])) ? append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=" . $row['topic_id'] . '&amp;p=' . $row['post_id'] . (($u_hilit) ? '&amp;hilit=' . $u_hilit : '')) . '#p' . $row['post_id'] : '')
 			));
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+			if (!empty($row['topic_deleted_time']))
+			{
+				set_stifled_topic_template_vars($row, $topic_title, ($blockname = 'searchresults'));
+			}
+			if (!empty($row['post_deleted_time']))
+			{
+				set_stifled_post_template_vars($row, $row['post_text'], $row['post_subject'], ($blockname = 'searchresults'));
+			}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 		}
 
 		if ($topic_id && ($topic_id == $result_topic_id))

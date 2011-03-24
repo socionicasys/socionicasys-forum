@@ -249,6 +249,15 @@ function mcp_topic_view($id, $mode, $action)
 			'U_MCP_REPORT'		=> ($auth->acl_get('m_report', $topic_info['forum_id'])) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=reports&amp;mode=report_details&amp;f=' . $topic_info['forum_id'] . '&amp;p=' . $row['post_id']) : '')
 		);
 
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Set up what we're going to display for the deleted post. 
+		if (!empty($row['post_deleted_time']))
+		{
+			include($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+			set_stifled_post_template_vars($row, $message, $post_subject, ($blockname = 'postrow'));
+		}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 		// Display not already displayed Attachments for this post, we already parsed them. ;)
 		if (!empty($attachments[$row['post_id']]))
 		{
@@ -338,6 +347,14 @@ function mcp_topic_view($id, $mode, $action)
 		'PAGINATION'		=> (!$posts_per_page) ? '' : generate_pagination(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=$id&amp;t={$topic_info['topic_id']}&amp;mode=$mode&amp;action=$action&amp;to_topic_id=$to_topic_id&amp;posts_per_page=$posts_per_page&amp;st=$sort_days&amp;sk=$sort_key&amp;sd=$sort_dir"), $total, $posts_per_page, $start),
 		'TOTAL_POSTS'		=> ($total == 1) ? $user->lang['VIEW_TOPIC_POST'] : sprintf($user->lang['VIEW_TOPIC_POSTS'], $total),
 	));
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// Set up what we're going to display for the deleted topic. 
+	if (!empty($topic_info['topic_deleted_time']))
+	{
+		include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+		set_stifled_topic_template_vars($topic_info, $topic_info['topic_title'], ($blockname = true));
+	}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 }
 
 /**

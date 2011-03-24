@@ -37,6 +37,10 @@ class mcp_logs
 		global $config, $phpbb_root_path, $phpEx;
 
 		$user->add_lang('acp/common');
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// Include our language file for the logs.
+		$user->add_lang('mods/prime_trash_bin_b');
+//-- end: Prime Trash Bin ---------------------------------------------------//
 
 		$action = request_var('action', array('' => ''));
 

@@ -484,6 +484,15 @@ else
 	$sql_where = (sizeof($get_forum_ids)) ? $db->sql_in_set('t.forum_id', $get_forum_ids) : 't.forum_id = ' . $forum_id;
 }
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// When doing active topics, get only topics that aren't mock-deleted, except for when doing the Trash forum.
+include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+if (stifle_topics_enabled() && ($s_display_active || !auth_fake_delete('list', $forum_id)))
+{
+	$sql_where .= ' AND (t.topic_deleted_time = 0' . (get_trash_forum() ? ' OR t.forum_id = ' . get_trash_forum() : '') . ')';
+}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 // Grab just the sorted topic ids
 $sql = 'SELECT t.topic_id
 	FROM ' . TOPICS_TABLE . " t
@@ -764,6 +773,14 @@ if (sizeof($topic_list))
 			'S_TOPIC_TYPE_SWITCH'	=> ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test)
 		);
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+		if (!empty($row['topic_deleted_time']))
+		{
+			include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+			set_stifled_topic_template_vars($row, $row['topic_title'], ($blockname = 'topicrow'));
+		}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 		$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
 
 		if ($unread_topic)

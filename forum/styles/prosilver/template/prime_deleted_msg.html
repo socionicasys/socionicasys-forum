@@ -1,0 +1,15 @@
+<!-- BEGIN deleted -->
+<!-- IF deleted.IS_ROW -->
+	{L_PRIME_DELETED} 
+	<!-- IF deleted.BY --> {L_PRIME_DELETED_BY} {deleted.BY}<!-- ENDIF --> 
+	<!-- IF deleted.ON --> {L_PRIME_DELETED_ON} {deleted.ON}<!-- ENDIF -->.
+<!-- ELSE -->
+	<!-- IF S_IS_BOT -->{deleted.MINI_POST_IMG}<!-- ELSE --><a href="{deleted.U_MINI_POST}">{deleted.MINI_POST_IMG}</a><!-- ENDIF -->{deleted.MESSAGE} 
+	<!-- IF deleted.FROM --> {L_PRIME_DELETED_FROM} <strong>{deleted.FROM}</strong><!-- ENDIF --> 
+	<!-- IF deleted.BY --> {L_PRIME_DELETED_BY} {deleted.BY}<!-- ENDIF --> 
+	<!-- IF deleted.ON --> {L_PRIME_DELETED_ON} {deleted.ON}<!-- ENDIF -->.
+	<!-- IF deleted.REASON --><br /><strong>{L_REASON}:</strong> <em>{deleted.REASON}</em><!-- ENDIF -->
+	<!-- IF deleted.VIEW_LINK or deleted.UNDO_LINK or deleted.PERM_LINK --><br />{deleted.VIEW_LINK}<!-- IF deleted.VIEW_LINK and (deleted.UNDO_LINK or deleted.PERM_LINK) --> | <!-- ENDIF -->{deleted.UNDO_LINK}<!-- IF deleted.UNDO_LINK and deleted.PERM_LINK --> | <!-- ENDIF -->{deleted.PERM_LINK}<!-- ENDIF -->
+	<!-- IF deleted.VIEW_LINK and deleted.ID and deleted.TEXT --><div style="display:none" id="{deleted.ID}"><hr />	<!-- IF deleted.POSTER --><strong>{L_AUTHOR}:</strong> {deleted.POSTER}<br /><!-- ENDIF --><!-- IF deleted.TITLE --><strong>{L_SUBJECT}:</strong> {deleted.TITLE}<br /><!-- ENDIF -->{deleted.TEXT}<br /><br /></div><!-- ENDIF -->
+<!-- ENDIF -->
+<!-- END deleted -->

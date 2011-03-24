@@ -1,0 +1,12 @@
+.deleted_topic, .deleted_topic .row1, .deleted_topic .row2 {
+	background-color: #DDDDDD !important;
+}
+
+.deleted_post, .deleted_post .row1, .deleted_post .row2 {
+	background-color: #DDDDDD !important;
+}
+
+.deleted_topic .content, .deleted_post .content {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 1.1em !important;
+}

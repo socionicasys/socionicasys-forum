@@ -771,6 +771,9 @@ function delete_posts($where_type, $where_ids, $auto_sync = true, $posted_sync =
 	$sql = 'SELECT post_id, poster_id, post_approved, post_postcount, topic_id, forum_id
 		FROM ' . POSTS_TABLE . '
 		WHERE ' . $where_clause;
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+	$sql = substr_replace($sql, 'post_deleted_time, ', strpos($sql, 'post_id'), 0);
+//-- end: Prime Trash Bin ---------------------------------------------------//
 	$result = $db->sql_query($sql);
 
 	while ($row = $db->sql_fetchrow($result))
@@ -782,6 +785,13 @@ function delete_posts($where_type, $where_ids, $auto_sync = true, $posted_sync =
 
 		if ($row['post_postcount'] && $post_count_sync && $row['post_approved'])
 		{
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+		       	// Do not reduce post counts for posts that have already been marked as deleted.
+			if (!empty($row['post_deleted_time']))
+			{
+				continue;
+			}
+//-- end: Prime Trash Bin ---------------------------------------------------//
 			$post_counts[$row['poster_id']] = (!empty($post_counts[$row['poster_id']])) ? $post_counts[$row['poster_id']] + 1 : 1;
 		}
 
@@ -1754,6 +1764,17 @@ function sync($mode, $where_type = '', $where_ids = '', $resync_parents = false,
 					GROUP BY t.forum_id';
 			}
 
+
+//-- mod: Prime Trash Bin (Topics) ------------------------------------------//
+// Here we update the last post information for the forums.
+			global $phpbb_root_path, $phpEx;
+			include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+			if (stifle_topics_enabled())
+			{
+				// Get the last topic that isn't deleted, except for when doing the Trash forum.
+				$sql = str_replace('AND t.topic_approved', 'AND (t.topic_deleted_time = 0' . (get_trash_forum() ? ' OR t.forum_id = ' . get_trash_forum() : '') . ') AND t.topic_approved', $sql);
+			}
+//-- end: Prime Trash Bin (Topics) ------------------------------------------//
 			$result = $db->sql_query($sql);
 
 			while ($row = $db->sql_fetchrow($result))
@@ -1884,6 +1905,29 @@ function sync($mode, $where_type = '', $where_ids = '', $resync_parents = false,
 			}
 			$db->sql_freeresult($result);
 
+
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Here we update the last post information for the topics.
+			global $phpbb_root_path, $phpEx;
+			include ($phpbb_root_path . 'includes/prime_trash_bin_a.' . $phpEx);
+			if (stifle_posts_enabled())
+			{
+				// Get the last topic that isn't deleted, except for when doing the Trash forum.
+				$where_sql2 = str_replace('WHERE ', 'WHERE (t.post_deleted_time = 0' . (get_trash_forum() ? ' OR t.forum_id = ' . get_trash_forum() : '') . ') AND ', $where_sql);
+				$sql = 'SELECT t.topic_id, MIN(t.post_id) AS first_post_id, MAX(t.post_id) AS last_post_id
+					FROM ' . POSTS_TABLE . " t
+					$where_sql2
+					GROUP BY t.topic_id";
+				$result = $db->sql_query($sql);
+				while ($row2 = $db->sql_fetchrow($result))
+				{
+					$topic_id = (int) $row2['topic_id'];
+					$first_post_ids[$topic_id] = $row2['first_post_id'];
+					$last_post_ids[$topic_id] = $row2['last_post_id'];
+				}
+				$db->sql_freeresult($result);
+			}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 			// Use "t" as table alias because of the $where_sql clause
 			// NOTE: 't.post_approved' in the GROUP BY is causing a major slowdown.
 			$sql = 'SELECT t.topic_id, t.post_approved, COUNT(t.post_id) AS total_posts, MIN(t.post_id) AS first_post_id, MAX(t.post_id) AS last_post_id
@@ -1898,6 +1942,20 @@ function sync($mode, $where_type = '', $where_ids = '', $resync_parents = false,
 
 				$row['first_post_id'] = (int) $row['first_post_id'];
 				$row['last_post_id'] = (int) $row['last_post_id'];
+//-- mod: Prime Trash Bin (Posts) -------------------------------------------//
+// Here we update the last post information for the topics.
+				if (stifle_posts_enabled())
+				{
+					if (!empty($first_post_ids[$topic_id]))
+					{
+						$row['first_post_id'] = (int) $first_post_ids[$topic_id];
+					}
+					if (!empty($last_post_ids[$topic_id]))
+					{
+						$row['last_post_id'] = (int) $last_post_ids[$topic_id];
+					}
+				}
+//-- end: Prime Trash Bin (Posts) -------------------------------------------//
 
 				if (!isset($topic_data[$topic_id]))
 				{
@@ -2621,6 +2679,15 @@ function view_log($mode, &$log, &$log_count, $limit = 0, $offset = 0, $forum_id 
 			$reportee_id_list[] = $row['reportee_id'];
 		}
 
+
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// Here we set the log entry to display the optional "Reason" parameter if it exists.
+		$log_data_ary = unserialize($row['log_data']);
+		if (count($log_data_ary) == 2 && !empty($log_data_ary[1]) && in_array($row['log_operation'], array('LOG_TOPIC_STIFLED', 'LOG_TOPIC_TRASHED', 'LOG_TOPIC_UNSTIFLED', 'LOG_POST_STIFLED', 'LOG_POST_TRASHED', 'LOG_POST_UNSTIFLED')) && isset($user->lang[$row['log_operation'] . '_2']))
+		{
+			$row['log_operation'] = $row['log_operation'] . '_2';
+		}
+//-- end: Prime Trash Bin ---------------------------------------------------//
 		$log[$i] = array(
 			'id'				=> $row['log_id'],
 

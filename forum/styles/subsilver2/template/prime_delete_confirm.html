@@ -1,0 +1,71 @@
+<!-- INCLUDE overall_header.html -->
+
+<div id="pagecontent">
+	<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+		<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<th>{MESSAGE_TITLE}</th>
+			</tr>
+			<tr>
+				<td class="row1" align="center">
+
+					<!-- IF ADDITIONAL_MSG --><span class="gen error">{ADDITIONAL_MSG}</span><br /><!-- ENDIF -->
+<script type="text/javascript"><!--
+function delete_forever_changed(obj)
+{
+	var trash	= document.getElementById('move_to_trash');
+	var shadow	= document.getElementById('move_leave_shadow');
+	var reason	= document.getElementById('delete_reason');
+
+	if (reason)
+	{
+		reason.disabled	= obj.checked;
+		reason.style.backgroundColor = obj.checked ? '#CCCCCC' : '';
+	}
+	if (trash)
+	{
+		trash.disabled = obj.checked;
+		trash.parentNode.style.textDecoration = obj.checked ? 'line-through' : '';
+	}
+	if (shadow)
+	{
+		shadow.disabled	= obj.checked;
+		shadow.parentNode.style.textDecoration	= obj.checked ? 'line-through' : '';
+	}
+}
+
+function move_to_trash_changed(obj)
+{
+	var shadow	= document.getElementById('move_leave_shadow_area');
+	if (shadow)
+	{
+		shadow.style.display = obj.checked ? '' : 'none';
+	}
+}
+// --></script>
+					<span class="gen"><br /><strong>{L_PRIME_DELETE_REASON}:</strong><br /></span>
+					<input type="text" class="post" name="delete_reason" id="delete_reason" size="50" maxlength="100" value="" /><br />
+					<table cellspacing="0">
+						<!-- IF S_CAN_USE_TRASH_BIN --><tr><td align="left"><label for="move_to_trash"><input type="checkbox" class="radio" name="move_to_trash" id="move_to_trash" onclick="move_to_trash_changed(this)" /><span class="gen">{L_PRIME_DELETE_TO_TRASH_BIN}</span></label></td></tr><!-- ENDIF -->
+						<!-- IF S_CAN_LEAVE_SHADOW --><tr><td align="left" id='move_leave_shadow_area'<!-- IF S_SHADOW_DEFAULT_DISABLED --> style="display:none;"<!-- ENDIF -->><label for="move_leave_shadow"><input type="checkbox" class="radio" name="move_leave_shadow" id="move_leave_shadow" /><span class="gen">{L_LEAVE_SHADOW}</span></label></td></tr><!-- ENDIF -->
+						<!-- IF S_CAN_DELETE_FOREVER --><tr><td align="left"><label for="delete_forever"><input type="checkbox" class="radio" name="delete_forever" id="delete_forever" onclick="delete_forever_changed(this)" /><span class="gen">{L_PRIME_DELETE_FOREVER}</span></label></td></tr><!-- ENDIF -->
+					</table>
+					<br />{S_HIDDEN_FIELDS}<span class="gen">{MESSAGE_TEXT}</span><br /><br />
+					<input type="submit" name="confirm" value="{L_YES}" class="btnmain" />&nbsp; 
+					<input type="submit" name="cancel" value="{L_NO}" class="btnlite" />
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</div>
+
+<br clear="all" />
+
+<!-- INCLUDE breadcrumbs.html -->
+
+<br clear="all" />
+
+<div align="{S_CONTENT_FLOW_END}"><!-- INCLUDE jumpbox.html --></div>
+
+<!-- INCLUDE overall_footer.html -->

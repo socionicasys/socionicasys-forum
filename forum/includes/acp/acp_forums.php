@@ -1343,6 +1343,12 @@ class acp_forums
 	{
 		global $db;
 
+
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . 'includes/prime_trash_bin_b.' . $phpEx);
+		update_stifled_from($from_id, $to_id);
+//-- end: Prime Trash Bin ---------------------------------------------------//
 		$table_ary = array(LOG_TABLE, POSTS_TABLE, TOPICS_TABLE, DRAFTS_TABLE, TOPICS_TRACK_TABLE);
 
 		foreach ($table_ary as $table)
@@ -1651,6 +1657,10 @@ class acp_forums
 			WHERE forum_id = ' . $forum_id . '
 				AND post_postcount = 1
 				AND post_approved = 1';
+//-- mod: Prime Trash Bin ---------------------------------------------------//
+// Do not reduce post counts for posts that have already been marked as deleted.
+		$sql = substr_replace($sql, 'AND post_deleted_time = 0 ', strpos($sql, 'AND post_approved = 1'), 0);
+//-- end: Prime Trash Bin ---------------------------------------------------//
 		$result = $db->sql_query($sql);
 
 		$post_counts = array();
