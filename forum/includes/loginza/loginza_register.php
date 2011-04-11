@@ -147,6 +147,7 @@ class loginza_register
 			'username'				=> utf8_normalize_nfc($LoginzaProfile->genNickname()),
 			'user_password'			=> phpbb_hash($gen_password),
 			'user_email'			=> strtolower($profile->email),
+			'user_birthday'			=> date('d-m-Y', strtotime($profile->dob)),
 			'user_from' 			=> (string)$profile->address->home->city,
 			'user_icq' 				=> (string)$profile->im->icq,
 			'user_jabber' 			=> (string)$profile->im->jabber,
