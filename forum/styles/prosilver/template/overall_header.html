@@ -95,8 +95,6 @@
 </script>
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/styleswitcher.js"></script>
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/forum_fn.js"></script>
-<!-- Loginza widget JavaScript -->
-<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>
 
 <link href="{T_THEME_PATH}/print.css" rel="stylesheet" type="text/css" media="print" title="printonly" />
 <link href="{T_STYLESHEET_LINK}" rel="stylesheet" type="text/css" media="screen, projection" />
@@ -175,15 +173,12 @@
 			<!-- ENDIF -->
 
 			<ul class="linklist rightside">
+				<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>
 				<!-- IF not S_IS_BOT -->
 					<!-- IF S_DISPLAY_MEMBERLIST --><li class="icon-members"><a href="{U_MEMBERLIST}" title="{L_MEMBERLIST_EXPLAIN}">{L_MEMBERLIST}</a></li><!-- ENDIF -->
-					<!-- IF not S_USER_LOGGED_IN -->
-						<li><a href="https://loginza.ru/api/widget?token_url={LOGINZA_RETURN_URL}" title="Войти через аккаунт соц. сети или OpenID" accesskey="x" class="loginza"><img src="http://s1.loginza.ru/img/sign_in_button_gray.gif" alt="Авторизация" align="top" border="0" style="margin-top:3px;"/></a></li>
-					<!-- ENDIF -->
-					<!-- IF S_USER_LOGGED_IN --><li class="icon-logout"><a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="x">{L_LOGIN_LOGOUT}</a></li><!-- ENDIF -->
 					<!-- IF not S_USER_LOGGED_IN and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) --><li class="icon-register"><a href="{U_REGISTER}">{L_REGISTER}</a></li><!-- ENDIF -->
+					<li class="icon-logout"><a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="x">{L_LOGIN_LOGOUT}</a></li>
 				<!-- ENDIF -->
-				<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>
 			</ul>
 
 			<span class="corners-bottom"><span></span></span></div>

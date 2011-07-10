@@ -64,11 +64,7 @@ switch ($mode)
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
 
-if (!empty($_POST['token'])) {
-	$module->load('loginza', 'register');
-} else {
 		$module->load('ucp', 'register');
-}
 		$module->display($user->lang['REGISTER']);
 	break;
 
