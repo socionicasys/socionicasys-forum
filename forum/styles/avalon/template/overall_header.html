@@ -248,8 +248,6 @@ if(navigator.userAgent && navigator.userAgent.indexOf('Mac OS X') > 0)
 // ]]>
 </script>
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/ca_scripts.js"></script>
-<!-- Loginza widget JavaScript -->
-<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>
 
 <!-- INCLUDE prime_bbcode_spoiler.html -->
 </head>
@@ -269,9 +267,6 @@ if(navigator.userAgent && navigator.userAgent.indexOf('Mac OS X') > 0)
 	    </div>
 
         <div class="navrow">
-			<!-- IF not S_IS_BOT and not S_USER_LOGGED_IN -->
-			<a href="https://loginza.ru/api/widget?token_url={LOGINZA_RETURN_URL}" title="Войти через аккаунт соц. сети или OpenID" accesskey="x" class="loginza"><img src="http://s1.loginza.ru/img/sign_in_button_gray.gif" alt="Авторизация" style="vertical-align: top; margin-top: -3px;"/></a>
-			<!-- ENDIF -->
             <!-- IF not S_IS_BOT -->
                 <!-- IF S_USER_LOGGED_IN --><a href="{U_PROFILE}">{L_PROFILE}</a> &#8226; <!-- ENDIF -->
                 <!-- IF S_USER_LOGGED_IN -->
