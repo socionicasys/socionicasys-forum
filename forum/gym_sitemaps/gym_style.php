@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_style.php 278 2010-11-25 15:28:16Z dcz $
+* @version $Id: gym_style.php 302 2011-04-13 19:44:08Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -62,6 +62,7 @@ $content_type = $gym_style_type == 'css' ? 'text/css' : 'text/xml';
 $cache_ttl = 15*86400;
 $recache = false;
 $theme = false;
+$lang = array();
 // Let's go
 if (!empty($action) && !empty($gym_style_type) && !empty($language) && !empty($theme_id)) {
 	// detect ssl
@@ -149,8 +150,19 @@ if (!empty($action) && !empty($gym_style_type) && !empty($language) && !empty($t
 			require($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
 		} else { // Try with the default language
 			$language = $config['default_lang'];
-			require($phpbb_root_path . 'language/' . $language . '/gym_sitemaps/gym_common.' . $phpEx);
-			require($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
+			if (file_exists($phpbb_root_path . 'language/' . $language . '/gym_sitemaps/gym_common.' . $phpEx)) {
+				require($phpbb_root_path . 'language/' . $language . '/gym_sitemaps/gym_common.' . $phpEx);
+				require($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
+			} else {
+				// try english as a last resort
+				$language = 'en';
+				if (file_exists($phpbb_root_path . 'language/' . $language . '/gym_sitemaps/gym_common.' . $phpEx)) {
+					require($phpbb_root_path . 'language/' . $language . '/gym_sitemaps/gym_common.' . $phpEx);
+					require($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
+				} else {
+					$language = 'none';
+				}
+			}
 		}
 		// Do not recache if up to date, recompile only if the source stylesheet was updated
 		$cached_file = "{$gym_cache_path}style_{$action}_{$ssl_bit}{$language}_$theme_id.$gym_style_type";
@@ -190,59 +202,60 @@ if (!empty($action) && !empty($gym_style_type) && !empty($language) && !empty($t
 		$replace = array(
 			'{T_IMAGE_PATH}'	=> "{$phpbb_url}gym_sitemaps/images/",
 			'{T_STYLE_PATH}'	=> "{$phpbb_url}gym_sitemaps/style/",
-			'{S_CONTENT_DIRECTION}'	=> $lang['DIRECTION'],
-			'{S_USER_LANG}'		=> $language
+			'{S_CONTENT_DIRECTION}'	=> gym_style_lang('DIRECTION', 'ltr'),
+			'{S_USER_LANG}'		=> $language,
+			'{NO_LANGUAGE_FILES}'	=> empty($lang) ? '<div style="padding:10px;color:red;font-weight:bold;font-size:2em;text-align:center">Required language files for GYM sitemaps are missing in this language pack !!</div>' : '',
 		);
 		if ($gym_style_type == 'xsl') {
 			$replace = array_merge($replace, array(
 				'{T_CSS_PATH}'		=> "{$phpbb_url}gym_sitemaps/gym_style.$phpEx?action=$action&amp;type=css&amp;lang={$language}&amp;theme_id={$theme_id}",
-				'{L_HOME}'		=> $lang['GYM_HOME'],
-				'{L_FORUM_INDEX}'	=> $lang['GYM_FORUM_INDEX'],
-				'{L_LINK}'		=> $lang['GYM_LINK'],
-				'{L_LASTMOD_DATE}'	=> $lang['GYM_LASTMOD_DATE'],
+				'{L_HOME}'		=> gym_style_lang('GYM_HOME'),
+				'{L_FORUM_INDEX}'	=> gym_style_lang('GYM_FORUM_INDEX'),
+				'{L_LINK}'		=> gym_style_lang('GYM_LINK'),
+				'{L_LASTMOD_DATE}'	=> gym_style_lang('GYM_LASTMOD_DATE'),
 				'{ROOT_URL}'		=> $root_url,
 				'{HTTP_PROTO_REQUEST}'	=> $server_protocol,
 				'{PHPBB_URL}'		=> $phpbb_url,
 				// Do not remove !
-				'{L_COPY}'		=>  '<a href="http://www.phpbb-seo.com/" title="GYM Sitemaps &amp; RSS &#169; 2006, ' . date('Y') . ' phpBB SEO" class="copyright"><img src="' . $phpbb_url . 'gym_sitemaps/images/phpbb-seo.png" alt="' . $lang['GYM_SEO'] . '"/></a>',
-				'{L_SEARCH_ADV_EXPLAIN}' => $lang['SEARCH_ADV_EXPLAIN'],
-				'{L_CHANGE_FONT_SIZE}'  => $lang['CHANGE_FONT_SIZE'],
-				'{L_SEARCH_ADV}' 	=> $lang['SEARCH_ADV'],
-				'{L_SEARCH}' 		=> $lang['SEARCH'],
-				'{L_BACK_TO_TOP}' 	=> $lang['BACK_TO_TOP'],
-				'{L_FAQ}' 		=> $lang['FAQ'],
-				'{L_FAQ_EXPLAIN}' 	=> $lang['FAQ_EXPLAIN'],
-				'{L_REGISTER}' 		=> $lang['REGISTER'],
-				'{L_SKIP}' 		=> $lang['SKIP'],
-				'{L_BOOKMARK_THIS}' 	=> $lang['GYM_BOOKMARK_THIS'],
-				'{SITENAME}' 		=> htmlspecialchars($config['sitename']),
+				'{L_COPY}'		=>  '<a href="http://www.phpbb-seo.com/" title="GYM Sitemaps &amp; RSS &#169; 2006, ' . date('Y') . ' phpBB SEO" class="copyright"><img src="' . $phpbb_url . 'gym_sitemaps/images/phpbb-seo.png" width="80" height="15" alt="' . gym_style_lang('GYM_SEO', 'GYM Sitemaps') . '"/></a>',
+				'{L_SEARCH_ADV_EXPLAIN}' => gym_style_lang('SEARCH_ADV_EXPLAIN'),
+				'{L_CHANGE_FONT_SIZE}'  => gym_style_lang('CHANGE_FONT_SIZE'),
+				'{L_SEARCH_ADV}' 	=> gym_style_lang('SEARCH_ADV'),
+				'{L_SEARCH}' 		=> gym_style_lang('SEARCH'),
+				'{L_BACK_TO_TOP}' 	=> gym_style_lang('BACK_TO_TOP'),
+				'{L_FAQ}' 		=> gym_style_lang('FAQ'),
+				'{L_FAQ_EXPLAIN}' 	=> gym_style_lang('FAQ_EXPLAIN'),
+				'{L_REGISTER}' 		=> gym_style_lang('REGISTER'),
+				'{L_SKIP}' 		=> gym_style_lang('SKIP'),
+				'{L_BOOKMARK_THIS}' 	=> gym_style_lang('GYM_BOOKMARK_THIS'),
+				'{SITENAME}' 		=> $config['sitename'],
 				'{SITE_DESCRIPTION}' 	=> $config['site_desc'],
 
 			));
 			if ($action == 'google') {
 				$replace = array_merge($replace, array(
-					'{L_SITEMAP}'		=> $lang['GOOGLE_SITEMAP'],
-					'{L_SITEMAP_OF}'	=> $lang['GOOGLE_SITEMAP_OF'],
-					'{L_SITEMAPINDEX}'	=> $lang['GOOGLE_SITEMAPINDEX'],
-					'{L_NUMBER_OF_SITEMAP}'	=> $lang['GOOGLE_NUMBER_OF_SITEMAP'],
-					'{L_SITEMAP_URL}'	=> $lang['GOOGLE_SITEMAP_URL'],
-					'{L_NUMBER_OF_URL}'	=> $lang['GOOGLE_NUMBER_OF_URL'],
-					'{L_CHANGEFREQ}'	=> $lang['GOOGLE_CHANGEFREQ'],
-					'{L_PRIORITY}'		=> $lang['GOOGLE_PRIORITY'],
+					'{L_SITEMAP}'		=> gym_style_lang('GOOGLE_SITEMAP'),
+					'{L_SITEMAP_OF}'	=> gym_style_lang('GOOGLE_SITEMAP_OF'),
+					'{L_SITEMAPINDEX}'	=> gym_style_lang('GOOGLE_SITEMAPINDEX'),
+					'{L_NUMBER_OF_SITEMAP}'	=> gym_style_lang('GOOGLE_NUMBER_OF_SITEMAP'),
+					'{L_SITEMAP_URL}'	=> gym_style_lang('GOOGLE_SITEMAP_URL'),
+					'{L_NUMBER_OF_URL}'	=> gym_style_lang('GOOGLE_NUMBER_OF_URL'),
+					'{L_CHANGEFREQ}'	=> gym_style_lang('GOOGLE_CHANGEFREQ'),
+					'{L_PRIORITY}'		=> gym_style_lang('GOOGLE_PRIORITY'),
 				));
 			} elseif ($action == 'rss') {
 				$replace = array_merge($replace, array(
-					'{L_UPDATE}'		=> $lang['RSS_UPDATE'],
-					'{L_LAST_UPDATE}'	=> $lang['RSS_LAST_UPDATE'],
-					'{L_MINUTES}'		=> $lang['GYM_MINUTES'],
-					'{L_SOURCE}'		=> $lang['GYM_SOURCE'],
-					'{L_SUBSCRIBE_POD}'	=> $lang['RSS_SUBSCRIBE_POD'],
-					'{L_SUBSCRIBE}'		=> $lang['RSS_SUBSCRIBE'],
-					'{L_2_LINK}'		=> $lang['RSS_2_LINK'],
-					'{L_FEED}'		=> $lang['RSS_FEED'],
-					'{L_ITEM_LISTED}'	=> $lang['RSS_ITEM_LISTED'],
-					'{L_ITEMS_LISTED}'	=> $lang['RSS_ITEMS_LISTED'],
-					'{L_RSS_VALID}'		=> $lang['RSS_VALID'],
+					'{L_UPDATE}'		=> gym_style_lang('RSS_UPDATE'),
+					'{L_LAST_UPDATE}'	=> gym_style_lang('RSS_LAST_UPDATE'),
+					'{L_MINUTES}'		=> gym_style_lang('GYM_MINUTES'),
+					'{L_SOURCE}'		=> gym_style_lang('GYM_SOURCE'),
+					'{L_SUBSCRIBE_POD}'	=> gym_style_lang('RSS_SUBSCRIBE_POD'),
+					'{L_SUBSCRIBE}'		=> gym_style_lang('RSS_SUBSCRIBE'),
+					'{L_2_LINK}'		=> gym_style_lang('RSS_2_LINK'),
+					'{L_FEED}'		=> gym_style_lang('RSS_FEED'),
+					'{L_ITEM_LISTED}'	=> gym_style_lang('RSS_ITEM_LISTED'),
+					'{L_ITEMS_LISTED}'	=> gym_style_lang('RSS_ITEMS_LISTED'),
+					'{L_RSS_VALID}'		=> gym_style_lang('RSS_VALID'),
 				));
 			}
 		}
@@ -283,4 +296,11 @@ if (!empty($action) && !empty($gym_style_type) && !empty($language) && !empty($t
 	}
 }
 exit;
+/**
+* A little helper for those who forgot the language files
+*/
+function gym_style_lang($key, $default = '') {
+	global $lang;
+	return isset($lang[$key]) ? $lang[$key] : ($default ? $default : '&#123; ' . $key . ' &#125;');
+}
 ?>

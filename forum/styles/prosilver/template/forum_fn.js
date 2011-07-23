@@ -31,16 +31,20 @@ function jumpto() {
 			base_url = anchor_parts[0];
 			anchor = '#' + anchor_parts[1];
 		}
-		if ( base_url.indexOf('?') >= 0 ) {
-			document.location.href = base_url.replace(/&amp;/g, '&') + '&start=' + seo_page + anchor;
-		} else if ( seo_page > 0 ) {
-			var seo_type1 = base_url.match(/\.[a-z0-9]+$/i);
-			if (seo_type1 !== null) {
-				document.location.href = base_url.replace(/\.[a-z0-9]+$/i, '') + seo_delim_start + seo_page + seo_type1 + anchor;
-			}
-			var seo_type2 = base_url.match(/\/$/);
-			if (seo_type2 !== null) {
-				document.location.href = base_url + seo_static_pagination + seo_page + seo_ext_pagination + anchor;
+		if ( seo_page > 0 ) {
+			var phpEXtest = false;
+			if ( base_url.indexOf('?') >= 0 || ( phpEXtest = base_url.match(/\.php$/i))) {
+				document.location.href = base_url.replace(/&amp;/g, '&') + (phpEXtest ? '?' : '&') + 'start=' + seo_page + anchor;
+			} else {
+				var ext = base_url.match(/\.[a-z0-9]+$/i);
+				if (ext) {
+					// location.ext => location-xx.ext
+					document.location.href = base_url.replace(/\.[a-z0-9]+$/i, '') + seo_delim_start + seo_page + ext + anchor;
+				} else {
+					// location and location/ to location/pagexx.html
+					var slash = base_url.match(/\/$/) ? '' : '/';
+					document.location.href = base_url + slash + seo_static_pagination + seo_page + seo_ext_pagination + anchor;
+				}
 			}
 		} else {
 			document.location.href = base_url + anchor;

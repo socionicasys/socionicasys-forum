@@ -4,7 +4,7 @@
 * acp_phpbb_seo [English]
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: acp_phpbb_seo.php 249 2010-03-11 05:08:04Z Typo $
+* @version $Id: acp_phpbb_seo.php 299 2011-03-27 12:20:05Z dcz $
 * @copyright (c) 2006 - 2009 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -78,7 +78,7 @@ $lang = array_merge($lang, array(
 	'SEO_EXTERNAL_LINKS' => 'External links',
 	'SEO_EXTERNAL_LINKS_EXPLAIN' => 'Open, or not, external links in a new browser window / tab',
 	'SEO_EXTERNAL_SUBDOMAIN' => 'Sub-domain links',
-	'SEO_EXTERNAL_SUBDOMAIN_EXPLAIN' => 'Open, or not, sub-domains (of your forum domain) links in a new browser window / tab',
+	'SEO_EXTERNAL_SUBDOMAIN_EXPLAIN' => 'Treat, or not, links to eventual sub-domains of your forum’s domain as internal links to open in the same window',
 	'SEO_EXTERNAL_CLASSES' => 'External by css class',
 	'SEO_EXTERNAL_CLASSES_EXPLAIN' => 'here you can define some css classes that will activate the new window feature on links using it. Coma separated list of class names, example: postlink,external',
 	// Titles

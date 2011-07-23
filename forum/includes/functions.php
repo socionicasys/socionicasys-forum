@@ -175,8 +175,13 @@ function set_config_count($config_name, $increment, $is_dynamic = false)
 	switch ($db->sql_layer)
 	{
 		case 'firebird':
+			// Precision must be from 1 to 18
+			$sql_update = 'CAST(CAST(config_value as DECIMAL(18, 0)) + ' . (int) $increment . ' as VARCHAR(255))';
+		break;
+
 		case 'postgres':
-			$sql_update = 'CAST(CAST(config_value as DECIMAL(255, 0)) + ' . (int) $increment . ' as VARCHAR(255))';
+			// Need to cast to text first for PostgreSQL 7.x
+			$sql_update = 'CAST(CAST(config_value::text as DECIMAL(255, 0)) + ' . (int) $increment . ' as VARCHAR(255))';
 		break;
 
 		// MySQL, SQlite, mssql, mssql_odbc, oracle
@@ -236,12 +241,28 @@ function unique_id($extra = 'c')
 
 	if ($dss_seeded !== true && ($config['rand_seed_last_update'] < time() - rand(1,10)))
 	{
-		set_config('rand_seed', $config['rand_seed'], true);
 		set_config('rand_seed_last_update', time(), true);
+		set_config('rand_seed', $config['rand_seed'], true);
 		$dss_seeded = true;
 	}
 
 	return substr($val, 4, 16);
+}
+
+/**
+* Wrapper for mt_rand() which allows swapping $min and $max parameters.
+*
+* PHP does not allow us to swap the order of the arguments for mt_rand() anymore.
+* (since PHP 5.3.4, see http://bugs.php.net/46587)
+*
+* @param int $min		Lowest value to be returned
+* @param int $max		Highest value to be returned
+*
+* @return int			Random integer between $min and $max (or $max and $min)
+*/
+function phpbb_mt_rand($min, $max)
+{
+	return ($min > $max) ? mt_rand($max, $min) : mt_rand($min, $max);
 }
 
 /**
@@ -512,7 +533,7 @@ function _hash_crypt_private($password, $setting, &$itoa64)
 	$output = '*';
 
 	// Check for correct hash
-	if (substr($setting, 0, 3) != '$H$')
+	if (substr($setting, 0, 3) != '$H$' && substr($setting, 0, 3) != '$P$')
 	{
 		return $output;
 	}
@@ -1698,7 +1719,7 @@ function get_unread_topics($user_id = false, $sql_extra = '', $sql_sort = '', $s
 	if ($config['load_db_lastread'] && $user->data['is_registered'])
 	{
 		// Get list of the unread topics
-		$last_mark = $user->data['user_lastmark'];
+		$last_mark = (int) $user->data['user_lastmark'];
 
 		$sql_array = array(
 			'SELECT'		=> 't.topic_id, t.topic_last_post_time, tt.mark_time as topic_mark_time, ft.mark_time as forum_mark_time',
@@ -1717,10 +1738,11 @@ function get_unread_topics($user_id = false, $sql_extra = '', $sql_sort = '', $s
 			),
 
 			'WHERE'			=> "
+				 t.topic_last_post_time > $last_mark AND
 				(
 				(tt.mark_time IS NOT NULL AND t.topic_last_post_time > tt.mark_time) OR
 				(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.topic_last_post_time > ft.mark_time) OR
-				(tt.mark_time IS NULL AND ft.mark_time IS NULL AND t.topic_last_post_time > $last_mark)
+				(tt.mark_time IS NULL AND ft.mark_time IS NULL)
 				)
 				$sql_extra
 				$sql_sort",
@@ -2107,8 +2129,18 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 		static $pagin_find = array();
 		static $pagin_replace = array();
 		if (empty($pagin_replace)) {
-			$pagin_find = array('`(https?\://[a-z0-9_/\.-]+/[a-z0-9_\.-]+)(\.[a-z0-9]+)(\?[\w$%&~\-;:=,@+\.]+)?(#[a-z0-9_\.-]+)?(&amp;|\?)start=([0-9]+)`i', '`(https?\://[a-z0-9_/\.-]+/[a-z0-9_\-]+)/(\?[\w$%&~\-;:=,@+\.]+)?(#[a-z0-9_\.-]+)?(&amp;|\?)start=([0-9]+)`i');
-			$pagin_replace = array( '\1' . $phpbb_seo->seo_delim['start'] . '\6\2\3\4', '\1/' . $phpbb_seo->seo_static['pagination'] . '\5' . $phpbb_seo->seo_ext['pagination'] . '\2\3');
+			$pagin_find = array(
+				// http://example.com/a_n-y/d.i.r/with.ext
+				'`(https?\://[a-z0-9_/\.-]+/[a-z0-9_\.-]+)(\.[a-z0-9]+)(\?[\w$%&~\-;:=,@+\. ]+)?(#[a-z0-9_\.-]+)?(&amp;|\?)start=([0-9]+)`i',
+				// http://example.com/a_n-y/d.i.r/withoutext
+				'`(https?\://[a-z0-9_/\.-]+/[a-z0-9_-]+)/?(\?[\w$%&~\-;:=,@+\. ]+)?(#[a-z0-9_\.-]+)?(&amp;|\?)start=([0-9]+)`i'
+			);
+			$pagin_replace = array(
+				// http://example.com/a_n-y/d.i.r/with-xx.ext
+				'\1' . $phpbb_seo->seo_delim['start'] . '\6\2\3\4',
+				// http://example.com/a_n-y/d.i.r/withoutext/pagexx.html
+				'\1/' . $phpbb_seo->seo_static['pagination'] . '\5' . $phpbb_seo->seo_ext['pagination'] . '\2\3'
+			);
 		}
 		$rewrite_pagination = false;
 		// here we rewrite rewritten urls only, and they do hold the full url with http
@@ -2133,6 +2165,8 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $add
 		} else {
 			// take care about eventual hashes
 			if (strpos($base_url, '#') !== false) {
+				// since hashes are not originally handled,
+				// we need to make sure we put it at the end of the url
 				static $hash_find = '`((https?\://)?[a-z0-9_/\.-]+\.[a-z0-9]+)(\?[\w$%&~\-;:=,@+\.]+)?(#[a-z0-9_\.-]+)((&amp;|\?)start=[0-9]+)`';
 				static $hash_replace = '\1\3\5\4';
 				$page_string = preg_replace($hash_find, $hash_replace, $page_string);
@@ -2297,7 +2331,10 @@ function append_sid($url, $params = false, $is_amp = true, $session_id = false)
 
 /**
 * Generate board url (example: http://www.example.com/phpBB)
+*
 * @param bool $without_script_path if set to true the script path gets not appended (example: http://www.example.com)
+*
+* @return string the generated board url
 */
 function generate_board_url($without_script_path = false)
 {
@@ -2402,12 +2439,12 @@ function redirect($url, $return = false, $disable_cd_check = false)
 		// Relative uri
 		$pathinfo = pathinfo($url);
 
-		if (!$disable_cd_check && !file_exists($pathinfo['dirname']))
+		if (!$disable_cd_check && !file_exists($pathinfo['dirname'] . '/'))
 		{
 			$url = str_replace('../', '', $url);
 			$pathinfo = pathinfo($url);
 
-			if (!file_exists($pathinfo['dirname']))
+			if (!file_exists($pathinfo['dirname'] . '/'))
 			{
 				// fallback to "last known user page"
 				// at least this way we know the user does not leave the phpBB root
@@ -2418,60 +2455,60 @@ function redirect($url, $return = false, $disable_cd_check = false)
 
 		if (!$failover_flag)
 		{
-		// Is the uri pointing to the current directory?
-		if ($pathinfo['dirname'] == '.')
-		{
-			$url = str_replace('./', '', $url);
-
-			// Strip / from the beginning
-			if ($url && substr($url, 0, 1) == '/')
+			// Is the uri pointing to the current directory?
+			if ($pathinfo['dirname'] == '.')
 			{
-				$url = substr($url, 1);
-			}
+				$url = str_replace('./', '', $url);
 
-			if ($user->page['page_dir'])
-			{
-				$url = generate_board_url() . '/' . $user->page['page_dir'] . '/' . $url;
+				// Strip / from the beginning
+				if ($url && substr($url, 0, 1) == '/')
+				{
+					$url = substr($url, 1);
+				}
+
+				if ($user->page['page_dir'])
+				{
+					$url = generate_board_url() . '/' . $user->page['page_dir'] . '/' . $url;
+				}
+				else
+				{
+					$url = generate_board_url() . '/' . $url;
+				}
 			}
 			else
 			{
+				// Used ./ before, but $phpbb_root_path is working better with urls within another root path
+				$root_dirs = explode('/', str_replace('\\', '/', phpbb_realpath($phpbb_root_path)));
+				$page_dirs = explode('/', str_replace('\\', '/', phpbb_realpath($pathinfo['dirname'])));
+				$intersection = array_intersect_assoc($root_dirs, $page_dirs);
+
+				$root_dirs = array_diff_assoc($root_dirs, $intersection);
+				$page_dirs = array_diff_assoc($page_dirs, $intersection);
+
+				$dir = str_repeat('../', sizeof($root_dirs)) . implode('/', $page_dirs);
+
+				// Strip / from the end
+				if ($dir && substr($dir, -1, 1) == '/')
+				{
+					$dir = substr($dir, 0, -1);
+				}
+
+				// Strip / from the beginning
+				if ($dir && substr($dir, 0, 1) == '/')
+				{
+					$dir = substr($dir, 1);
+				}
+
+				$url = str_replace($pathinfo['dirname'] . '/', '', $url);
+
+				// Strip / from the beginning
+				if (substr($url, 0, 1) == '/')
+				{
+					$url = substr($url, 1);
+				}
+
+				$url = (!empty($dir) ? $dir . '/' : '') . $url;
 				$url = generate_board_url() . '/' . $url;
-			}
-		}
-		else
-		{
-			// Used ./ before, but $phpbb_root_path is working better with urls within another root path
-			$root_dirs = explode('/', str_replace('\\', '/', phpbb_realpath($phpbb_root_path)));
-			$page_dirs = explode('/', str_replace('\\', '/', phpbb_realpath($pathinfo['dirname'])));
-			$intersection = array_intersect_assoc($root_dirs, $page_dirs);
-
-			$root_dirs = array_diff_assoc($root_dirs, $intersection);
-			$page_dirs = array_diff_assoc($page_dirs, $intersection);
-
-			$dir = str_repeat('../', sizeof($root_dirs)) . implode('/', $page_dirs);
-
-			// Strip / from the end
-			if ($dir && substr($dir, -1, 1) == '/')
-			{
-				$dir = substr($dir, 0, -1);
-			}
-
-			// Strip / from the beginning
-			if ($dir && substr($dir, 0, 1) == '/')
-			{
-				$dir = substr($dir, 1);
-			}
-
-			$url = str_replace($pathinfo['dirname'] . '/', '', $url);
-
-			// Strip / from the beginning
-			if (substr($url, 0, 1) == '/')
-			{
-				$url = substr($url, 1);
-			}
-
-			$url = (!empty($dir) ? $dir . '/' : '') . $url;
-			$url = generate_board_url() . '/' . $url;
 			}
 		}
 	}
@@ -2679,8 +2716,14 @@ function send_status_line($code, $message)
 	}
 	else
 	{
-		if (isset($_SERVER['HTTP_VERSION']))
+		if (!empty($_SERVER['SERVER_PROTOCOL']))
 		{
+			$version = $_SERVER['SERVER_PROTOCOL'];
+		}
+		else if (!empty($_SERVER['HTTP_VERSION']))
+		{
+			// I cannot remember where I got this from.
+			// This code path may never be reachable in reality.
 			$version = $_SERVER['HTTP_VERSION'];
 		}
 		else
@@ -3478,6 +3521,48 @@ function get_preg_expression($mode)
 }
 
 /**
+* Generate regexp for naughty words censoring
+* Depends on whether installed PHP version supports unicode properties
+*
+* @param string	$word			word template to be replaced
+* @param bool	$use_unicode	whether or not to take advantage of PCRE supporting unicode
+*
+* @return string $preg_expr		regex to use with word censor
+*/
+function get_censor_preg_expression($word, $use_unicode = true)
+{
+	static $unicode_support = null;
+
+	// Check whether PHP version supports unicode properties
+	if (is_null($unicode_support))
+	{
+		$unicode_support = ((version_compare(PHP_VERSION, '5.1.0', '>=') || (version_compare(PHP_VERSION, '5.0.0-dev', '<=') && version_compare(PHP_VERSION, '4.4.0', '>='))) && @preg_match('/\p{L}/u', 'a') !== false) ? true : false;
+	}
+
+	// Unescape the asterisk to simplify further conversions
+	$word = str_replace('\*', '*', preg_quote($word, '#'));
+
+	if ($use_unicode && $unicode_support)
+	{
+		// Replace asterisk(s) inside the pattern, at the start and at the end of it with regexes
+		$word = preg_replace(array('#(?<=[\p{Nd}\p{L}_])\*+(?=[\p{Nd}\p{L}_])#iu', '#^\*+#', '#\*+$#'), array('([\x20]*?|[\p{Nd}\p{L}_-]*?)', '[\p{Nd}\p{L}_-]*?', '[\p{Nd}\p{L}_-]*?'), $word);
+
+		// Generate the final substitution
+		$preg_expr = '#(?<![\p{Nd}\p{L}_-])(' . $word . ')(?![\p{Nd}\p{L}_-])#iu';
+	}
+	else
+	{
+		// Replace the asterisk inside the pattern, at the start and at the end of it with regexes
+		$word = preg_replace(array('#(?<=\S)\*+(?=\S)#iu', '#^\*+#', '#\*+$#'), array('(\x20*?\S*?)', '\S*?', '\S*?'), $word);
+
+		// Generate the final substitution
+		$preg_expr = '#(?<!\S)(' . $word . ')(?!\S)#iu';
+	}
+
+	return $preg_expr;
+}
+
+/**
 * Returns the first block of the specified IPv6 address and as many additional
 * ones as specified in the length paramater.
 * If length is zero, then an empty string is returned.
@@ -3563,9 +3648,9 @@ function phpbb_checkdnsrr($host, $type = 'MX')
 		($type != 'TXT' || version_compare(PHP_VERSION, '5.2.4', '>=')) &&
 		function_exists('checkdnsrr')
 	)
-		{
+	{
 		return checkdnsrr($host_fqdn, $type);
-		}
+	}
 
 	// dns_get_record() is available since PHP 5; since PHP 5.3 also on Windows,
 	// but on Windows it does not work reliable for AAAA records before PHP 5.3.1
@@ -3638,28 +3723,28 @@ function phpbb_checkdnsrr($host, $type = 'MX')
 			{
 				case 'MX':
 					if (stripos($line, "$host MX") === 0)
-			{
-				return true;
-			}
+					{
+						return true;
+					}
 				break;
 
 				case 'NS':
 					if (stripos($line, "$host nameserver") === 0)
 					{
 						return true;
-		}
+					}
 				break;
 
 				case 'TXT':
 					if (stripos($line, "$host text") === 0)
 					{
 						return true;
-	}
+					}
 				break;
 
 				case 'CNAME':
 					if (stripos($line, "$host canonical name") === 0)
-	{
+					{
 						return true;
 					}
 
@@ -3734,25 +3819,11 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 
 			if (strpos($errfile, 'cache') === false && strpos($errfile, 'template.') === false)
 			{
-				// flush the content, else we get a white page if output buffering is on
-				if ((int) @ini_get('output_buffering') === 1 || strtolower(@ini_get('output_buffering')) === 'on')
-				{
-					@ob_flush();
-				}
-
-				// Another quick fix for those having gzip compression enabled, but do not flush if the coder wants to catch "something". ;)
-				if (!empty($config['gzip_compress']))
-				{
-					if (@extension_loaded('zlib') && !headers_sent() && !ob_get_level())
-					{
-						@ob_flush();
-					}
-				}
-
 				// remove complete path to installation, with the risk of changing backslashes meant to be there
 				$errfile = str_replace(array(phpbb_realpath($phpbb_root_path), '\\'), array('', '/'), $errfile);
 				$msg_text = str_replace(array(phpbb_realpath($phpbb_root_path), '\\'), array('', '/'), $msg_text);
-				echo '<b>[phpBB Debug] PHP Notice</b>: in file <b>' . $errfile . '</b> on line <b>' . $errline . '</b>: <b>' . $msg_text . '</b><br />' . "\n";
+				$error_name = ($errno === E_WARNING) ? 'PHP Warning' : 'PHP Notice';
+				echo '<b>[phpBB Debug] ' . $error_name . '</b>: in file <b>' . $errfile . '</b> on line <b>' . $errline . '</b>: <b>' . $msg_text . '</b><br />' . "\n";
 
 				// we are writing an image - the user won't see the debug, so let's place it in the log
 				if (defined('IMAGE_OUTPUT') || defined('IN_CRON'))
@@ -3841,7 +3912,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 			echo '	</div>';
 			echo '	</div>';
 			echo '	<div id="page-footer">';
-			echo '		Powered by phpBB &copy; 2000, 2002, 2005, 2007 <a href="http://www.phpbb.com/">phpBB Group</a>';
+			echo '		Powered by <a href="http://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group';
 			echo '	</div>';
 			echo '</div>';
 			echo '</body>';
@@ -4303,24 +4374,29 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 	}
 	// www.phpBB-SEO.com SEO TOOLKIT BEGIN
 	global $phpbb_seo;
-	$template->assign_vars( array( 'PHPBB_FULL_URL' => $phpbb_seo->seo_path['phpbb_url'],
+	if (!empty($phpbb_seo)) {
+		$template->assign_vars( array(
+			'PHPBB_FULL_URL' => $phpbb_seo->seo_path['phpbb_url'],
 		'SEO_BASE_HREF' => $phpbb_seo->seo_opt['seo_base_href'],
 		'SEO_START_DELIM' => $phpbb_seo->seo_delim['start'],
 		'SEO_SATIC_PAGE' => $phpbb_seo->seo_static['pagination'],
 		'SEO_EXT_PAGE' => $phpbb_seo->seo_ext['pagination'],
-		'SEO_CANONICAL_URL' => !empty($phpbb_seo->seo_opt['no_dupe']['on']) ? $phpbb_seo->get_canonical() : '',
+			'SEO_CANONICAL_URL' => !empty($phpbb_seo->seo_opt['zero_dupe']['on']) ? $phpbb_seo->get_canonical() : '',
 		'SEO_EXTERNAL' => !empty($config['seo_ext_links']) ? 'true' : 'false',
 		'SEO_EXTERNAL_SUB' => !empty($config['seo_ext_subdomain']) ? 'true' : 'false',
 		'SEO_EXT_CLASSES' => !empty($config['seo_ext_classes']) ? "'" . preg_replace('`[^a-z0-9_|-]+`', '', str_replace(',', '|', trim($config['seo_ext_classes'], ', '))) . "'" : 'false',
 		'SEO_HASHFIX' => $phpbb_seo->seo_opt['url_rewrite'] && $phpbb_seo->seo_opt['virtual_folder'] ? 'true' : 'false',
 	));
+	}
 	if (isset($user->lang['Page']) && !empty($config['seo_append_sitename']) && !empty($config['sitename'])) {
 		$page_title = $page_title && strpos($page_title, $config['sitename']) === false ? $page_title . ' - ' . $config['sitename'] : $page_title;
 	}
 	// www.phpBB-SEO.com SEO TOOLKIT END
 	// www.phpBB-SEO.com SEO TOOLKIT BEGIN  - META
 	global $seo_meta;
+	if (!empty($seo_meta)) {
 	$seo_meta->build_meta($page_title);
+	}
 	// www.phpBB-SEO.com SEO TOOLKIT END  - META
 	// www.phpBB-SEO.com SEO TOOLKIT BEGIN - GYM LINKS
 	if (!empty($config['gym_installed'])) {
@@ -4335,7 +4411,21 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 	// gzip_compression
 	if ($config['gzip_compress'])
 	{
-		if (@extension_loaded('zlib') && !headers_sent())
+		// to avoid partially compressed output resulting in blank pages in
+		// the browser or error messages, compression is disabled in a few cases:
+		//
+		// 1) if headers have already been sent, this indicates plaintext output
+		//    has been started so further content must not be compressed
+		// 2) the length of the current output buffer is non-zero. This means
+		//    there is already some uncompressed content in this output buffer
+		//    so further output must not be compressed
+		// 3) if more than one level of output buffering is used because we
+		//    cannot test all output buffer level content lengths. One level
+		//    could be caused by php.ini output_buffering. Anything
+		//    beyond that is manual, so the code wrapping phpBB in output buffering
+		//    can easily compress the output itself.
+		//
+		if (@extension_loaded('zlib') && !headers_sent() && ob_get_level() <= 1 && ob_get_length() == 0)
 		{
 			ob_start('ob_gzhandler');
 		}
@@ -4456,6 +4546,12 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		$user_lang = substr($user_lang, 0, strpos($user_lang, '-x-'));
 	}
 
+	$s_search_hidden_fields = array();
+	if ($_SID)
+	{
+		$s_search_hidden_fields['sid'] = $_SID;
+	}
+
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SITENAME'						=> $config['sitename'],
@@ -4489,7 +4585,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		'U_RETURN_INBOX'		=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=inbox'),
 		'U_POPUP_PM'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=popup'),
 		// www.phpBB-SEO.com SEO TOOLKIT BEGIN
-		'UA_POPUP_PM'			=> addslashes(append_sid($phpbb_seo->seo_path['phpbb_url'] . "ucp.$phpEx", 'i=pm&amp;mode=popup')),
+		'UA_POPUP_PM'			=> addslashes(append_sid((!empty($phpbb_seo) ? $phpbb_seo->seo_path['phpbb_url'] : $phpbb_root_path) . "ucp.$phpEx", 'i=pm&amp;mode=popup')),
 		// www.phpBB-SEO.com SEO TOOLKIT END
 		'U_MEMBERLIST'			=> append_sid("{$phpbb_root_path}memberlist.$phpEx"),
 		'U_VIEWONLINE'			=> ($auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel')) ? append_sid("{$phpbb_root_path}viewonline.$phpEx") : '',
@@ -4547,11 +4643,13 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 
 		'S_LOAD_UNREADS'			=> ($config['load_unreads_search'] && ($config['load_anon_lastread'] || $user->data['is_registered'])) ? true : false,
 
+		'S_SEARCH_HIDDEN_FIELDS'	=> build_hidden_fields($s_search_hidden_fields),
+
 		'T_THEME_PATH'			=> "{$web_path}styles/" . $user->theme['theme_path'] . '/theme',
 		'T_TEMPLATE_PATH'		=> "{$web_path}styles/" . $user->theme['template_path'] . '/template',
 		'T_SUPER_TEMPLATE_PATH'	=> (isset($user->theme['template_inherit_path']) && $user->theme['template_inherit_path']) ? "{$web_path}styles/" . $user->theme['template_inherit_path'] . '/template' : "{$web_path}styles/" . $user->theme['template_path'] . '/template',
 		'T_IMAGESET_PATH'		=> "{$web_path}styles/" . $user->theme['imageset_path'] . '/imageset',
-		'T_IMAGESET_LANG_PATH'	=> "{$web_path}styles/" . $user->theme['imageset_path'] . '/imageset/' . $user->data['user_lang'],
+		'T_IMAGESET_LANG_PATH'	=> "{$web_path}styles/" . $user->theme['imageset_path'] . '/imageset/' . $user->lang_name,
 		'T_IMAGES_PATH'			=> "{$web_path}images/",
 		'T_SMILIES_PATH'		=> "{$web_path}{$config['smilies_path']}/",
 		'T_AVATAR_PATH'			=> "{$web_path}{$config['avatar_path']}/",
@@ -4559,7 +4657,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		'T_ICONS_PATH'			=> "{$web_path}{$config['icons_path']}/",
 		'T_RANKS_PATH'			=> "{$web_path}{$config['ranks_path']}/",
 		'T_UPLOAD_PATH'			=> "{$web_path}{$config['upload_path']}/",
-		'T_STYLESHEET_LINK'		=> (!$user->theme['theme_storedb']) ? "{$web_path}styles/" . $user->theme['theme_path'] . '/theme/stylesheet.css' : append_sid("{$phpbb_root_path}style.$phpEx", 'id=' . $user->theme['style_id'] . '&amp;lang=' . $user->data['user_lang']),
+		'T_STYLESHEET_LINK'		=> (!$user->theme['theme_storedb']) ? "{$web_path}styles/" . $user->theme['theme_path'] . '/theme/stylesheet.css' : append_sid("{$phpbb_root_path}style.$phpEx", 'id=' . $user->theme['style_id'] . '&amp;lang=' . $user->lang_name),
 		'T_STYLESHEET_NAME'		=> $user->theme['theme_name'],
 
 		'T_THEME_NAME'			=> $user->theme['theme_path'],
@@ -4642,7 +4740,7 @@ function page_footer($run_cron = true)
 
 	// Call cron-type script
 	$call_cron = false;
-	if (!defined('IN_CRON') && $run_cron && !$config['board_disable'])
+	if (!defined('IN_CRON') && $run_cron && !$config['board_disable'] && !$user->data['is_bot'])
 	{
 		$call_cron = true;
 		$time_now = (!empty($user->time_now) && is_int($user->time_now)) ? $user->time_now : time();
@@ -4746,7 +4844,7 @@ function exit_handler()
 	}
 
 	// As a pre-caution... some setups display a blank page if the flush() is not there.
-	(empty($config['gzip_compress'])) ? @flush() : @ob_flush();
+	(ob_get_level() > 0) ? @ob_flush() : @flush();
 
 	exit;
 }

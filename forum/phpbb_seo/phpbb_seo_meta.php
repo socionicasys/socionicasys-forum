@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO Dynamic Meta tags
-* @version $Id: phpbb_seo_meta.php 252 2010-03-12 09:23:51Z dcz $
-* @copyright (c) 2006 - 2010 www.phpbb-seo.com
+* @version $Id: phpbb_seo_meta.php 314 2011-06-27 08:21:34Z dcz $
+* @copyright (c) 2006 - 2011 www.phpbb-seo.com
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License v2
 *
 */
@@ -20,6 +20,7 @@ if (!defined('IN_PHPBB')) {
 * @package phpBB SEO Dynamic Meta tags
 */
 class seo_meta {
+	var $version = '0.4.4';
 	var $meta = array('title' => '', 'description' => '', 'keywords' => '', 'lang' => '', 'category' => '', 'robots' => '', 'distribution' => '', 'resource-type' => '', 'copyright' => '');
 	var $meta_def = array();
 	var $filters = array('description' => 'meta_filter_txt', 'keywords' => 'make_keywords');

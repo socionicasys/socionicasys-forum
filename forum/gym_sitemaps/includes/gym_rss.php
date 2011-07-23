@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_rss.php 272 2010-11-21 13:56:31Z dcz $
+* @version $Id: gym_rss.php 314 2011-06-27 08:21:34Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -459,7 +459,6 @@ class gym_rss extends gym_sitemaps {
 	* Beware, bo not reduce $bbcodelist without knowing what you are doing
 	*/
 	function close_bbcode_tags(&$message, $uid, $bbcodelist = 'quote|b|u|i|color|*|list') {
-		global $config, $user, $phpbb_seo;
 		$open_lists = $close_lists = array();
 		$bbcodelist = str_replace('|*', '|\*', $bbcodelist);
 		$open_count = preg_match_all('`\[(' . $bbcodelist . ')(\=([a-z0-9]{1}))?[^\]\[]*\:' . $uid . '\]`i', $message, $open_matches);

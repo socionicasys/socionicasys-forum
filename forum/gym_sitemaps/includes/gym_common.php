@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_common.php 264 2010-06-02 07:13:08Z dcz $
+* @version $Id: gym_common.php 308 2011-06-16 07:20:24Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -76,8 +76,7 @@ function set_gym_config($config_name, $config_value, $mode, &$cfg_array) {
 			'config_name'	=> (string) $config_name,
 			'config_value'	=> (string) $config_value,
 			'config_type'	=> (string) $mode,
-			)
-		);
+		));
 		$db->sql_query($sql);
 	}
 	$cfg_array[$config_name] = $config_value;
@@ -107,9 +106,9 @@ function obtain_gym_links($gym_links = array()) {
 	$_phpbb_seo = !empty($phpbb_seo);
 	$board_url = $_phpbb_seo ? $phpbb_seo->seo_path['phpbb_url'] : generate_board_url() . '/';
 	$gym_config = array();
-	$ssl_bit = $phpbb_seo->ssl['use'] ? 'ssl_' : '';
+	$ssl_bit = ($_phpbb_seo ? $phpbb_seo->ssl['use'] : (bool) ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === true)) || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443))) ? 'ssl_' : '';
 	$cache_file = '_gym_links_' . $ssl_bit . $user->data['user_lang'];
-	$gym_link_tpl = '<a href="%1$s" title="%3$s" class="gym"><img src="' . $board_url . 'gym_sitemaps/images/%2$s" alt="%3$s" width="14", height="14"/>&nbsp;%4$s</a>&nbsp;';
+	$gym_link_tpl = '<a href="%1$s" title="%3$s" class="gym"><img src="' . $board_url . 'gym_sitemaps/images/%2$s" alt="%3$s" width="14" height="14"/>&nbsp;%4$s</a>&nbsp;';
 	if (($links = $cache->get($cache_file)) === false) {
 		obtain_gym_config('main', $gym_config);
 		$user->add_lang('gym_sitemaps/gym_common');
@@ -235,13 +234,13 @@ function display_feed($params, $tpl_prefix = '') {
 	}
 	$_params = array(
 		'url' => trim(str_replace('&amp;', '&', $params['url'])),
-		'slide' => !empty($params['slide']),
-		'speed' => !empty($params['speed']) ? max((int) $params['speed'], 1) : 30,
-		'ttl' => !empty($params['ttl']) ? max((int) $params['ttl'], 0) : 3600,
-		'limit' => !empty($params['limit']) ? max((int) $params['limit'], 1) : 5,
-		'desc' => !empty($params['desc']),
-		'html' => !empty($params['html']),
-		'striptags' => !empty($params['striptags']),
+		'slide' => isset($params['slide']) ? max(0, (int) $params['slide']) : 0,
+		'speed' => !empty($params['speed']) ? max(1, (int) $params['speed']) : 30,
+		'ttl' => !empty($params['ttl']) ? max(0, (int) $params['ttl']) : 3600,
+		'limit' => !empty($params['limit']) ? max(1, (int) $params['limit']) : 5,
+		'desc' => isset($params['desc']) ? max(0, (int) $params['desc']) : 0,
+		'html' => isset($params['html']) ? max(0, (int) $params['html']) : 0,
+		'striptags' => isset($params['striptags']) ? max(0, (int) $params['striptags']) : 1,
 	);
 	if (empty($_params['url'])) {
 		return false;

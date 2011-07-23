@@ -2,7 +2,7 @@
 /**
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: phpbb_seo_install.php 222 2010-02-27 13:08:48Z dcz $
+* @version $Id: phpbb_seo_install.php 291 2011-01-14 07:31:31Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -647,18 +647,13 @@ class install_phpbb_seo extends module {
 			include($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
 		}
 		$db_tools = new phpbb_db_tools($db);
+		$db_tools->db->sql_return_on_error(true);
 		$indexes = $db_tools->sql_list_index(TOPICS_TABLE);
 		$drop_index_name = 'topic_last_post_id';
 		$add_index_name = 'topic_lpid';
 		if (  $mode == 'install_phpbb_seo' ) {
 			if (!$db_tools->sql_column_exists(TOPICS_TABLE, 'topic_url')) {
 				$db_tools->sql_column_add(TOPICS_TABLE, 'topic_url', array('VCHAR', ''));
-			}
-			if (in_array($drop_index_name, $indexes)) {
-				$db_tools->sql_index_drop(TOPICS_TABLE, $drop_index_name);
-			}
-			if (!in_array($add_index_name, $indexes)) {
-				$db_tools->sql_create_index(TOPICS_TABLE, $add_index_name, array('topic_last_post_id'));
 			}
 			$submit_action = append_sid($phpbb_root_path . 'adm/index.' . $phpEx . '?sid=' . $user->session_id);
 			$title = $user->lang['SEO_INSTALL_CONGRATS'];

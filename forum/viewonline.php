@@ -212,6 +212,10 @@ while ($row = $db->sql_fetchrow($result))
 
 			if ($forum_id && $auth->acl_get('f_list', $forum_id))
 			{
+				// www.phpBB-SEO.com SEO TOOLKIT BEGIN
+				$phpbb_seo->set_url($forum_data[$forum_id]['forum_name'], $forum_id, 'forum');
+				// www.phpBB-SEO.com SEO TOOLKIT END
+
 				$location = '';
 				$location_url = append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $forum_id);
 

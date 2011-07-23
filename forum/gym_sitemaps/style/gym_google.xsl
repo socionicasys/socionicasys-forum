@@ -1,18 +1,22 @@
-<xsl:stylesheet version="2.0" 
+<xsl:stylesheet version="2.0"
                 xmlns:html="http://www.w3.org/TR/REC-html40"
                 xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  
 <xsl:output 
-	method="html" 
-	version="1.0" 
-	encoding="utf-8" 
-	omit-xml-declaration="yes"		
-	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" 
+	method="html"
+	version="1.0"
+	encoding="utf-8"
+	omit-xml-declaration="yes"
+	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 	doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 	indent="yes" />
-
-<!-- Root template -->    
+<!--
+@package phpBB SEO GYM Sitemaps
+@version $Id: gym_google.xsl 302 2011-04-13 19:44:08Z dcz $
+@copyright (c) 2006 - 2010 www.phpbb-seo.com
+@license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
+-->
+<!-- Root template -->
 <xsl:template match="/">
 	<!-- Store in $fileType if we are in a sitemap or in a SitemapIndex -->
 	<xsl:variable name="fileType">
@@ -87,6 +91,7 @@
 							<span class="corners-bottom"><span></span></span>
 						</div>
 					</div>
+					{NO_LANGUAGE_FILES}
 					<div class="navbar">
 						<div class="inner"><span class="corners-top"><span></span></span>
 							<ul class="linklist navlinks">

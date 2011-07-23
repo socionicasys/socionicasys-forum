@@ -2,7 +2,7 @@
 /**
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: setup_phpbb_seo.php 262 2010-04-20 11:06:58Z dcz $
+* @version $Id: setup_phpbb_seo.php 307 2011-05-04 20:24:42Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -151,6 +151,25 @@ class setup_phpbb_seo {
 		// Can be overridden, requires .htaccess update <=
 		// Example :
 		// 	$this->seo_ext['topic'] = '/'; // instead of the default ".html"
+
+		// ==> Forum redirect <==
+		// In case you are using forum id removing and need to edit some forum urls
+		// that where already indexed, you can keep track of them ritgh here
+		// NOTE :
+		// 	This will only allow the zero duplicate to perform the appropriate redirection
+		// 	You need the mod for this to work :
+		// 		http://www.phpbb-seo.com/en/zero-duplicate/phpbb-seo-zero-duplicate-t1220.html (en)
+		// 		http://www.phpbb-seo.com/fr/zero-duplicate/zero-duplicate-phpbb-seo-t1502.html (fr)
+		//
+		// Example :
+		//
+		// $this->forum_redirect = array(
+		// 	// 'old-url-without-id-nor-suffix' => forum_id,
+		// 	'old-forum-url' => 23,
+		// 	'another-one' => 32,
+		// 	'anoter-version-of-the-same' => 32,
+		// );
+		//
 
 		// ==> Special for lazy French, others may delete this part
 		if ( strpos($config['default_lang'], 'fr') !== false ) {

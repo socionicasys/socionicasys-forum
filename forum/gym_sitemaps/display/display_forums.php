@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: display_forums.php 254 2010-03-12 15:08:58Z dcz $
+* @version $Id: display_forums.php 294 2011-02-16 07:55:02Z dcz $
 * @copyright (c) 2006 - 2009 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -22,7 +22,7 @@ class display_forums {
 		global $phpbb_seo;
 		static $tpl = array(
 			'link' => '<a href="%1$s" title="%3$s">%2$s</a>',
-			'img' => '<img src="%1$s" alt="%2$s"/>'
+			'img' => '<img src="%1$s" alt="%2$s" width="14" height="14"/>'
 		);
 		// Usefull for multi bb topic & forum tracking
 		// Leave default for single forum eg : '_track'

@@ -1087,7 +1087,10 @@ function mcp_fork_topic($topic_ids)
 		$total_posts = 0;
 		$new_topic_id_list = array();
 
-		if ($topic_data['enable_indexing'])
+
+		foreach ($topic_data as $topic_id => $topic_row)
+		{
+			if (!isset($search_type) && $topic_row['enable_indexing'])
 		{
 			// Select the search method and do some additional checks to ensure it can actually be utilised
 			$search_type = basename($config['search_type']);
@@ -1111,13 +1114,11 @@ function mcp_fork_topic($topic_ids)
 				trigger_error($error);
 			}
 		}
-		else
+			else if (!isset($search_type) && !$topic_row['enable_indexing'])
 		{
 			$search_type = false;
 		}
 
-		foreach ($topic_data as $topic_id => $topic_row)
-		{
 			$sql_ary = array(
 				'forum_id'					=> (int) $to_forum_id,
 				'icon_id'					=> (int) $topic_row['icon_id'],
@@ -1226,9 +1227,9 @@ function mcp_fork_topic($topic_ids)
 				// Copy whether the topic is dotted
 				markread('post', $to_forum_id, $new_topic_id, 0, $row['poster_id']);
 
-				if ($search_type)
+				if (!empty($search_type))
 				{
-					$search->index($search_mode, $sql_ary['post_id'], $sql_ary['post_text'], $sql_ary['post_subject'], $sql_ary['poster_id'], ($topic_row['topic_type'] == POST_GLOBAL) ? 0 : $to_forum_id);
+					$search->index($search_mode, $new_post_id, $sql_ary['post_text'], $sql_ary['post_subject'], $sql_ary['poster_id'], ($topic_row['topic_type'] == POST_GLOBAL) ? 0 : $to_forum_id);
 					$search_mode = 'reply'; // After one we index replies
 				}
 

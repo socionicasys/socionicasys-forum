@@ -242,6 +242,16 @@ class dbal
 	}
 
 	/**
+	* Returns whether results of a query need to be buffered to run a transaction while iterating over them.
+	*
+	* @return bool Whether buffering is required.
+	*/
+	function sql_buffer_nested_transactions()
+	{
+		return false;
+	}
+
+	/**
 	* SQL Transaction
 	* @access private
 	*/
@@ -769,7 +779,7 @@ class dbal
 							</div>
 						</div>
 						<div id="page-footer">
-							Powered by phpBB &copy; 2000, 2002, 2005, 2007 <a href="http://www.phpbb.com/">phpBB Group</a>
+							Powered by <a href="http://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group
 						</div>
 					</div>
 					</body>

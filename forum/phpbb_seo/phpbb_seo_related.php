@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO Related topics
-* @version $Id: phpbb_seo_related.php 222 2010-02-27 13:08:48Z dcz $
-* @copyright (c) 2006 - 2010 www.phpbb-seo.com
+* @version $Id: phpbb_seo_related.php 314 2011-06-27 08:21:34Z dcz $
+* @copyright (c) 2006 - 2011 www.phpbb-seo.com
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License v2
 *
 */
@@ -20,10 +20,12 @@ if (!defined('IN_PHPBB')) {
 * @package phpBB SEO Related topics
 */
 class seo_related {
+	var $version = '0.2.4';
 	var $fulltext = true;
 	var $limit = 5;
 	var $allforums = false;
 	var $check_ignore = false;
+	var $forum_exclude = array();
 	/**
 	* constructor
 	*/
@@ -148,14 +150,21 @@ class seo_related {
 		}
 		if (!$forum_id || $this->allforums) {
 			global $auth;
-			// Do not include those forums the user is not having read access to...
-			$related_read_ary = $auth->acl_getf('f_read', true);
-			$related_forum_ids = array();
-			foreach ($related_read_ary as $_forum_id => $null) {
-				$related_forum_ids[$_forum_id] = (int) $_forum_id;
+			// Only include those forums the user is having read access to...
+			$related_forum_ids = $auth->acl_getf('f_read', true);
+			if (!empty($related_forum_ids)) {
+				$related_forum_ids = array_keys($related_forum_ids);
+				if (!empty($this->forum_exclude)) {
+					$related_forum_ids = array_diff($related_forum_ids, $this->forum_exclude);
+				}
+				$forum_sql = !empty($related_forum_ids) ? $db->sql_in_set('t.forum_id', $related_forum_ids, false) . ' AND ' : '';
+			} else {
+				$forum_sql = !empty($this->forum_exclude) ? $db->sql_in_set('t.forum_id', $this->forum_exclude, true) . ' AND ' : '';
 			}
-			$forum_sql = sizeof($related_forum_ids) ? $db->sql_in_set('t.forum_id', $related_forum_ids, false, true) . ' AND ' : '';
 		} else {
+			if (in_array($forum_id, $this->forum_exclude)) {
+				return false;
+			}
 			$forum_sql = ' t.forum_id = ' . (int) $forum_id . ' AND ';
 		}
 		$sql_array = array(
@@ -171,11 +180,11 @@ class seo_related {
 			$sql_array['WHERE'] .= " AND MATCH (t.topic_title) AGAINST ('" . $db->sql_escape($match) . "')";
 			$sql_array['ORDER_BY'] = 'relevancy DESC';
 		} else {
-			$sql_like = $this->buil_sql_like($match);
+			$sql_like = $this->buil_sql_like($match, 't.topic_title');
 			if (!$sql_like) {
 				return false;
 			}
-			$sql_array['WHERE'] .= " AND t.topic_title $sql_like";
+			$sql_array['WHERE'] .= " AND $sql_like";
 			$sql_array['ORDER_BY'] = 't.topic_id DESC';
 		}
 		$sql_array['WHERE'] .= " AND t.topic_status <> " . ITEM_MOVED . "
@@ -217,27 +226,66 @@ class seo_related {
 	}
 	/**
 	* buil_sql_like
-	* @param	string	$text		the string of all words to search for,prepared with prepare_match
+	* @param	string	$text		the string of all words to search for, prepared with prepare_match
+	* @param	string	$text		the table field we are matching against
 	* @param	int	$limit		maxximum number of words to use in the query
 	*/
-	function buil_sql_like($text, $limit = 3) {
+	function buil_sql_like($text, $field, $limit = 3) {
 		global $db;
-		$sql_like = '';
+		$sql_like = array();
 		$i = 0;
-		$text = str_replace(array('_', '%'), array("\_", "\%"), $text);
-		$text = str_replace(array(chr(0) . "\_", chr(0) . "\%"), array('_', '%'), $text);
 		$text = explode(' ', trim(preg_replace('`[\s]+`', ' ', $text)));
 		if ( !empty($text) ) {
 			foreach ($text as $word) {
-				$word = $db->sql_escape(trim($word));
-				$sql_like .= empty($sql_like) ? " LIKE '%$word%'" : " OR  '%$word%'";
+				$sql_like[] = "'%" . $db->sql_escape(trim($word)) . "%'";
 				$i++;
 				if ($i >= $limit) {
-					return $sql_like;
+					break;
 				}
 			}
 		}
-		return $sql_like;
+		$result = false;
+		$escape = '';
+		$operator = 'LIKE';
+		if (!empty($sql_like)) {
+			switch ($db->sql_layer) {
+				case 'mysql':
+				case 'mysql4':
+				case 'mysqli':
+					$result = '(t.topic_title LIKE ' . implode(' OR ', $sql_like) . ')';
+					break;
+				case 'oracle': // untested
+				case 'mssql': // untested
+				case 'mssql_odbc': // untested
+				case 'mssqlnative': // untested
+				case 'firebird': // untested
+					$escape = " ESCAPE '\\'";
+					// no break;
+				case 'postgres':
+					if ($db->sql_layer === 'postgres') {
+						$operator = 'ILIKE';
+					}
+					// no break;
+				case 'sqlite': // untested
+					$result = '(' . implode(' OR ', $this->sql_like_field($sql_like, $field, $operator, $escape)) . ')';
+					break;
+			}
+		}
+		return $result;
+	}
+	/**
+	* sql_like_field
+	* @param	array	$sql_like	the escaped words to match
+	* @param	string	$field		the field to match against
+	* @param	string	$operator	the operator to use
+	* @param	string	$escape		the optional escape string
+	*/
+	function sql_like_field($sql_like, $field, $operator = 'LIKE', $escape = '') {
+		$result = array();
+		foreach ($sql_like as $word) {
+			$result[] = "($field $operator $word $escape)";
+		}
+		return $result;
 	}
 }
 ?>

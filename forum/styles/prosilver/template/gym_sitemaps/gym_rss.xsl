@@ -1,12 +1,18 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output 
-	method="html" 
-	version="1.0" 
-	encoding="utf-8" 
-	omit-xml-declaration="yes"		
-	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" 
+<xsl:output
+	method="html"
+	version="1.0"
+	encoding="utf-8"
+	omit-xml-declaration="yes"
+	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 	doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 	indent="yes" />
+<!--
+@package phpBB SEO GYM Sitemaps
+@version $Id: gym_rss.xsl 302 2011-04-13 19:44:08Z dcz $
+@copyright (c) 2006 - 2010 www.phpbb-seo.com
+@license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
+-->
 <xsl:template match="/rss" >
 
 <xsl:variable name="rss_link">
@@ -62,6 +68,7 @@
 							<span class="corners-bottom"><span></span></span>
 						</div>
 					</div>
+					{NO_LANGUAGE_FILES}
 					<div class="navbar">
 						<div class="inner"><span class="corners-top"><span></span></span>
 							<ul class="linklist navlinks">

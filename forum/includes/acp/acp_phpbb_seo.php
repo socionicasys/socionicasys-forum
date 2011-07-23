@@ -2,7 +2,7 @@
 /**
 *
 * @package Ultimate SEO URL phpBB SEO
-* @version $Id: acp_phpbb_seo.php 277 2010-11-25 12:09:02Z dcz $
+* @version $Id: acp_phpbb_seo.php 311 2011-06-20 07:14:09Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://www.opensource.org/licenses/rpl1.5.txt Reciprocal Public License 1.5
 *
@@ -206,7 +206,7 @@ class acp_phpbb_seo {
 						'legend1' => 'SEO_EXTERNAL_LINKS',
 						'seo_ext_links' => array('lang' => 'SEO_EXTERNAL_LINKS', 'validate' => 'bool', 'type' => 'radio:enabled_disabled', 'explain' => true, 'default' => 1),
 						'seo_ext_subdomain' => array('lang' => 'SEO_EXTERNAL_SUBDOMAIN', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true, 'default' => 0),
-						'seo_ext_classes' =>  array('lang' => 'SEO_EXTERNAL_CLASSES', 'validate' => 'string', 'type' => 'text:25:150', 'explain' => true, 'default' => ''),
+						'seo_ext_classes' =>  array('lang' => 'SEO_EXTERNAL_CLASSES', 'validate' => 'string', 'type' => 'text:40:250', 'explain' => true, 'default' => ''),
 					),
 				);
 				// Related topics
@@ -225,18 +225,18 @@ class acp_phpbb_seo {
 				if (class_exists('seo_meta')) {
 					$display_vars['vars'] += array(
 						'legend3' => 'SEO_META',
-						'seo_meta_title' =>  array('lang' => 'SEO_META_TITLE', 'validate' => 'string:0:225', 'type' => 'text:25:150', 'explain' => true, 'default' => $config['sitename']),
-						'seo_meta_desc' =>  array('lang' => 'SEO_META_DESC', 'validate' => 'string:0:225', 'type' => 'text:40:255', 'explain' => true, 'default' => $config['site_desc']),
+						'seo_meta_title' =>  array('lang' => 'SEO_META_TITLE', 'validate' => 'string:0:225', 'type' => 'text:40:250', 'explain' => true, 'default' => $config['sitename']),
+						'seo_meta_desc' =>  array('lang' => 'SEO_META_DESC', 'validate' => 'string:0:225', 'type' => 'text:40:250', 'explain' => true, 'default' => $config['site_desc']),
 						'seo_meta_desc_limit' => array('lang' => 'SEO_META_DESC_LIMIT', 'validate' => 'int:5:40', 'type' => 'text:3:4', 'explain' => true, 'default' => 25),
-						'seo_meta_bbcode_filter' =>  array('lang' => 'SEO_META_BBCODE_FILTER', 'validate' => 'string:0:225', 'type' => 'text:25:150', 'explain' => true, 'default' => 'img|url|flash|code'),
-						'seo_meta_keywords' =>  array('lang' => 'SEO_META_KEYWORDS', 'validate' => 'string:0:225', 'type' => 'text:40:150', 'explain' => true, 'default' => $config['site_desc']),
+						'seo_meta_bbcode_filter' =>  array('lang' => 'SEO_META_BBCODE_FILTER', 'validate' => 'string:0:225', 'type' => 'text:40:250', 'explain' => true, 'default' => 'img|url|flash|code'),
+						'seo_meta_keywords' =>  array('lang' => 'SEO_META_KEYWORDS', 'validate' => 'string:0:225', 'type' => 'text:40:250', 'explain' => true, 'default' => $config['site_desc']),
 						'seo_meta_keywords_limit' => array('lang' => 'SEO_META_KEYWORDS_LIMIT', 'validate' => 'int:5:40', 'type' => 'text:3:4', 'explain' => true, 'default' => 15),
 						'seo_meta_min_len' => array('lang' => 'SEO_META_MIN_LEN', 'validate' => 'int:0:10', 'type' => 'text:3:4', 'explain' => true, 'default' => 2),
 						'seo_meta_check_ignore' => array('lang' => 'SEO_META_CHECK_IGNORE', 'validate' => 'bool', 'type' => 'radio:enabled_disabled', 'explain' => true, 'default' => 0),
 						'seo_meta_lang' =>  array('lang' => 'SEO_META_LANG', 'validate' => 'lang', 'type' => 'select', 'method' => 'language_select', 'params' => array('{CONFIG_VALUE}'), 'explain' => true,  'default' => $config['default_lang']),
-						'seo_meta_copy' =>  array('lang' => 'SEO_META_COPY', 'validate' => 'string:0:225', 'type' => 'text:25:150', 'explain' => true, 'default' => $config['sitename']),
-						'seo_meta_file_filter' =>  array('lang' => 'SEO_META_FILE_FILTER', 'validate' => 'string:0:225', 'type' => 'text:25:150', 'explain' => true, 'default' => 'ucp'),
-						'seo_meta_get_filter' =>  array('lang' => 'SEO_META_GET_FILTER', 'validate' => 'string:0:225', 'type' => 'text:25:150', 'explain' => true, 'default' => 'style,hilit,sid'),
+						'seo_meta_copy' =>  array('lang' => 'SEO_META_COPY', 'validate' => 'string:0:225', 'type' => 'text:40:250', 'explain' => true, 'default' => $config['sitename']),
+						'seo_meta_file_filter' =>  array('lang' => 'SEO_META_FILE_FILTER', 'validate' => 'string:0:225', 'type' => 'text:40:250', 'explain' => true, 'default' => 'ucp'),
+						'seo_meta_get_filter' =>  array('lang' => 'SEO_META_GET_FILTER', 'validate' => 'string:0:225', 'type' => 'text:40:250', 'explain' => true, 'default' => 'style,hilit,sid'),
 						'seo_meta_robots' =>  array('lang' => 'SEO_META_ROBOTS', 'validate' => 'string:0:225', 'type' => 'text:25:150', 'explain' => true, 'default' => 'index,follow'),
 						'seo_meta_noarchive' =>  array('lang' => 'SEO_META_NOARCHIVE', 'validate' => 'string:0:225', 'multiple_validate' => 'int', 'type' => 'custom', 'method' => 'select_multiple', 'params' => array('{CONFIG_VALUE}', '{KEY}', $this->forum_select()), 'explain' => true, 'default' => ''),
 					);
@@ -714,7 +714,7 @@ class acp_phpbb_seo {
 			$htaccess_tpl .= '<b style="color:blue"># RewriteCond %{HTTP_HOST} !^' . str_replace(array('https://', 'http://', '.'), array('', '', '\\.'), trim($phpbb_seo->seo_path['root_url'], '/ ')) . '$ [NC]</b>' . "\n";
 			$htaccess_tpl .= '<b style="color:blue"># RewriteRule ^(.*)$ ' . $phpbb_seo->seo_path['root_url'] . '{REWRITEBASE}$1 [QSA,L,R=301]</b>' . "\n\n";
 			$htaccess_tpl .= '<b style="color:blue"># DO NOT GO FURTHER IF THE REQUESTED FILE / DIR DOES EXISTS</b>' . "\n";
-			$htaccess_tpl .= '<b style="color:green">RewriteCond</b> %{REQUEST_FILENAME} -f' . "\n";
+			$htaccess_tpl .= '<b style="color:green">RewriteCond</b> %{REQUEST_FILENAME} -f [OR]' . "\n";
 			$htaccess_tpl .= '<b style="color:green">RewriteCond</b> %{REQUEST_FILENAME} -d' . "\n";
 			$htaccess_tpl .= '<b style="color:green">RewriteRule</b> . - [L]' . "\n";
 			$htaccess_tpl .= '<b style="color:blue">#####################################################' . "\n";
@@ -790,7 +790,7 @@ class acp_phpbb_seo {
 				$htaccess_tpl .= $mods_ht['pos1'];
 			}
 			$htaccess_tpl .= '<b style="color:blue"># FORUM WITHOUT ID &amp; DELIM ALL MODES</b>' . "\n";
-			if ($phpbb_seo->seo_ext['forum'] != '/') {
+			if (trim($phpbb_seo->seo_ext['forum'],'/')) {
 				$htaccess_tpl .= '<b style="color:blue"># THESE FOUR LINES MUST BE LOCATED AT THE END OF YOUR HTACCESS TO WORK PROPERLY</b>' . "\n";
 				$htaccess_tpl .= '<b style="color:green">RewriteCond</b> %{REQUEST_FILENAME} !-f' . "\n";
 				$htaccess_tpl .= '<b style="color:green">RewriteRule</b> ^{WIERD_SLASH}{PHPBB_LPATH}([a-z0-9_-]+)(-([0-9]+)){EXT_FORUM}$ {DEFAULT_SLASH}{PHPBB_RPATH}viewforum.{PHP_EX}?forum_uri=$1&amp;start=$3 [QSA,L,NC]' . "\n";
@@ -853,14 +853,18 @@ class acp_phpbb_seo {
 			// handle the suffixes proper in the RegEx
 			// set up pagination reg ex
 			// set up ext bits
-			$seo_ext = array('pagination' => str_replace('.', '\\.', $phpbb_seo->seo_ext['pagination']));
+			$seo_ext = array(
+				// force '/' for both / and empty ext to add /? in RegEx (which allows both cases)
+				'pagination' => trim($phpbb_seo->seo_ext['pagination'], '/') ? str_replace('.', '\\.', $phpbb_seo->seo_ext['pagination']) : '/'
+			);
 			$reg_ex_page = sprintf($tpl['paginpage'], $phpbb_seo->seo_static['pagination'], $seo_ext['pagination'] . ($seo_ext['pagination'] === '/' ? '?' : '') );
 			foreach ( $phpbb_seo->seo_ext as $type => $value) {
-				$seo_ext[$type] = str_replace('.', '\\.', $value);
-				$htaccess_tpl_vars['{' . strtoupper($type) . '_PAGINATION}'] = ($value === '/') ? $reg_ex_page : sprintf($tpl['pagin'], $phpbb_seo->seo_delim['start'], $seo_ext[$type]);
+				$_value = trim($value, '/');
+				// force '/' for both / and empty ext to add /? in RegEx (which allows both cases)
+				$seo_ext[$type] = $_value ? str_replace('.', '\\.', $value) : '/';
+				$htaccess_tpl_vars['{' . strtoupper($type) . '_PAGINATION}'] = $_value ? sprintf($tpl['pagin'], $phpbb_seo->seo_delim['start'], $seo_ext[$type]) : $reg_ex_page;
 				// use url/? to allow both url and url/ to work as expected
-				$htaccess_tpl_vars['{EXT_' . strtoupper($type) . '}'] = sprintf($tpl['ext'] , $seo_ext[$type]) . ($value === '/' ? '?' : '');
-
+				$htaccess_tpl_vars['{EXT_' . strtoupper($type) . '}'] = sprintf($tpl['ext'] , $seo_ext[$type]) . ($_value ? '' : '?');
 			}
 			$htaccess_tpl_vars['{PAGE_PAGINATION}'] = $reg_ex_page;
 			// static bits

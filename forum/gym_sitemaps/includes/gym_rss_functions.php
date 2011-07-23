@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_rss_functions.php 275 2010-11-21 17:48:06Z dcz $
+* @version $Id: gym_rss_functions.php 286 2010-12-04 19:24:05Z dcz $
 * @copyright (c) 2006 - 2010 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
@@ -21,7 +21,7 @@ function get_gym_links($gym_config) {
 	$links = array();
 	$_phpbb_seo = !empty($phpbb_seo);
 	$board_url = $_phpbb_seo ? $phpbb_seo->seo_path['phpbb_url'] : generate_board_url() . '/';
-	$gym_link_tpl = '<a href="%1$s" title="%3$s" class="gym"><img src="' . $board_url . 'gym_sitemaps/images/%2$s" alt="%3$s" width="14", height="14"/>&nbsp;%3$s</a>';
+	$gym_link_tpl = '<a href="%1$s" title="%3$s" class="gym"><img src="' . $board_url . 'gym_sitemaps/images/%2$s" alt="%3$s" width="14" height="14"/>&nbsp;%3$s</a>';
 	$google_threshold = max(1, (int) $gym_config['google_threshold']);
 	//compute guest auth
 	$cache_file = '_gym_auth_guests_forum';

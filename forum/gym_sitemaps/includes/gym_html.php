@@ -2,8 +2,8 @@
 /**
 *
 * @package phpBB SEO GYM Sitemaps
-* @version $Id: gym_html.php 262 2010-04-20 11:06:58Z dcz $
-* @copyright (c) 2006 - 2010 www.phpbb-seo.com
+* @version $Id: gym_html.php 314 2011-06-27 08:21:34Z dcz $
+* @copyright (c) 2006 - 2011 www.phpbb-seo.com
 * @license http://opensource.org/osi3.0/licenses/lgpl-license.php GNU Lesser General Public License
 *
 */
@@ -159,8 +159,8 @@ class gym_html extends gym_sitemaps {
 		// Set up module's urls : Pagination
 		$this->url_config['html_start_ext'] = '';
 		if ($this->html_config['html_modrewrite']) {
-			$page = !empty($phpbb_seo->seo_static['page']) ? $phpbb_seo->seo_static['page'] : 'page';
-			$html = !empty($phpbb_seo->seo_ext['page']) ? $phpbb_seo->seo_ext['page'] : '.html';
+			$page = !empty($phpbb_seo->seo_static['pagination']) ? $phpbb_seo->seo_static['pagination'] : 'page';
+			$html = !empty($phpbb_seo->seo_ext['pagination']) ? $phpbb_seo->seo_ext['pagination'] : '.html';
 			$this->url_config['html_start'] = "$page%1\$s$html";
 			$this->url_config['html_default'] = 'maps/';
 			$this->url_config['html_news_default'] = 'news/';
@@ -328,22 +328,20 @@ class gym_html extends gym_sitemaps {
 			);
 		}
 		$template->assign_vars($tpl_data + array(
-				'S_SINGLE_TRAKING' => !empty($this->output_data['single_traking']) ? true : false,
-				'S_LOGIN_ACTION' => append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
-				'S_SEO_FORUM' => strpos($config['default_lang'], 'fr') !== false ? 'fr/' : 'en/',
-				'LEFT_COL' => $left_col,
-				'RIGHT_COL' => $right_col,
-			)
-		);
+			'S_SINGLE_TRAKING' => !empty($this->output_data['single_traking']) ? true : false,
+			'S_LOGIN_ACTION' => append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
+			'S_SEO_FORUM' => strpos($config['default_lang'], 'fr') !== false ? 'fr/' : 'en/',
+			'LEFT_COL' => $left_col,
+			'RIGHT_COL' => $right_col,
+		));
 		if ($this->actions['pagination_limit'] > 0) { // Add page number to title
 			$page_title .= $this->start > 0 ? ' - ' . $user->lang['HTML_PAGE'] . ' ' . ( floor( $this->start / $this->actions['pagination_limit'] ) + 1 ) : '';
 		}
 		page_header($page_title, $this->html_config['html_disp_online']);
 		if (!empty($this->html_config['html_logo_url'])) {
 			$template->assign_vars(array(
-					'SITE_LOGO_IMG' => '<img src="' . $this->path_config['gym_img_url'] . $this->html_config['html_logo_url'] . '" alt="' . $this->output_data['page_title'] . '" />',
-				)
-			);
+				'SITE_LOGO_IMG' => '<img src="' . $this->path_config['gym_img_url'] . $this->html_config['html_logo_url'] . '" alt="' . $this->output_data['page_title'] . '" />',
+			));
 		}
 		page_footer();
 		return;
@@ -474,7 +472,6 @@ class gym_html extends gym_sitemaps {
 	* Beware, bo not reduce $bbcodelist without knowing what you are doing
 	*/
 	function close_bbcode_tags(&$message, $uid, $bbcodelist = 'quote|b|u|i|color|*|list') {
-		global $config, $user, $phpbb_seo;
 		$open_lists = $close_lists = array();
 		$bbcodelist = str_replace('|*', '|\*', $bbcodelist);
 		$open_count = preg_match_all('`\[(' . $bbcodelist . ')(\=([a-z0-9]{1}))?[^\]\[]*\:' . $uid . '\]`i', $message, $open_matches);
@@ -735,12 +732,13 @@ class gym_html extends gym_sitemaps {
 		// www.phpBB-SEO.com SEO TOOLKIT END
 		// Make sure $per_page is a valid value
 		$per_page = ($config['posts_per_page'] <= 0) ? 1 : $config['posts_per_page'];
+
 		if (($replies + 1) > $per_page) {
 			$total_pages = ceil(($replies + 1) / $per_page);
 			$pagination = '';
 			$times = 1;
 			for ($j = 0; $j < $replies + 1; $j += $per_page) {
-				$pagination .= '<a href="' . $url . '&amp;start=' . $j . '">' . $times . '</a>';
+				$pagination .= '<a href="' . $url . ($j == 0 ? '' : '&amp;start=' . $j) . '">' . $times . '</a>';
 				if ($times == 1 && $total_pages > 5) {
 					$pagination .= ' ... ';
 					// Display the last three pages
@@ -756,10 +754,9 @@ class gym_html extends gym_sitemaps {
 				static $pagin_find = array();
 				static $pagin_replace = array();
 				if (empty($pagin_find)) {
-					$pagin_find = array( '`(\.(?!' . $phpEx . ')[a-z0-9]+)([\w\#$%&~\-;:=,?@+]*)&amp;start=([0-9]+)`i', '`/([\w\#$%&~\-;:=,?@+]*)&amp;start=([0-9]+)`i' );
-					$pagin_replace = array( $phpbb_seo->seo_delim['start'] . '\\3\\1\\2', '/' . $phpbb_seo->seo_static['pagination'] . '\\2' . $phpbb_seo->seo_ext['pagination'] .'\\1' );
+					$pagin_find = array('`(https?\://[a-z0-9_/\.-]+/[a-z0-9_\.-]+)(\.(?!' . $phpEx . ')[a-z0-9]+)(\?[\w\#$%&~\-;:=,@+\.]+)?(&amp;|\?)start=([0-9]+)`i', '`(https?\://[a-z0-9_/\.-]+/[a-z0-9_\.-]+)/(\?[\w\#$%&~\-;:=,@+\.]+)?(&amp;|\?)start=([0-9]+)`i' );
+					$pagin_replace = array( '\1' . $phpbb_seo->seo_delim['start'] . '\5\2\3', '\1/' . $phpbb_seo->seo_static['pagination'] . '\4' . $phpbb_seo->seo_ext['pagination'] . '\2' );
 				}
-				$pagination = str_replace( '&amp;start=0', '', $pagination );
 				$pagination = preg_replace( $pagin_find, $pagin_replace, $pagination );
 			}
 			// www.phpBB-SEO.com SEO TOOLKIT END
@@ -813,21 +810,25 @@ class gym_html extends gym_sitemaps {
 	* @return string Avatar image
 	*/
 	function get_user_avatar($avatar, $avatar_type, $avatar_width, $avatar_height, $alt = 'USER_AVATAR') {
-	global $user, $config, $phpbb_root_path, $phpEx;
+		static $avatar_cache = array();
+		if (isset($avatar_cache[$avatar])) {
+			return $avatar_cache[$avatar];
+		}
+		global $user, $config, $phpbb_root_path, $phpEx;
 		if (empty($avatar) || !$avatar_type) {
 			return '';
 		}
 		$avatar_img = '';
-			switch ($avatar_type) {
+		switch ($avatar_type) {
 			case AVATAR_UPLOAD:
 				$avatar_img = $phpbb_root_path . "download/file.$phpEx?avatar=";
-			break;
+				break;
 			case AVATAR_GALLERY:
 				$avatar_img = $phpbb_root_path . $config['avatar_gallery_path'] . '/';
-			break;
+				break;
 		}
 		$avatar_img .= $avatar;
-		return '<img src="' . $avatar_img . '" width="' . $avatar_width . '" height="' . $avatar_height . '" alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';
+		return ($avatar_cache[$avatar] = '<img src="' . (str_replace(' ', '%20', $avatar_img)) . '" width="' . $avatar_width . '" height="' . $avatar_height . '" alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />');
 	}
 }
 ?>
