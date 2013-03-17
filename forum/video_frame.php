@@ -2,7 +2,8 @@
 
 $url = $_GET['url'];
 $matches = array();
-if (preg_match('#^http://(?:www\.)?youtube\.com/watch\?$#', $url) === 1) {
+if (preg_match('#http://(?:www\.)?youtube\.com/watch\?#', $url, $matches) === 1)
+{
     $v = $_GET['v'];
     if (preg_match('#^http://(?:www\.)?youtube\.com/watch\?.*v=([0-9A-Za-z-_]{11})$#', $url, $matches) === 1)
     {
