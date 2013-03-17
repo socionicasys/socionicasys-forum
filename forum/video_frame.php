@@ -2,7 +2,7 @@
 
 $url = $_GET['url'];
 $matches = array();
-if (preg_match('#^http://(?:www\.)?youtube\.com/watch\?v=([0-9A-Za-z-_]{11})$#', $url, $matches) === 1)
+if (preg_match('#^http://(?:www\.)?youtube\.com/watch\?.*v=([0-9A-Za-z-_]{11})$#', $url, $matches) === 1)
 {
 ?>
 <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/<?php echo $matches[1]; ?>?rel=0" frameborder="0"></iframe>
